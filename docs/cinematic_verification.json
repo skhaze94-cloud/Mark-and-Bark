@@ -81,5 +81,24 @@
     "Tutorial replay retains existing campus progress"
   ],
   "edition": "Cinematic",
-  "rendered_review": "Pending final recovery review"
+  "rendered_review": {
+    "engine": "Godot 4.4.1",
+    "renderer": "Compatibility / Mesa llvmpipe OpenGL 4.5",
+    "fixture_views": 12,
+    "runtime_errors": 0,
+    "reviewed": [
+      "title",
+      "hallway",
+      "garden",
+      "workshop",
+      "opening film"
+    ],
+    "physical_phone_tested": false
+  },
+  "fresh_archive_check": {
+    "passed": 76,
+    "failed": 0,
+    "directory_entries": true,
+    "project_at_archive_root": true
+  }
 }

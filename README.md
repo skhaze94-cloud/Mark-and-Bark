@@ -17,6 +17,8 @@ A 28-second skippable campus film opens a first adventure. Choose **Watch the ca
 
 New high-resolution transparent art adds an oak invention blackboard, a reading-nook cabinet and leafy canopy framing. Rear lockers, furniture, plants and near leaves have separate parallax speeds and cast shadows. Warm dust-lit shafts, a restrained world-only highlight glow and colour finish, gentle character breathing, and soft landing squash/dust enrich the stages. UI stays crisp above the world shader. Reduced motion fixes the film camera and disables scenery drift, animated dust and landing effects. This remains a 2D game with layered depth and the original character identities and pivots.
 
+![Campus film](docs/previews/campus_film.png)
+
 See [cinematic edition notes](docs/CINEMATIC_EDITION.md). New art and the recorded generation prompts are included in this editable project.
 
 ## Visual overhaul and room travel
