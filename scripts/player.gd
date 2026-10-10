@@ -90,6 +90,8 @@ func _physics_process(delta: float) -> void:
 		jump_buffer -= delta
 		coyote = 0.14 if is_on_floor() else coyote-delta
 		velocity.x = move_toward(velocity.x,axis*SPEED,1800*delta)
+		if absf(velocity.x)>10:
+			facing = 1 if velocity.x>0 else -1
 		if jump_buffer > 0:
 			if coyote > 0 and jumps_used==0:
 				velocity.y = JUMP
@@ -119,6 +121,10 @@ func _physics_process(delta: float) -> void:
 	if absf(velocity.x)>10:
 		facing = 1 if velocity.x>0 else -1
 	sprite.scale.x = visual_scale*facing
+	# A nearby landing can interrupt a spring; never retain its crouch on a shelf.
+	if is_on_floor() and spring_contact:
+		spring_contact=false
+		pose_lock=0
 	pose_lock -= delta
 	if pose_lock <= 0:
 		var pose = "young_actions_idle"
@@ -184,6 +190,13 @@ func _draw() -> void:
 
 func reset_jumps() -> void:
 	spring_contact=false
+	pose_lock=0
+	landing=0
+	if is_instance_valid(sprite):
+		sprite.texture=Art.tex("young_actions_idle")
+		last_texture=sprite.texture
+		sprite.modulate.a=1
+		sprite.rotation=0
 	jumps_used=0
 	coyote=0
 	jump_buffer=0

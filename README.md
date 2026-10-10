@@ -1,4 +1,4 @@
-# Mark & Bark — Smooth Spring 2.0.1
+# Mark & Bark — Spring Polish 2.0.2
 
 **Ultimate Polish 2.0** refines the three-level vertical adventure with clearer progress, illustrated level cards, smoother teamwork, richer lighting and safer navigation. Platforming remains the main game. Bark accidentally presses the shrinking ray. Mark and Bark must climb three giant school and home environments, recover a design, power cell and lens, and repair the ray together.
 
@@ -10,6 +10,13 @@
 4. Let the bundled textures and font import, then press **F5**.
 
 This is a ready-to-import, editable Godot project. Godot is required; the ZIP is not a standalone Windows/macOS executable. No paid plugins, .NET, build tools or additional asset downloads are needed.
+
+## New in 2.0.2
+
+- Short landings restore Mark's standing pose immediately.
+- Bark stays on the same shelf near its edge and keeps a consistent release direction while Mark steers.
+- Direction changes on launch and checkpoint resets clear the right visual states.
+- Added checks for rapid taps, ceiling bumps and interrupted jumps.
 
 ## New in 2.0.1
 
