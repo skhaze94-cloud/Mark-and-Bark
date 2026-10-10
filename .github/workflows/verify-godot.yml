@@ -1,0 +1,64 @@
+name: Godot 4.7.2 playable-project verification
+
+on:
+  push:
+    branches:
+      - main
+      - fix/godot-4-7-startup
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  godot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download exact Godot version
+        run: |
+          set -euxo pipefail
+          curl -fL --retry 3 --output /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -j /tmp/godot.zip -d /tmp/godot-bin
+          chmod +x /tmp/godot-bin/Godot_v4.7.2-stable_linux.x86_64
+          echo "/tmp/godot-bin" >> "$GITHUB_PATH"
+      - name: Import assets and check script parsing
+        run: |
+          set -o pipefail
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import --quit 2>&1 | tee /tmp/godot-import.log
+          if grep -E 'SCRIPT ERROR:|Parse Error:|Failed to load script|Parser Error:' /tmp/godot-import.log; then exit 1; fi
+      - name: Main-scene startup smoke test
+        run: |
+          set -o pipefail
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 90 2>&1 | tee /tmp/godot-start.log
+          if grep -E 'SCRIPT ERROR:|Parse Error:|Failed to load script|Parser Error:' /tmp/godot-start.log; then exit 1; fi
+      - name: Full interactive playthrough regression
+        timeout-minutes: 8
+        run: |
+          set -o pipefail
+          Godot_v4.7.2-stable_linux.x86_64 --headless --fixed-fps 60 --path . res://tests/playthrough.tscn 2>&1 | tee /tmp/godot-playthrough.log
+          if grep -E 'SCRIPT ERROR:|Parse Error:|Failed to load script|Parser Error:' /tmp/godot-playthrough.log; then exit 1; fi
+      - name: Package playable Godot source project
+        if: success()
+        run: |
+          mkdir -p dist/Mark-and-Bark-Godot-4.7.2
+          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output ./ dist/Mark-and-Bark-Godot-4.7.2/
+          cd dist
+          zip -qr Mark-and-Bark-Godot-4.7.2-Ready-To-Play.zip Mark-and-Bark-Godot-4.7.2
+      - name: Upload ready-to-play Godot ZIP
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mark-and-Bark-Godot-4.7.2-Ready-To-Play
+          path: dist/Mark-and-Bark-Godot-4.7.2-Ready-To-Play.zip
+          if-no-files-found: error
+      - name: Upload diagnostic logs and playthrough results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Godot-4.7.2-validation-logs
+          path: |
+            /tmp/godot-import.log
+            /tmp/godot-start.log
+            /tmp/godot-playthrough.log
+            test_output/playthrough.json
+          if-no-files-found: ignore
