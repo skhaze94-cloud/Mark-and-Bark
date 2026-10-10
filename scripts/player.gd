@@ -14,6 +14,7 @@ var jump_buffer: float = 0.0
 var anim: float = 0.0
 var right_bound: float = 5500.0
 var pose_lock: float = 0.0
+var stride: float = 0.0
 
 func _ready() -> void:
 	var shape = CollisionShape2D.new()
@@ -26,6 +27,7 @@ func _ready() -> void:
 	sprite = Art.character("young_actions_idle")
 	sprite.scale = Vector2.ONE * 0.31
 	add_child(sprite)
+	z_index = 3
 	collision_layer = 2
 	collision_mask = 1
 
@@ -38,6 +40,8 @@ func show_pose(id: String, seconds: float = 0.5) -> void:
 
 func _physics_process(delta: float) -> void:
 	anim += delta
+	stride += absf(velocity.x) * delta
+	queue_redraw()
 	if not enabled:
 		velocity.x = move_toward(velocity.x,0,1400*delta)
 		jump_queued = false
@@ -65,8 +69,23 @@ func _physics_process(delta: float) -> void:
 		if not is_on_floor():
 			pose = "young_actions_jump"
 		elif absf(velocity.x)>35:
-			# Alternating readable poses with low frequency avoids jittery feet.
-			pose = "young_actions_walk_stride_a" if int(anim*5)%2==0 else "young_actions_walk_passing"
+			var frames = ["young_actions_walk_stride_a","young_actions_walk_passing","young_actions_walk_stride_b","young_actions_walk_passing"]
+			pose = frames[int(stride / 35.0) % 4]
 		sprite.texture = Art.tex(pose)
-	sprite.position.y = 0.0 if reduced_motion or absf(velocity.x)<35 else sin(anim*10)*1.5
+	# All transforms pivot at the supplied feet, so idle breathing never slides.
+	sprite.position.y = 0.0
+	if reduced_motion:
+		sprite.rotation = 0
+		sprite.scale.y = 0.31
+	else:
+		sprite.rotation = velocity.x / SPEED * 0.025 if is_on_floor() else clampf(velocity.y / 12000.0,-0.035,0.035)
+		sprite.scale.y = 0.31 * (1.0 + sin(anim * 2.1) * 0.008) if absf(velocity.x)<35 and is_on_floor() else 0.31
+
+func _draw() -> void:
+	var height = maxf(0.0,610.0-position.y)
+	var radius = 30.0 * clampf(1.0-height/450.0,0.45,1.0)
+	var points = PackedVector2Array()
+	for i in range(32):
+		points.append(Vector2(cos(i*TAU/32)*radius,610.0-position.y+sin(i*TAU/32)*7))
+	draw_colored_polygon(points,Color(0.09,0.14,0.13,0.23))
 

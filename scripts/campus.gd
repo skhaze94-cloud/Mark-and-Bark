@@ -8,6 +8,12 @@ var reduced_motion: bool = false
 var bark: Sprite2D
 var platforms: Array[Rect2] = []
 var markers: Array[Node2D] = []
+var depth
+var foreground
+var room: int = 0
+var backgrounds: Array[Dictionary] = []
+const ROOM_BOUNDS = [Vector2(0,1700),Vector2(1700,3700),Vector2(3700,5600)]
+const ROOM_NAMES = ["SCHOOL HALLWAY","DISCOVERY GARDEN","CLASSROOM WORKSHOP"]
 
 func _ready() -> void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_MIRROR
@@ -21,13 +27,23 @@ func build(is_tutorial: bool) -> void:
 	objects.clear()
 	platforms.clear()
 	markers.clear()
+	backgrounds.clear()
 	if tutorial:
 		background("garden_hub",0,1550)
 	else:
 		background("school_hub",0,1700)
 		background("garden_hub",1700,2000)
-		background("school_hub",3700,1900)
-		# Lightly darkened workshop section keeps foreground props readable.
+		background("workshop_hub_v2",3700,1900)
+	depth = load("res://scripts/depth_layer.gd").new()
+	depth.tutorial = tutorial
+	depth.z_index = 0
+	add_child(depth)
+	foreground = load("res://scripts/depth_layer.gd").new()
+	foreground.tutorial = tutorial
+	foreground.foreground = true
+	foreground.z_index = 12
+	add_child(foreground)
+	add_lights()
 	var ground = StaticBody2D.new()
 	ground.collision_layer = 1
 	ground.collision_mask = 2
@@ -48,7 +64,6 @@ func build(is_tutorial: bool) -> void:
 		bark.position = Vector2(320,610)
 		bark.scale = Vector2.ONE*0.26
 		add_child(bark)
-		world_label("THE QUIET GARDEN",Vector2(200,230),28)
 	else:
 		decorate("school_props_red_locker",Vector2(410,610),215)
 		decorate("school_props_navy_locker",Vector2(565,610),215)
@@ -74,13 +89,11 @@ func build(is_tutorial: bool) -> void:
 		add_object("volcano","school_props_science_volcano",Vector2(4020,610),"Bark's volcano inspection",185)
 		decorate("school_props_chalkboard",Vector2(4620,320),240)
 		decorate("school_props_lamp",Vector2(4310,460),100)
-		world_label("THE SCHOOL HUB",Vector2(730,230),28)
-		world_label("DISCOVERY GARDEN",Vector2(2100,230),28)
-		world_label("THE BIG IDEAS WORKSHOP",Vector2(4400,210),26)
 		bark = Art.character("bark_actions_idle")
 		bark.scale = Vector2.ONE*0.26
 		bark.position = Vector2(340,610)
 		add_child(bark)
+	bark.z_index = 3
 	refresh()
 	queue_redraw()
 
@@ -88,14 +101,26 @@ func background(id: String, x: float, span: float) -> void:
 	var s = Sprite2D.new()
 	s.texture = Art.tex(id)
 	s.centered = false
-	s.position = Vector2(x,-305)
-	s.scale = Vector2(span/s.texture.get_width(),915.0/s.texture.get_height())
-	s.z_index = -5
+	s.position = Vector2(x-span*0.0225,0 if id=="workshop_hub_v2" else -305)
+	s.scale = Vector2(span*1.045/s.texture.get_width(),(720.0 if id=="workshop_hub_v2" else 915.0)/s.texture.get_height())
+	s.z_index = -10
 	add_child(s)
+	backgrounds.append({"sprite":s,"base":s.position.x,"center":x+span/2})
 
 func decorate(id: String, pos: Vector2, size: float) -> Sprite2D:
 	var sprite = Art.prop(id,size)
 	sprite.position = pos
+	sprite.z_index = 2
+	# A flattened silhouette creates a contact shadow without fake collision.
+	var shadow = Sprite2D.new()
+	shadow.texture = sprite.texture
+	shadow.centered = false
+	shadow.offset = sprite.offset
+	shadow.scale = Vector2(1.12,0.075)
+	shadow.position = Vector2(5,3)
+	shadow.modulate = Color(0.10,0.16,0.16,0.23)
+	shadow.show_behind_parent = true
+	sprite.add_child(shadow)
 	add_child(sprite)
 	return sprite
 
@@ -107,6 +132,7 @@ func add_object(id: String, asset: String, pos: Vector2, title: String, size: fl
 
 func world_label(text: String, pos: Vector2, size: int) -> Label:
 	var l = Label.new()
+	l.z_index = 5
 	l.text = text
 	l.position = pos
 	l.size = Vector2(330,55)
@@ -163,7 +189,7 @@ func refresh() -> void:
 				show = bool(Progress.data.plant_restored)
 		item.visible = show
 		item.sprite.visible = show
-		item.label.visible = show and not id.begins_with("leaf_")
+		item.label.visible = false # Contextual HUD prompts keep the scenery uncluttered.
 	if not tutorial and bool(Progress.data.plant_restored):
 		if not has_node("RestoredPlant"):
 			var s = decorate("school_props_plant",Vector2(2320,555),95)
@@ -198,6 +224,11 @@ func nearest(pos: Vector2, range_px: float = 150) -> Dictionary:
 
 func _process(delta: float) -> void:
 	clock+=delta
+	if is_instance_valid(depth):
+		depth.reduced_motion = reduced_motion
+		foreground.reduced_motion = reduced_motion
+		for backdrop in backgrounds:
+			backdrop.sprite.position.x = backdrop.base if reduced_motion else backdrop.base+(depth.camera_x-backdrop.center)*0.08
 	for item in objects:
 		if item.id.begins_with("leaf_") or item.id in ["tutorial_leaf","bark_token"]:
 			item.sprite.position.y = item.pos.y if reduced_motion else item.pos.y+sin(clock*2+item.pos.x)*4
@@ -207,7 +238,7 @@ func _draw() -> void:
 	draw_texture_rect(tile,Rect2(0,610,width,110),true,Color(0.60,0.56,0.46))
 	draw_rect(Rect2(0,610,width,6),Color("ddbd6d"))
 	for p in platforms:
-		draw_style_box(platform_style(),Rect2(p.position,p.size))
+		draw_line(p.position+Vector2(4,2),p.position+Vector2(p.size.x-4,2),Color(0.94,0.78,0.44,0.70),3)
 
 func platform_style() -> StyleBoxFlat:
 	var s=StyleBoxFlat.new()
@@ -216,3 +247,32 @@ func platform_style() -> StyleBoxFlat:
 	s.set_border_width_all(2)
 	s.set_corner_radius_all(7)
 	return s
+
+func room_for(x: float) -> int:
+	return 0 if x < 1700 else 1 if x < 3700 else 2
+
+func camera_target(x: float) -> Vector2:
+	var bounds: Vector2 = Vector2(0,1550) if tutorial else ROOM_BOUNDS[room]
+	return Vector2(clampf(x,bounds.x+640,bounds.y-640),360)
+
+func enter_room(index: int) -> void:
+	room = clampi(index,0,2)
+
+func add_lights() -> void:
+	var gradient = Gradient.new()
+	gradient.colors = PackedColorArray([Color(1,1,1,0.85),Color(1,1,1,0)])
+	var texture = GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.width = 256
+	texture.height = 256
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5,0.5)
+	texture.fill_to = Vector2(1,0.5)
+	for pos in ([Vector2(550,250),Vector2(1200,250)] if tutorial else [Vector2(400,250),Vector2(1270,250),Vector2(2390,230),Vector2(3090,250),Vector2(4430,330),Vector2(5100,250)]):
+		var lamp = PointLight2D.new()
+		lamp.texture = texture
+		lamp.position = pos
+		lamp.texture_scale = 3.2
+		lamp.color = Color("ffe4b4")
+		lamp.energy = 0.18
+		add_child(lamp)

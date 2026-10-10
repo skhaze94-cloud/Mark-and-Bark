@@ -889,5 +889,23 @@
       1672,
       941
     ]
+  },
+  "workshop_hub_v2": {
+    "path": "res://assets/workshop_hub_v2.png",
+    "size": [
+      1672,
+      941
+    ]
+  },
+  "school_door_v2": {
+    "path": "res://assets/school_door_v2.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "pivot": [
+      512,
+      1480
+    ]
   }
 }

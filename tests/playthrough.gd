@@ -72,6 +72,9 @@ func run() -> void:
 	root.add_child(game)
 	await ticks(5)
 	check(game.mode=="title","Title scene loads")
+	check(Art.tex("workshop_hub_v2").get_width()>1200,"Detailed workshop backdrop is bundled")
+	check(Art.tex("school_door_v2").get_image().detect_alpha()!=Image.ALPHA_NONE,"Doorway sprite has genuine transparency")
+	check(game.campus.depth!=null and game.campus.foreground.z_index>game.player.z_index,"Depth scenery and foreground layers are separate")
 	await capture("01_title")
 	game.start_tutorial()
 	await dismiss()
@@ -108,6 +111,8 @@ func run() -> void:
 	check(int(Progress.data.stage)==1,"Fair invitation starts quest")
 	await capture("02_hallway")
 	await walk_to(1910)
+	check(game.campus.room==1 and game.transitions_completed>=1,"Walking off hallway enters a separate garden room")
+	check(game.camera.position.x>=2340,"Garden camera excludes the hallway")
 	await press_key(KEY_E)
 	await dismiss()
 	check(Progress.data.notebook and int(Progress.data.stage)==2,"Scattered notebook recovered")
@@ -131,7 +136,8 @@ func run() -> void:
 	check(Progress.data.pencil and int(Progress.data.stage)==4,"Pencil collection completes supply list")
 	await walk_to(3630)
 	await press_key(KEY_E)
-	check(game.player.position.x>4200,"Unlocked garden shortcut reaches workshop")
+	await ticks(65)
+	check(game.campus.room==2 and game.player.position.x>4200,"Unlocked garden shortcut reaches workshop")
 	await walk_to(4430)
 	await press_key(KEY_E)
 	check(int(Progress.data.stage)==5 and game.busy,"Workshop opens after supplies")
@@ -208,10 +214,44 @@ func run() -> void:
 	await ticks(8)
 	check(game.player.position.y<580,"Touch jump uses real character physics")
 	await ticks(70)
+	var start_x: float=game.player.position.x
+	e=InputEventScreenTouch.new()
+	e.index=0
+	e.position=Vector2(175,650)
+	e.pressed=true
+	root.push_input(e,true)
+	e=InputEventScreenTouch.new()
+	e.index=1
+	e.position=Vector2(315,650)
+	e.pressed=true
+	root.push_input(e,true)
+	await ticks(15)
+	check(game.player.position.x>start_x+25 and game.player.position.y<580,"Two fingers can move and jump together")
+	for finger in [0,1]:
+		e=InputEventScreenTouch.new()
+		e.index=finger
+		e.position=Vector2(175,650) if finger==0 else Vector2(315,650)
+		e.pressed=false
+		root.push_input(e,true)
+	await ticks(8)
+	check(game.touch_fingers.is_empty() and not game.touches.right,"Both touch fingers release cleanly")
+	await ticks(70)
 	Progress.settings.reduced_motion=true
 	game.apply_settings()
 	check(game.player.reduced_motion and game.campus.reduced_motion,"Reduced-motion setting reaches character and environment")
 	var stage=int(Progress.data.stage)
+	game.player.position=Vector2(3720,605)
+	game.sync_room()
+	await walk_to(3635)
+	check(game.campus.room==1,"Workshop exit returns to garden")
+	check(int(Progress.data.stage)==stage and Progress.data.bark_token,"Room crossing preserves story and discoveries")
+	await walk_to(1750)
+	await walk_to(1630)
+	check(game.campus.room==0,"Garden exit re-enters school")
+	check(game.camera.position.x<=1060,"School camera excludes the garden")
+	game.begin_room_transition(2,4240,"Test checkpoint")
+	await ticks(25)
+	check(game.campus.room==2 and game.room_transition.is_empty(),"Reduced-motion transition finishes without blocking input")
 	game.restart_checkpoint()
 	check(int(Progress.data.stage)==stage and Progress.data.bark_token,"Checkpoint restart preserves quest and discoveries")
 	Progress.save_enabled=true

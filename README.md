@@ -1,15 +1,25 @@
 # Mark & Bark: The Big Idea
 
-A playable Godot 4.4.1 project: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+A playable Godot 4.4.1 project, updated with a 2.5D visual overhaul and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
-1. Extract the project ZIP into a folder.
+1. Use Windows **Extract All** (or your normal archive utility) to extract the project ZIP into a fresh writable folder. Avoid extracting over an older running project.
 2. Open Godot **4.4.1 or a newer compatible Godot 4 release** (the standard editor; no .NET requirement).
 3. In the Project Manager, choose **Import**, select `project.godot`, and open it.
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
 No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
+
+## Visual overhaul and room travel
+
+The school hallway, discovery garden and classroom workshop now behave as separate rooms. Follow the signed entrances at the left or right screen edge. The camera stops at each room boundary; stepping through an exit plays a short named transition, then places Mark and Bark safely inside the next room. Return trips preserve the quest, supplies and discoveries. The unlocked garden shortcut uses the same transition system. Existing save files remain compatible.
+
+The workshop has a new detailed storybook backdrop and the entrances use a new transparent oak doorway sprite. The original Mark and Bark identities are preserved. Slow background parallax, foreground foliage, warm light pools, sun shafts, contact shadows and perspective floor details add depth while retaining 2D gameplay. Mark and Bark use fuller supplied walk-pose sequences, subtle foot-anchored breathing, and more deliberate hint/cheer poses. Reduced motion disables parallax, ambient specks, butterflies, breathing and character lean, and shortens room transitions.
+
+![Updated classroom workshop](docs/previews/workshop.png)
+
+See [visual overhaul notes](docs/VISUAL_OVERHAUL.md) for implementation details, new-art provenance and generation prompts.
 
 ## Controls
 
@@ -44,7 +54,8 @@ Quest progress, discoveries, completed tutorial, settings and safe ground checkp
 - `scenes/main.tscn`: main scene.
 - `scripts/main.gd`: story, tutorial gates, quest interactions, UI, touch input and launcher.
 - `scripts/player.gd`: CharacterBody2D movement, coyote time, jump buffering and aligned key poses.
-- `scripts/campus.gd`: connected level layout, props, platforms, pickups and collision geometry.
+- `scripts/campus.gd`: room layout, props, platforms, pickups and collision geometry.
+- `scripts/depth_layer.gd`: perspective accents, sunbeams, foliage, butterflies and discovery effects.
 - `scripts/progress.gd`: persistent state and save validation.
 - `scripts/art.gd`: manifest-backed texture access and missing-image fallback.
 - `assets/index.json`: the subset of the supplied pack used by this introduction, including pivots.
@@ -57,12 +68,20 @@ Quest progress, discoveries, completed tutorial, settings and safe ground checkp
 Tested with Godot 4.4.1 on Linux. Run the regression suite using:
 
 ```sh
-godot --headless --path . res://tests/playthrough.tscn
+godot --headless --fixed-fps 60 --path . res://tests/playthrough.tscn
 ```
 
-The suite exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
+The updated suite contains 65 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
 
-This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use deliberate low-frequency steps and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. A graphical visual review could not be completed in this environment; native headless execution and Web export compilation succeeded.
+This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use deliberate low-frequency steps and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. The updated chapter has been reviewed using native OpenGL screenshots of the title, tutorial, hallway, garden, workshop, room transition and touch HUD. Automated touch events were verified; actual tablets and phones remain untested.
+
+To recreate the visual fixtures on a machine with a display:
+
+```sh
+godot --path . res://tests/visual_review.tscn
+```
+
+The fixture scene creates screenshots under `test_output/` and never writes a player save.
 
 ## Art and sound
 

@@ -4,6 +4,9 @@
   "notes": "Automated runtime playthrough uses keyboard events, real physics, GUI touch events and quest callbacks. It does not measure children's play duration.",
   "passed": [
     "Title scene loads",
+    "Detailed workshop backdrop is bundled",
+    "Doorway sprite has genuine transparency",
+    "Depth scenery and foreground layers are separate",
     "Tutorial starts with walking",
     "Walk reaches 310.0",
     "Tutorial walking gate advances",
@@ -20,6 +23,8 @@
     "Walk reaches 810.0",
     "Fair invitation starts quest",
     "Walk reaches 1910.0",
+    "Walking off hallway enters a separate garden room",
+    "Garden camera excludes the hallway",
     "Scattered notebook recovered",
     "Walk reaches 2840.0",
     "Misplaced plant collected",
@@ -47,13 +52,29 @@
     "Screen touch holds right movement and releases",
     "Touch release clears movement",
     "Touch jump uses real character physics",
+    "Two fingers can move and jump together",
+    "Both touch fingers release cleanly",
     "Reduced-motion setting reaches character and environment",
+    "Walk reaches 3635.0",
+    "Workshop exit returns to garden",
+    "Room crossing preserves story and discoveries",
+    "Walk reaches 1750.0",
+    "Walk reaches 1630.0",
+    "Garden exit re-enters school",
+    "School camera excludes the garden",
+    "Reduced-motion transition finishes without blocking input",
     "Checkpoint restart preserves quest and discoveries",
     "Disk save/load restores completed quest and inventory",
     "Missing art has a safe fallback",
     "Procedural sound cues load",
     "Tutorial replay retains existing campus progress"
   ],
-  "visual_review": "Not completed: the sandbox graphical renderer and local browser could not start. Native headless runtime and Web export compile succeeded.",
-  "physical_mobile_devices_tested": false
+  "graphical_runtime": {
+    "passed": 65,
+    "failures": 0,
+    "renderer": "Godot 4.4.1 OpenGL compatibility, Mesa llvmpipe software rendering"
+  },
+  "visual_review": "Native screenshots reviewed for title, tutorial, hallway, garden, workshop, room transition, workshop UI and touch HUD. Final contextual prompts use a readable panel.",
+  "physical_mobile_devices_tested": false,
+  "speaker_playback_tested": false
 }

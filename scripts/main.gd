@@ -13,6 +13,7 @@ var modal: Panel
 var objective: Label
 var counter: Label
 var prompt: Label
+var prompt_panel: Panel
 var zone_label: Label
 var toast_label: Label
 var mode: String = "title"
@@ -45,6 +46,67 @@ var sound_player: AudioStreamPlayer
 var sounds: Dictionary = {}
 var checkpoint_save_timer: float = 0
 var pending_end: bool = false
+var transition_panel: ColorRect
+var transition_title: Label
+var room_transition: Dictionary = {}
+var transitions_completed: int = 0
+var ambient: CanvasModulate
+var bark_pose_until: float = 0.0
+
+func sync_room() -> void:
+	campus.enter_room(campus.room_for(player.position.x))
+	last_zone = campus.ROOM_NAMES[campus.room]
+	camera.position = campus.camera_target(player.position.x)
+	campus.bark.position = Vector2(player.position.x-90*player.facing,610)
+	ambient.color = Color("eef1e4") if campus.room==1 else Color("e4e5e8") if campus.room==0 else Color("eee4d5")
+
+func check_room_exit() -> void:
+	var x: float = player.position.x
+	match campus.room:
+		0:
+			if x>1688:begin_room_transition(1,1745,"Out into the discovery garden")
+		1:
+			if x<1712:begin_room_transition(0,1655,"Back inside the school")
+			elif x>3688:begin_room_transition(2,3745,"Into the invention workshop")
+		2:
+			if x<3712:begin_room_transition(1,3655,"Back out to the garden")
+
+func begin_room_transition(to_room: int, arrival_x: float, title: String) -> void:
+	if not room_transition.is_empty():return
+	room_transition = {"room":to_room,"arrival":arrival_x,"age":0.0,"arrived":false}
+	player.enabled=false
+	player.axis=0
+	player.velocity=Vector2.ZERO
+	touches.left=false
+	touches.right=false
+	touch_fingers.clear()
+	transition_title.text=title
+	transition_panel.modulate.a=0
+	transition_panel.show()
+	prompt.text=""
+
+func update_room_transition(delta: float) -> void:
+	room_transition.age += delta
+	var duration: float = 0.24 if Progress.settings.reduced_motion else 0.85
+	var progress: float = room_transition.age/duration
+	transition_panel.modulate.a=clampf(progress*2 if progress<0.5 else (1-progress)*2,0,1)
+	if progress>=0.5 and not room_transition.arrived:
+		room_transition.arrived=true
+		player.position=Vector2(room_transition.arrival,605)
+		player.velocity=Vector2.ZERO
+		sync_room()
+		checkpoint=player.position.x
+		Progress.set_checkpoint(checkpoint)
+		update_hud()
+	if progress>=1:
+		transitions_completed+=1
+		cancel_room_transition()
+		player.enabled=not busy
+		toast("Welcome to "+last_zone.to_lower()+". Your discoveries came with you.")
+
+func cancel_room_transition() -> void:
+	room_transition.clear()
+	if is_instance_valid(transition_panel):transition_panel.hide()
 
 func _ready() -> void:
 	configure_input()
@@ -70,6 +132,9 @@ func _ready() -> void:
 		var path="res://assets/"+key+".wav"
 		if ResourceLoader.exists(path):
 			sounds[key]=load(path)
+	ambient = CanvasModulate.new()
+	ambient.color = Color("edece1")
+	add_child(ambient)
 	build_ui()
 	apply_settings()
 	show_title()
@@ -134,11 +199,22 @@ func build_ui() -> void:
 	top.size=Vector2(1236,115)
 	top.add_theme_stylebox_override("panel",panel_style("203849"))
 	hud.add_child(top)
-	zone_label=label_at(top,"THE BIG IDEA",Rect2(20,10,210,28),18,"e3c479")
+	zone_label=label_at(top,"THE BIG IDEA",Rect2(20,10,780,28),18,"e3c479")
 	objective=label_at(top,"",Rect2(20,43,780,60),22,"fff5dd")
 	counter=label_at(top,"",Rect2(850,15,180,86),17,"fff5dd")
 	button(top,"Pause",Rect2(1070,28,145,55),show_pause)
-	prompt=label_at(hud,"",Rect2(275,515,730,56),20,"fff5dd")
+	prompt_panel=Panel.new()
+	prompt_panel.position=Vector2(255,638)
+	prompt_panel.size=Vector2(720,54)
+	prompt_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var prompt_style=panel_style("203849")
+	prompt_style.bg_color.a=0.92
+	prompt_style.set_border_width_all(1)
+	prompt_style.shadow_size=3
+	prompt_panel.add_theme_stylebox_override("panel",prompt_style)
+	hud.add_child(prompt_panel)
+	prompt=label_at(prompt_panel,"",Rect2(12,8,696,38),20,"fff5dd")
+	prompt.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	prompt.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	prompt.add_theme_color_override("font_shadow_color",Color("172e3c"))
 	prompt.add_theme_constant_override("shadow_offset_x",2)
@@ -163,6 +239,16 @@ func build_ui() -> void:
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	layer.add_child(overlay)
+	transition_panel = ColorRect.new()
+	transition_panel.color = Color("172f39")
+	transition_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	transition_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	transition_panel.visible = false
+	layer.add_child(transition_panel)
+	transition_title = label_at(transition_panel,"",Rect2(160,295,960,80),36,"f8e9be")
+	transition_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var subtitle = label_at(transition_panel,"A new place. The same big idea.",Rect2(260,391,760,48),20,"c6d7c1")
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 func close_modal() -> void:
 	if is_instance_valid(modal):
@@ -173,7 +259,7 @@ func close_modal() -> void:
 	touches.left=false
 	touches.right=false
 	touch_fingers.clear()
-	player.enabled=mode in ["tutorial","campus"] and flight.is_empty()
+	player.enabled=mode in ["tutorial","campus"] and flight.is_empty() and room_transition.is_empty()
 
 func open_modal(rect: Rect2) -> Panel:
 	close_modal()
@@ -217,6 +303,7 @@ func start_continue() -> void:
 		start_tutorial()
 
 func start_tutorial() -> void:
+	cancel_room_transition()
 	close_modal()
 	mode="tutorial"
 	tutorial_step=0
@@ -239,6 +326,7 @@ func finish_tutorial() -> void:
 	start_campus()
 
 func start_campus() -> void:
+	cancel_room_transition()
 	close_modal()
 	mode="campus"
 	flight.clear()
@@ -253,7 +341,7 @@ func start_campus() -> void:
 	hud.visible=true
 	player.enabled=true
 	idle_time=0
-	camera.position=Vector2(clampf(player.position.x,640,4960),360)
+	sync_room()
 	if int(Progress.data.stage)==0:
 		say(["Bark|Tiny update: the supplies are now enjoying a tour of the garden.","Mark|We'll find them. And build something worth showing.","Bark|That's the spirit! Start with the fair invitation on the hallway board."])
 	update_hud()
@@ -299,6 +387,9 @@ func dismiss_dialogue() -> void:
 		callback.call()
 
 func _input(event: InputEvent) -> void:
+	if not room_transition.is_empty():
+		if event is InputEventScreenTouch:get_viewport().set_input_as_handled()
+		return
 	if event is InputEventScreenTouch:
 		input_touch=true
 		apply_settings()
@@ -331,6 +422,9 @@ func _input(event: InputEvent) -> void:
 		apply_settings()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not room_transition.is_empty():
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("pause"):
 		if busy and mode!="title":
 			if is_instance_valid(dialogue_text):dismiss_dialogue()
@@ -356,14 +450,27 @@ func _physics_process(delta: float) -> void:
 	clock+=delta
 	if mode=="title":
 		return
+	if not room_transition.is_empty():
+		update_room_transition(delta)
+		return
+	if mode=="campus" and not busy and flight.is_empty():
+		check_room_exit()
+		if not room_transition.is_empty(): return
 	player.reduced_motion=bool(Progress.settings.reduced_motion)
 	campus.reduced_motion=player.reduced_motion
 	if not busy and flight.is_empty():
 		player.axis=clampf(Input.get_axis("left","right")+float(touches.right)-float(touches.left),-1,1)
 	else:
 		player.axis=0
-	var target=Vector2(clampf(player.position.x,640,campus.width-640),360)
+	var framing_x: float = player.position.x
+	if not flight.is_empty() and flight.kind=="workshop" and not Progress.settings.reduced_motion:
+		framing_x += minf(float(flight.t)*100.0,380.0)
+	var target=campus.camera_target(framing_x)
 	camera.position=target if Progress.settings.reduced_motion else camera.position.lerp(target,1-exp(-delta*5))
+	var bounds: Vector2 = Vector2(0,1550) if mode=="tutorial" else campus.ROOM_BOUNDS[campus.room]
+	camera.position.x = clampf(camera.position.x,bounds.x+640,bounds.y-640)
+	campus.depth.camera_x = camera.position.x
+	campus.foreground.camera_x = camera.position.x
 	if not busy and flight.is_empty():
 		idle_time+=delta
 		if absf(player.velocity.x)>20:idle_time=0
@@ -383,8 +490,11 @@ func _physics_process(delta: float) -> void:
 			campus.bark.position.x=lerpf(campus.bark.position.x,follow_x,1-exp(-delta*3))
 			campus.bark.position.y=610
 		campus.bark.scale.x=0.26*player.facing
-		if not busy and int(clock*2)%4==0:
-			campus.bark.texture=Art.tex("bark_actions_idle")
+		if not busy and clock>bark_pose_until:
+			var frames = ["bark_actions_walk_stride_a","bark_actions_walk_passing","bark_actions_walk_stride_b","bark_actions_walk_passing"]
+			var walking = absf(campus.bark.position.x-follow_x)>15
+			campus.bark.texture=Art.tex(frames[int(clock*6)%4] if walking else "bark_actions_idle")
+			campus.bark.scale.y=0.26 if Progress.settings.reduced_motion or walking else 0.26*(1+sin(clock*1.8)*0.009)
 	update_flight(delta)
 	toast_time-=delta
 	toast_label.visible=toast_time>0
@@ -411,6 +521,7 @@ func update_tutorial() -> void:
 func collect_nearby() -> void:
 	for item in campus.objects:
 		if item.id.begins_with("leaf_") and item.visible and player.position.distance_to(item.pos)<95:
+			campus.depth.burst(item.pos+Vector2(0,-35))
 			Progress.collect_leaf(item.id)
 			campus.refresh()
 			play_sound("collect")
@@ -440,7 +551,10 @@ func update_hud() -> void:
 		prompt.text=""
 	else:
 		var item=campus.nearest(player.position)
-		prompt.text=("Use: " if touch_root.visible else "[E] ")+String(item.title) if not item.is_empty() else ("Use the arrows to explore · Jump over low obstacles" if touch_root.visible else "A/D or arrows: walk · Space: jump · E: interact · H: hint")
+		prompt.text=("Use: " if touch_root.visible else "[E] ")+String(item.title) if not item.is_empty() else ""
+
+	prompt_panel.visible=not prompt.text.is_empty()
+	prompt_panel.position=Vector2(255,547 if touch_root.visible else 638)
 
 func interact_pressed() -> void:
 	if busy or not flight.is_empty() or not mode in ["tutorial","campus"]:
@@ -512,9 +626,7 @@ func interact_object(id: String) -> void:
 				show_workshop()
 		"shortcut":
 			if Progress.data.plant_restored:
-				player.position=Vector2(4240,605)
-				player.velocity=Vector2.ZERO
-				toast("Bark's garden shortcut! Straight to the workshop.")
+				begin_room_transition(2,4240,"Bark's garden shortcut")
 		"bark_token":
 			Progress.data.bark_token=true
 			Progress.save_game()
@@ -534,6 +646,7 @@ func interact_object(id: String) -> void:
 func request_hint() -> void:
 	if busy or mode=="title" or not flight.is_empty():return
 	campus.bark.texture=Art.tex("bark_actions_hint")
+	bark_pose_until=clock+3
 	if mode=="tutorial":
 		if tutorial_step==4:
 			tutorial_step=5
@@ -670,6 +783,8 @@ func complete_invention() -> void:
 	Progress.advance(7)
 	Progress.set_checkpoint(4520)
 	campus.bark.texture=Art.tex("bark_actions_cheer")
+	bark_pose_until=clock+8
+	campus.depth.burst(Vector2(5050,290))
 	play_sound("success")
 	say(["Mark|It worked!","Bark|Of course. We only had to discover twelve ways it didn't.","Mark|Three.","Bark|I was counting the ones before you arrived.","Mark|A first attempt, a better idea, and a friend. That's what we'll bring to the fair."],show_ending)
 
@@ -699,6 +814,7 @@ func show_pause() -> void:
 	button(p,"Save & title screen",Rect2(30,329,440,60),func():Progress.save_game();show_title())
 
 func restart_checkpoint() -> void:
+	cancel_room_transition()
 	close_modal()
 	flight.clear()
 	prediction.clear_points()
@@ -706,6 +822,7 @@ func restart_checkpoint() -> void:
 	player.velocity=Vector2.ZERO
 	player.position=Vector2(120 if mode=="tutorial" else checkpoint,605)
 	player.enabled=true
+	if mode=="campus":sync_room()
 	toast("A fresh start nearby. Your discoveries are safe.")
 
 func show_settings(back: Callable) -> void:
