@@ -1,6 +1,6 @@
-# Mark & Bark: The Big Idea — Ultimate Polish
+# Mark & Bark: The Big Idea — Leafy Lift
 
-The **Ultimate Polish** edition refines the Fundate with clearer interfaces, smoother key-pose animation, richer landing and pickup feedback, original music, and a more finished presentation: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+The **Leafy Lift** edition makes platforming essential to the invention quest, with taller required routes and a more mischievous Bark. It preserves the Ultimate Polish presentation, which refines the Fundate with clearer interfaces, smoother key-pose animation, richer landing and pickup feedback, original music, and a more finished presentation: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
@@ -10,6 +10,16 @@ The **Ultimate Polish** edition refines the Fundate with clearer interfaces, smo
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
 No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
+
+## Leafy Lift
+
+- **Core platforming:** recover the design on the garden book tower, climb the right-hand leaf ledges for the book base, then climb the classroom Pencil Express for the pencil. Required 220–260 px rises exceed the first jump's approximately 154 px reach.
+- **Bark and Mark:** ear-flapping, plant parachutes, book sledding, and pencil pole-vaulting lead to brief, skippable exchanges. Mark turns Bark's terrible suggestions into useful plans. Rotating jump banter adds personality without interrupting movement.
+- **Guidance and recovery:** updated objectives, route labels and specific hints; land beside required pickups; safe floors, restored jumps, unchanged checkpoints and no lost supplies. Existing saves retain collected items.
+
+See [route and verification notes](docs/LEAFY_LIFT.md).
+
+![Bark's leafy lift reaches the design tower](docs/previews/leafy_lift.png)
 
 ## Ultimate Polish
 
@@ -33,7 +43,7 @@ Bark's ray shrinks both friends in a **15-second, skippable opening**. Ordinary 
 
 Press **Space/W/Up again in midair**, or tap **Jump** again, for Bark's leafy lift. Mark gets one air jump, with no precise timing required; landing restores both jumps. Walking off a ledge still leaves an air rescue. Coyote time and landing input buffering are retained. A jump meter, soft wind ring, higher second-jump sound and Bark's cheer make the lift clear. The tutorial teaches it separately from the first jump; skipping unlocks it immediately.
 
-Climb the optional **Book-Spine Skyway** in the hallway, **Leaf-Top Lookout** in the garden, and **Pencil Express** in the workshop. Three leaf tokens, the garden notebook and Bark token reward the higher routes. Ground paths and required supplies stay accessible. The camera rises for high jumps, while room exits still preserve progress and play their named transitions.
+Climb the optional **Book-Spine Skyway** in the hallway and the required garden and **Pencil Express** routes. The design notebook, book base, and pencil guide now require climbing. Taller steps need Bark's leafy double jump; land beside supplies before using them. Six leaves, two doodles and a Bark token remain optional. The ground below provides forgiving recovery. The camera rises for high jumps, while room exits still preserve progress and play their named transitions.
 
 The title's **Start adventure**, **New adventure**, and ending's **Play again** use the ray introduction. **Watch the campus film** remains a separate optional tour. Reduced motion replaces the shrink animation with a static size reveal and disables wind rings; every essential action still works. Existing save paths and version-1 saves are preserved.
 
@@ -125,7 +135,7 @@ This Ultimate Polish release was verified with Godot **4.4.1** on Linux, headles
 godot --headless --fixed-fps 60 --path . res://tests/playthrough.tscn
 ```
 
-The updated suite contains 141 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
+The updated suite contains 153 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
 
 This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use timed key poses, short crossfades and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. The updated chapter has been reviewed using native OpenGL screenshots of the title, tutorial, hallway, garden, workshop, room transition and touch HUD. Automated touch events were verified; actual tablets and phones remain untested.
 

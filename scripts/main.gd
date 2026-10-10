@@ -2,7 +2,7 @@ extends Node2D
 
 const PlayerScript = preload("res://scripts/player.gd")
 const CampusScript = preload("res://scripts/campus.gd")
-const GOALS = ["Read the Big Ideas Fair invitation in the school hallway.","Find Mark's scattered design notebook in the garden.","Find the wandering plant and return it to the stump display.","Collect the book base and pencil guide for your invention.","Bring your supplies to the classroom invention desk.","Assemble your paper-plane machine at the desk.","Test your invention and deliver the invitation to the fair board.","Big idea complete! Explore the campus and find its secrets."]
+const GOALS = ["Read the Big Ideas Fair invitation in the school hallway.","Climb the garden books with Bark's double jump to recover your design.","Find the wandering plant and return it to the stump display.","Climb for the garden book base and the classroom pencil guide.","Bring your supplies to the classroom invention desk.","Assemble your paper-plane machine at the desk.","Test your invention and deliver the invitation to the fair board.","Big idea complete! Explore the campus and find its secrets."]
 const TUTORIAL_GOALS = ["Walk right to meet Bark.","Jump over the low log. You can try as often as you like.","Jump, then press Jump again in the air for Bark's leafy lift!", "Walk to your notebook and interact with it.","Collect the bright leaf just ahead.","Ask Bark for a hint.","Interact with the practice plane for a gentle launch.","Watch your paper plane reach the target!"]
 var campus: Node2D
 var player: CharacterBody2D
@@ -764,12 +764,15 @@ func interact_object(id: String) -> void:
 		else:
 			toast("Let's finish the current garden lesson first.")
 		return
+	if id in ["notebook","books","pencil"] and not player.is_on_floor():
+		toast("Land beside the supply, then use it. Bark will help with your second jump!")
+		return
 	var stage=int(Progress.data.stage)
 	match id:
 		"invitation":
 			if stage==0:
 				Progress.advance(1)
-				say(["Mark|Big Ideas Fair: bring an invention, a question, and a friend.","Bark|Three things! I've brought seventeen questions.\nLet's recover your design from the garden."])
+				say(["Mark|Big Ideas Fair: bring an invention, a question, and a friend.","Bark|I launched your notebook onto the garden book tower. Try flapping your ears!","Mark|Or we could jump, then use your leafy lift.","Bark|Fine. The sensible ridiculous plan."])
 			else:say(["Bark|The fair welcomes first attempts, second attempts, and friends. Especially tree friends."])
 		"notebook":
 			if stage<1:
@@ -779,7 +782,7 @@ func interact_object(id: String) -> void:
 				Progress.advance(2)
 				player.show_pose("young_actions_notebook",1)
 				campus.refresh()
-				say(["Mark|A book base, a pencil guide, and a puff of wind. A paper-plane delivery machine!","Bark|A very scientific puff.\nAlso, I may have borrowed the garden's plant. Let's put it back."])
+				say(["Mark|A book base, a pencil guide, and a puff of wind. A paper-plane delivery machine!","Bark|I used the plant as a parachute. It refused to open.","Mark|Plants need a display, not flying lessons. Let's bring it back.","Bark|Agreed. Next time: a bigger plant."])
 		"plant":
 			if stage<2:toast("Let's recover the design notebook first.")
 			else:
@@ -793,7 +796,7 @@ func interact_object(id: String) -> void:
 				Progress.advance(3)
 				campus.refresh()
 				play_sound("success")
-				say(["Mark|There. Back where it belongs.","Bark|A little helping makes a big difference!\nThe garden shortcut is open. Find the books on the low branch route and the pencil near the workshop. The leaf-tops hide extra surprises!"])
+				say(["Mark|There. Back where it belongs.","Bark|Now bounce up the right-hand branches for the book base. The pencil is on the classroom skyway!","Mark|No throwing this time. Jump, leafy lift, land, repeat.","Bark|But throwing was my entire transport policy! The shortcut is open when you need it."])
 			else:toast("This display is waiting for its potted plant. Find it farther right in the garden.")
 		"books","pencil":
 			if stage<3:toast("Help restore the garden display first.")
@@ -803,7 +806,10 @@ func interact_object(id: String) -> void:
 				if Progress.data.books and Progress.data.pencil:Progress.advance(4)
 				Progress.save_game()
 				campus.refresh()
-				toast("Book base collected!" if id=="books" else "Pencil guide collected!")
+				if id=="books":
+					say(["Bark|Book base secured! Slide down on it like a sled?","Mark|We need it for the machine. We can drop safely and take the garden shortcut.","Bark|Responsible sled ownership. Fascinating."])
+				else:
+					say(["Bark|The pencil! We could pole-vault into the fair!","Mark|Or use it as a guide so our plane flies straight.","Bark|One tiny adventure at a time. Meet you at the desk!"])
 		"workshop":
 			if stage<4:
 				say(["Bark|Our workshop is ready when you are.\nRecover the notebook, return the plant, and collect the books and pencil."])
@@ -839,7 +845,7 @@ func request_hint() -> void:
 			say(["Bark|Good inventors ask questions!\nWalk to the paper plane on the right and interact to launch it."])
 		else:say(["Bark|"+TUTORIAL_GOALS[mini(tutorial_step,7)]+"\nThere is no hurry. We can try again."])
 	else:
-		var clues=["The hallway noticeboard is between the lockers and the reading nook.","The notebook is at the garden entrance, just right of the school.","Pick up the plant farther right in the garden, then return it to the stump display on the left.","Books are on the lowest right-hand garden branch. Jump up from below! The pencil is just beyond it. Press Jump again in the air to reach the optional leaf-tops.","The invention desk is in the classroom on the far right. The garden shortcut can help.","At the desk, add the books, then the pencil, then load your plane.","Try the middle angle and medium power. I'll show you the flight path at the workshop.","Six leaves, two funny notebook pages, and one secret Bark token are waiting to be found!"]
+		var clues=["The hallway noticeboard is between the lockers and the reading nook.","Start on the low log at the garden entrance. Jump toward the book ledge above it, then press Jump again near the top of your first jump. Land on the books and use the notebook.","Pick up the plant farther right in the garden, then return it to the stump display on the left.","For books: climb the rightmost low garden log, double-jump left to the leaf ledge, then hop right to the high book shelf. For the pencil: enter the classroom, climb the low book ledge, double-jump to the pencil platform, then hop right. Land before using each item.","The invention desk is in the classroom on the far right. The garden shortcut can help.","At the desk, add the books, then the pencil, then load your plane.","Try the middle angle and medium power. I'll show you the flight path at the workshop.","Six leaves, two funny notebook pages, and one secret Bark token are waiting to be found!"]
 		show_prediction=true
 		say(["Bark|"+clues[clampi(int(Progress.data.stage),0,7)]])
 
@@ -1143,7 +1149,8 @@ func on_player_jump(is_second: bool) -> void:
 		bark_pose_until=clock+0.9
 		if clock-last_air_cheer>7 and mode=="campus":
 			last_air_cheer=clock
-			toast("Bark: Leafy lift! Even tiny inventors can reach big ideas.")
+			var quips=["Bark: Aim for the clouds! Mark: The next platform will do.","Bark: Try landing upside down! Mark: Feet first, please.","Bark: I call this leaf-powered nonsense. Mark: Useful nonsense!","Bark: Can we jump over tomorrow? Mark: One ledge at a time."]
+			toast(quips[(player.double_jump_count-1)%quips.size()])
 
 
 func on_player_landed(at: Vector2, strength: float) -> void:

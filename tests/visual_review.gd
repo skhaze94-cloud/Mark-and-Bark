@@ -47,6 +47,9 @@ func run() -> void:
 	game.sync_room()
 	game.toast_time=0
 	await capture("polish_hallway")
+	game.player.position=Vector2(2150,290)
+	game.sync_room()
+	await capture("leafy_design_tower")
 	Progress.data.stage=3
 	Progress.data.notebook=true
 	Progress.data.plant=true
@@ -70,6 +73,12 @@ func run() -> void:
 	await capture("polish_transition")
 	game.cancel_room_transition()
 	game.player.enabled=true
+	game.player.position=Vector2(3290,190)
+	game.sync_room()
+	await capture("leafy_book_shelf")
+	game.player.position=Vector2(5310,260)
+	game.sync_room()
+	await capture("leafy_pencil_route")
 	Progress.data.stage=6
 	Progress.data.books=true
 	Progress.data.pencil=true

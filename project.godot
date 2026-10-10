@@ -2,10 +2,10 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="Ultimate Polish"
+config/version="Leafy Lift"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/description="The Fundate: a shrinking-ray story, leafy double jumps, giant books and playful campus skyways."
+config/description="Leafy Lift: essential double-jump platforming, high invention supplies and mischievous Bark banter."
 
 [autoload]
 Progress="*res://scripts/progress.gd"

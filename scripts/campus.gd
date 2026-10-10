@@ -85,29 +85,32 @@ func build(is_tutorial: bool) -> void:
 		add_child(bark)
 	else:
 		add_object("invitation","school_props_noticeboard",Vector2(810,600),"Big Ideas Fair invitation",215)
-		add_object("notebook","collectibles_notebook",Vector2(1910,600),"Mark's scattered design",110)
+		add_object("notebook","collectibles_notebook",Vector2(2150,290),"Mark's scattered design",110)
 		add_object("plant_bed","school_props_stump",Vector2(2320,610),"Garden display · return the plant",180)
 		add_object("plant","school_props_plant",Vector2(2840,610),"The wandering plant",145)
-		for rect in [Rect2(1990,550,180,20),Rect2(2225,490,175,20),Rect2(2470,430,190,20),Rect2(2730,370,190,20),Rect2(2980,430,190,20),Rect2(3220,490,180,20)]:
+		for rect in [Rect2(1990,550,180,20),Rect2(2225,490,175,20),Rect2(2470,430,190,20),Rect2(2730,430,190,20),Rect2(2980,430,190,20),Rect2(3220,490,180,20)]:
 			add_platform(rect,"school_props_log")
-		add_object("books","collectibles_books",Vector2(3290,490),"Book base",95)
-		add_object("pencil","collectibles_pencil",Vector2(3500,600),"Pencil guide",110)
+		add_object("books","collectibles_books",Vector2(3290,190),"Book base",95)
+		add_object("pencil","collectibles_pencil",Vector2(5310,260),"Pencil guide",110)
 		add_object("doodle_1","collectibles_notebook",Vector2(2500,255),"Notebook discovery",70)
 		add_object("doodle_2","collectibles_notebook",Vector2(5200,600),"Notebook discovery",70)
 		add_object("bark_token","collectibles_bark_token",Vector2(2830,240),"Bark's secret token",75)
-		# Three optional sky routes; the original required-item route stays intact.
+		# Leafy-lift routes carry essential supplies as well as optional discoveries.
+		add_platform(Rect2(2060,290,190,20),"fun_book")
+		add_platform(Rect2(3200,190,210,20),"fun_book")
 		for rect in [Rect2(960,520,205,20),Rect2(1210,405,195,20),Rect2(1450,285,195,20)]:
 			add_platform(rect,"fun_book")
-		for rect in [Rect2(2400,255,200,20),Rect2(2740,250,205,20),Rect2(3035,285,210,20)]:
+		for rect in [Rect2(2400,255,200,20),Rect2(2740,250,205,20),Rect2(3035,240,210,20)]:
 			add_platform(rect,"fun_leaf")
-		for rect in [Rect2(4630,470,205,20),Rect2(4870,350,200,20),Rect2(5180,260,230,20)]:
-			add_platform(rect,"fun_pencil" if rect.position.y==350 else "fun_book")
+		for rect in [Rect2(4630,470,205,20),Rect2(4870,250,220,20),Rect2(5180,260,230,20)]:
+			add_platform(rect,"fun_pencil" if rect.position.x==4870 else "fun_book")
 		world_label("BOOK-SPINE SKYWAY",Vector2(1160,255),16)
-		world_label("THE LEAF-TOP LOOKOUT",Vector2(2390,310),16)
-		world_label("THE PENCIL EXPRESS",Vector2(4810,395),16)
+		world_label("DESIGN: JUMP + LEAFY LIFT",Vector2(1900,410),16)
+		world_label("BOOK BASE: UP IN THE BRANCHES",Vector2(3120,330),16)
+		world_label("THE PENCIL EXPRESS",Vector2(4810,410),16)
 		decorate("collectibles_books",Vector2(1160,610),230)
 		decorate("collectibles_pencil",Vector2(5220,610),270)
-		var leaf_positions = [Vector2(1545,270),Vector2(2090,525),Vector2(2390,600),Vector2(3135,270),Vector2(3850,540),Vector2(5310,245)]
+		var leaf_positions = [Vector2(1545,270),Vector2(2090,525),Vector2(2390,600),Vector2(3135,225),Vector2(3850,540),Vector2(5310,245)]
 		for i in range(6):
 			add_object("leaf_"+str(i+1),"collectibles_leaf_token",leaf_positions[i],"Leaf discovery",55)
 		add_object("shortcut","ui_parts_wood_button",Vector2(3630,610),"Garden shortcut to workshop",120)
@@ -257,7 +260,8 @@ func nearest(pos: Vector2, range_px: float = 150) -> Dictionary:
 		if not item.visible or item.id.begins_with("leaf_") or item.id in ["tutorial_target","fair_target","tutorial_leaf"]:
 			continue
 		var d = absf(item.pos.x-pos.x)
-		if d<best and absf(item.pos.y-pos.y)<145:
+		var reach_y = 70 if item.id in ["notebook","books","pencil"] else 145
+		if d<best and absf(item.pos.y-pos.y)<reach_y:
 			found=item
 			best=d
 	return found
