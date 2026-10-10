@@ -1,11 +1,11 @@
 # Mark & Bark: The Big Idea
 
-A playable Godot 4.4.1 project, updated with a cinematic 2.5D edition and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+A playable Godot 4.7.2-verified project, updated with a cinematic 2.5D edition and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
 1. Use Windows **Extract All** (or your normal archive utility) to extract the project ZIP into a fresh writable folder. Avoid extracting over an older running project.
-2. Open Godot **4.4.1 or a newer compatible Godot 4 release** (the standard editor; no .NET requirement).
+2. Open Godot **4.7.2** (the tested version) (the standard editor; no .NET requirement).
 3. In the Project Manager, choose **Import**, select `project.godot`, and open it.
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
@@ -78,13 +78,15 @@ Quest progress, discoveries, completed tutorial, settings and safe ground checkp
 
 ## Verification
 
-Tested with Godot 4.4.1 on Linux. Run the regression suite using:
+The Godot 4.7.2 startup fix renames the custom ellipse painter in `scripts/depth_layer.gd` to avoid shadowing the engine's built-in `draw_ellipse()` method. The [automated verification workflow](.github/workflows/verify-godot.yml) checks this issue and packages the **complete Godot project ZIP** (including assets), downloadable from the successful workflow run's Artifacts section. This is a Godot source project, not a Windows executable.
+
+Verified with Godot **4.7.2** on GitHub Actions Linux, including asset import, scene startup, and the complete playthrough. Run the regression suite using:
 
 ```sh
 godot --headless --fixed-fps 60 --path . res://tests/playthrough.tscn
 ```
 
-The updated suite contains 65 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
+The updated suite contains 76 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
 
 This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use deliberate low-frequency steps and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. The updated chapter has been reviewed using native OpenGL screenshots of the title, tutorial, hallway, garden, workshop, room transition and touch HUD. Automated touch events were verified; actual tablets and phones remain untested.
 
