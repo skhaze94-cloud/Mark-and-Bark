@@ -19,6 +19,7 @@ var soundscape
 var spring_age=9.0
 var spring_anchor=Vector2.ZERO
 var spring_contacts=0
+var spring_facing=1
 var dialogue=[]
 var page=0
 var dialogue_portrait: TextureRect
@@ -50,7 +51,7 @@ func _ready():
 		for key in {"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"interact":[KEY_E,KEY_ENTER],"hint":[KEY_H],"pause":[KEY_ESCAPE],"notebook":[KEY_N],"retry":[KEY_R]}[action]:
 			var e=InputEventKey.new();e.physical_keycode=key;InputMap.action_add_event(action,e)
 	campus=load("res://scripts/mega_level.gd").new();add_child(campus);campus.build(0)
-	player=load("res://scripts/player.gd").new();add_child(player);player.right_bound=1600;player.position=Vector2(510,645);player.jumped.connect(jumped);player.landed.connect(landed)
+	player=load("res://scripts/player.gd").new();add_child(player);player.right_bound=1600;player.position=Vector2(510,645);player.jumped.connect(jumped);player.landed.connect(landed);player.movement_finished.connect(update_bark_jump)
 	camera=Camera2D.new();camera.position=Vector2(800,330);add_child(camera);camera.make_current()
 	var canvas=CanvasLayer.new();canvas.layer=10;add_child(canvas)
 	hud=Control.new();hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud.mouse_filter=Control.MOUSE_FILTER_IGNORE;canvas.add_child(hud)
@@ -177,8 +178,8 @@ func jump():
 func jumped(second):
 	play_sound("jump",1.15 if second else .95)
 	if second:
-		spring_age=0;spring_anchor=player.position;spring_contacts+=1
-		campus.bark.position=player.position+Vector2(0,54);campus.bark.texture=Art.tex("bark_actions_hop");player.spring_contact=true;player.show_pose("young_actions_crouch",.09)
+		spring_age=0;spring_anchor=campus.bark.position;spring_facing=player.facing;spring_contacts+=1
+		campus.bark.texture=Art.tex("bark_actions_hop");player.spring_contact=true;player.show_pose("young_actions_crouch",.09)
 		if spring_contacts%4==1:toast(["Bark: Feet on my leaves! Mark: Spring, please—not sneeze.","Bark: Try three jumps! Mark: We get two. Make this one count.","Bark: Aim for next Tuesday! Mark: The shelf will do."][int(spring_contacts/4)%3])
 func landed(at,strength):
 	if absf(at.y-650)<6:last_shelf=0
@@ -252,7 +253,7 @@ func retry():
 	if mode!="campus" or (busy and is_instance_valid(dialogue_label)):return
 	close();var cp=int(Mega.runs[Mega.current].checkpoint);last_shelf=maxi(0,cp+1)
 	player.position=campus.platforms[cp].get_center()+Vector2(0,-12) if cp>=0 else Vector2(510,645)
-	player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;campus.bark.position=player.position+Vector2(-80,0);camera.position=Vector2(clampf(player.position.x,640,960),player.position.y-150)
+	player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;campus.bark.rotation=0;campus.bark.position=player.position+Vector2(-80,0);camera.position=Vector2(clampf(player.position.x,640,960),player.position.y-150)
 	toast("Back at your checkpoint. Every discovery is safe.")
 func pause_game():
 	if mode!="campus" or busy:return
@@ -305,18 +306,9 @@ func _physics_process(delta):
 	player.axis=0 if busy else clampf(Input.get_axis("left","right")+float("right" in fingers.values())-float("left" in fingers.values()),-1,1)
 	if busy:
 		notice_until+=delta;hint_until+=delta;notice.hide();notice_back.hide();context.hide();context_back.hide();return
-	context.show();player.spring_contact=spring_age<.10
+	context.show();player.spring_contact=spring_age<.22
 	var target=Vector2(clampf(player.position.x+player.velocity.x*.1,640,960),clampf(player.position.y-105,campus.top-400,450))
 	camera.position=target if player.reduced_motion else camera.position.lerp(target,1-exp(-delta*9))
-	spring_age+=delta
-	if spring_age<.10:
-		campus.bark.position=player.position+Vector2(0,54);campus.bark.scale=Vector2(.21*player.facing,.18) if not player.reduced_motion else Vector2.ONE*.2
-	elif spring_age<.45:
-		if spring_age<.13:player.show_pose("young_actions_jump",.3)
-		campus.bark.position=spring_anchor+Vector2(0,66-(sin((spring_age-.1)/.35*PI)*18 if not player.reduced_motion else 0));campus.bark.scale=Vector2(.19*player.facing,.22) if not player.reduced_motion else Vector2.ONE*.2
-	else:
-		var goal=player.position+Vector2(-75*player.facing,0);goal.y=campus.support_y(goal.x,player.position.y) if player.is_on_floor() else player.position.y
-		campus.bark.position=campus.bark.position.lerp(goal,1-exp(-delta*8));campus.bark.scale=Vector2(.2*player.facing,.2);campus.bark.texture=Art.tex("bark_actions_walk_stride_a" if absf(player.velocity.x)>30 else "bark_actions_idle")
 	var r=Mega.runs[Mega.current]
 	for p in campus.pickups:
 		if p.sprite.visible and player.position.distance_to(p.pos+Vector2(0,35))<80:
@@ -329,6 +321,49 @@ func _physics_process(delta):
 	notice_back.visible=notice.visible;notice_back.position.y=notice.position.y-9
 	context_back.visible=not context.text.is_empty()
 	update_hud()
+# Runs after Mark's move_and_slide: Bark never trails a physics tick behind.
+# Visual anticipation and recovery do not delay or alter the jump impulse.
+func update_bark_jump(delta: float) -> void:
+	if mode!="campus" or busy:return
+	var bark=campus.bark
+	var age_before=spring_age
+	spring_age+=delta
+	var goal: Vector2
+	var desired_scale=Vector2(.2*player.facing,.2)
+	var response=9.0
+	if spring_age<.10:
+		# Bark is already moving beneath Mark during the first jump. Any
+		# remaining gap closes smoothly, including immediate rescue springs.
+		goal=player.position+Vector2(0,54)+player.velocity/32.0
+		response=32.0
+		desired_scale=Vector2(.21*spring_facing,.18)
+		spring_anchor=bark.position
+	elif spring_age<.45:
+		if age_before<.10:
+			spring_anchor=bark.position
+			player.show_pose("young_actions_jump",.23)
+		var release=clampf((spring_age-.10)/.35,0,1)
+		# Depart from the actual contact position, without a phase-boundary snap.
+		goal=spring_anchor+Vector2(player.velocity.x*.10*release,28*release*release)
+		response=18.0
+		desired_scale=Vector2(.19*spring_facing,.22)
+	else:
+		var ready=not player.is_on_floor() and player.jumps_used<2
+		goal=player.position+Vector2(0,60)+player.velocity/22.0 if ready else player.position+Vector2(-75*player.facing,0)
+		if player.is_on_floor():goal.y=campus.support_y(goal.x,player.position.y)
+		response=22.0 if ready else 9.0
+		bark.texture=Art.tex("bark_actions_hop" if ready else ("bark_actions_walk_stride_a" if absf(player.velocity.x)>30 else "bark_actions_idle"))
+	bark.position=bark.position.lerp(goal,1-exp(-delta*response))
+	if player.reduced_motion:
+		bark.scale=Vector2.ONE*.2 if spring_age<.45 else Vector2(.2*player.facing,.2)
+		bark.rotation=0
+	else:
+		# Keep facing fixed through contact; ease squash, release and settling.
+		if signf(bark.scale.x)!=signf(desired_scale.x):bark.scale.x=-bark.scale.x
+		bark.scale=bark.scale.lerp(desired_scale,1-exp(-delta*20))
+		var lean=clampf(player.velocity.x/10000.0,-.026,.026) if spring_age<.45 else 0.0
+		bark.rotation=lerpf(bark.rotation,lean,1-exp(-delta*15))
+
 func _input(e):
 	if e is InputEventScreenTouch:
 		touch_mode=true

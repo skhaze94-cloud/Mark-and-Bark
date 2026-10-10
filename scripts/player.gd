@@ -5,6 +5,8 @@ const GRAVITY = 1250.0
 const JUMP = -620.0
 const AIR_JUMP = -590.0
 signal jumped(is_second: bool)
+# Companions update after movement, keeping contact aligned with the feet.
+signal movement_finished(delta: float)
 signal landed(at: Vector2, strength: float)
 var spring_contact: bool = false
 var suspended: bool = false
@@ -156,6 +158,7 @@ func _physics_process(delta: float) -> void:
 	ghost.scale=sprite.scale
 	ghost.rotation=sprite.rotation
 	ghost.position=sprite.position
+	movement_finished.emit(delta)
 
 func _draw() -> void:
 	var support: float=get_parent().campus.support_y(position.x,position.y)

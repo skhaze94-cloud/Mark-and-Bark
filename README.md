@@ -1,4 +1,4 @@
-# Mark & Bark — Ultimate Polish 2.0
+# Mark & Bark — Smooth Spring 2.0.1
 
 **Ultimate Polish 2.0** refines the three-level vertical adventure with clearer progress, illustrated level cards, smoother teamwork, richer lighting and safer navigation. Platforming remains the main game. Bark accidentally presses the shrinking ray. Mark and Bark must climb three giant school and home environments, recover a design, power cell and lens, and repair the ray together.
 
@@ -10,6 +10,14 @@
 4. Let the bundled textures and font import, then press **F5**.
 
 This is a ready-to-import, editable Godot project. Godot is required; the ZIP is not a standalone Windows/macOS executable. No paid plugins, .NET, build tools or additional asset downloads are needed.
+
+## New in 2.0.1
+
+- Bark anticipates the first jump instead of teleporting at launch.
+- Foot-aligned contact, eased squash and release, and a smooth return beside Mark.
+- Immediate second-jump response and the same platform reach, with pause and reduced-motion support.
+
+See [the jump review](docs/SMOOTH_SPRING.md).
 
 ## New in 2.0
 
@@ -49,7 +57,7 @@ The story never requires optional collectibles. There are no enemies, damage pen
 | Return to checkpoint | R | Checkpoint |
 | Pause | Escape | Pause |
 
-**Jump once, then again as Mark rises near the top of his first jump.** Bark appears under his feet, braces his leafy head and springs Mark upward. Mark crouches on contact and releases into the supplied jump pose. Landing recharges both jumps. Walking off a ledge still leaves a rescue spring. You cannot perform a third airborne jump.
+**Jump once, then again as Mark rises near the top of his first jump.** Bark moves beneath Mark during the first jump, braces his leafy head and springs Mark upward. Mark crouches on contact and releases into the supplied jump pose. Landing recharges both jumps. Walking off a ledge still leaves a rescue spring. You cannot perform a third airborne jump.
 
 Checkpoint bulbs mark every second main shelf. Landing there saves the highest checkpoint. **R / Checkpoint** returns you there with every item intact. The HUD shows your current shelf and climbing height. Completed checkpoint bulbs become check marks. Bark's hint explains the current objective and briefly marks the next shelf. Pause freezes movement, and losing window focus pauses the climb and releases held movement.
 
