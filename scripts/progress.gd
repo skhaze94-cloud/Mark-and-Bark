@@ -2,7 +2,7 @@ extends Node
 
 const SAVE_PATH = "user://big_idea_save.json"
 var data: Dictionary = {}
-var settings: Dictionary = {"volume":0.45, "reduced_motion":false, "touch":false}
+var settings: Dictionary = {"volume":0.45, "reduced_motion":false, "touch":false, "music":true}
 var tutorial_done: bool = false
 var save_enabled: bool = true
 
@@ -51,6 +51,7 @@ func load_save() -> void:
 		settings.volume = clampf(float(saved_settings.get("volume",0.45)),0.0,1.0)
 		settings.reduced_motion = bool(saved_settings.get("reduced_motion",false))
 		settings.touch = bool(saved_settings.get("touch",false))
+		settings.music = bool(saved_settings.get("music",true))
 
 func collect_leaf(id: String) -> bool:
 	if id in data.leaves:

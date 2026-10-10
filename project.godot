@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="Fundate"
+config/version="Ultimate Polish"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/description="The Fundate: a shrinking-ray story, leafy double jumps, giant books and playful campus skyways."

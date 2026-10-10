@@ -1,6 +1,6 @@
-# Mark & Bark: The Big Idea — Fundate
+# Mark & Bark: The Big Idea — Ultimate Polish
 
-The **Fundate** adds a shrinking-ray opening, forgiving double jumps, and taller miniature-campus routes to this playable Godot 4 project: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+The **Ultimate Polish** edition refines the Fundate with clearer interfaces, smoother key-pose animation, richer landing and pickup feedback, original music, and a more finished presentation: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
@@ -10,6 +10,22 @@ The **Fundate** adds a shrinking-ray opening, forgiving double jumps, and taller
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
 No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
+
+## Ultimate Polish
+
+- **Presentation:** a newly staged title with both friends, balanced world glow and vignette, detailed book bindings, pencil grain and leaf veins, and an ending framed by gentle paper-leaf confetti.
+- **Movement:** foot-aligned 65 ms pose crossfades, supplied run poses at full speed, small jump stretch, stable landing edges and a readable two-jump meter. Reduced motion keeps one fully opaque pose and disables extra movement effects.
+- **Clarity:** an objective pictogram, numbered quest/lesson progress, completed-step check marks, readable toast cards and dialogue page counts. Touch and keyboard prompts follow the last input used.
+- **Interaction:** transient pickup rewards, stable object brackets, assembly component cards, and a short golden plane trail. World props, pickups, collision tops and the live board stay anchored.
+- **Menus:** gameplay buttons no longer take keyboard jump focus; menus retain keyboard focus navigation. A dim backdrop isolates dialogue and workshop panels. Pause freezes Mark even in midair, then resumes the same jump. Settings have high-contrast navy text, clear On/Off labels and custom cream/navy toggle icons.
+- **Sound:** original seamless plucked music and gentle wind/bird ambience. Master volume controls all audio; music has its own saved toggle. Gameplay modals pause the loops, garden ambience fades between rooms, and audio drains cleanly when the window closes.
+
+The complete shrinking-ray introduction, double jump, three optional high routes, seven-step invention story, room transitions and version-1 save compatibility remain intact. No external downloads or paid plugins are required.
+
+See [Ultimate Polish notes](docs/ULTIMATE_POLISH.md) and `docs/polish_verification.json` for checks and limits. Audio is bundled; `docs/generate_soundscape.py` is an optional reproduction script, not a play-time dependency.
+
+![Polished campus interface](docs/previews/polish_campus.png)
+![Big Idea Complete](docs/previews/polish_ending.png)
 
 ## The Fundate
 
@@ -66,7 +82,7 @@ See [visual overhaul notes](docs/VISUAL_OVERHAUL.md) for implementation details,
 
 Enable **Always show touch controls** in Settings for touchscreen testing. Movement and jumping support separate fingers. Dragging out of a movement control releases it. Native screen-touch events are handled explicitly rather than relying only on first-finger mouse emulation.
 
-Settings include sound volume and reduced motion. Every sound has a visible counterpart. Story dialogue can be skipped, the tutorial can be skipped or replayed, and mistakes do not remove inventory or discoveries.
+Settings include master sound volume, an independent background-music toggle, and reduced motion. Every sound has a visible counterpart. Story dialogue can be skipped, the tutorial can be skipped or replayed, and mistakes do not remove inventory or discoveries.
 
 ## Adventure
 
@@ -103,15 +119,15 @@ Quest progress, discoveries, completed tutorial, settings and safe ground checkp
 
 The Godot 4.7.2 startup fix renames the custom ellipse painter in `scripts/depth_layer.gd` to avoid shadowing the engine's built-in `draw_ellipse()` method. The [automated verification workflow](.github/workflows/verify-godot.yml) checks this issue and packages the **complete Godot project ZIP** (including assets), downloadable from the successful workflow run's Artifacts section. This is a Godot source project, not a Windows executable.
 
-Verified with Godot **4.7.2** on GitHub Actions Linux, including asset import, scene startup, and the complete playthrough. Run the regression suite using:
+This Ultimate Polish release was verified with Godot **4.4.1** on Linux, headlessly and with native OpenGL Compatibility rendering. The previous Godot 4.7 loading fix is retained; this release has not been separately tested in Godot 4.7. Run the regression suite using:
 
 ```sh
 godot --headless --fixed-fps 60 --path . res://tests/playthrough.tscn
 ```
 
-The updated suite contains 76 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
+The updated suite contains 141 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
 
-This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use deliberate low-frequency steps and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. The updated chapter has been reviewed using native OpenGL screenshots of the title, tutorial, hallway, garden, workshop, room transition and touch HUD. Automated touch events were verified; actual tablets and phones remain untested.
+This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use timed key poses, short crossfades and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. The updated chapter has been reviewed using native OpenGL screenshots of the title, tutorial, hallway, garden, workshop, room transition and touch HUD. Automated touch events were verified; actual tablets and phones remain untested.
 
 To recreate the visual fixtures on a machine with a display:
 
@@ -125,4 +141,4 @@ The fixture scene creates screenshots under `test_output/` and never writes a pl
 
 Mark and Bark artwork comes from the supplied detailed asset pack. Original pack metadata and art notes are retained in `docs/source_asset_manifest.json` and `docs/ART_ASSETS.md`. Character foot anchors use (256, 612) on the supplied 512×640 canvases. Surface tiles use mirrored repeat; all walkways and collision shapes are separate from the flattened backdrops.
 
-Short audio cues are original generated sine-wave tones. `assets/readable.ttf` is DejaVu Sans; its license notice is included. No rights to third-party logos, franchises, or unrelated assets are implied. The repository contains the supplied creative material and the implementation; no new license is imposed on the owner's game or artwork.
+Short audio cues and the new looped music/garden soundscape are original synthesized recordings. The bundled WAV files need no external service; `docs/generate_soundscape.py` documents the optional regeneration process. `assets/readable.ttf` is DejaVu Sans; its license notice is included. No rights to third-party logos, franchises, or unrelated assets are implied. The repository contains the supplied creative material and the implementation; no new license is imposed on the owner's game or artwork.

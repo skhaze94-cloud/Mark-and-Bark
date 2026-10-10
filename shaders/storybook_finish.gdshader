@@ -1,8 +1,8 @@
 shader_type canvas_item;
 render_mode unshaded;
 uniform sampler2D world_texture : hint_screen_texture, repeat_disable, filter_linear;
-uniform float glow_strength : hint_range(0.0, 0.15) = 0.065;
-uniform float vignette_strength : hint_range(0.0, 0.3) = 0.13;
+uniform float glow_strength : hint_range(0.0, 0.15) = 0.045;
+uniform float vignette_strength : hint_range(0.0, 0.3) = 0.09;
 void fragment() {
  vec2 uv = SCREEN_UV;
  vec3 source = texture(world_texture, uv).rgb;

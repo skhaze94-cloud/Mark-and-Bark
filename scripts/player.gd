@@ -5,6 +5,12 @@ const GRAVITY = 1250.0
 const JUMP = -620.0
 const AIR_JUMP = -590.0
 signal jumped(is_second: bool)
+signal landed(at: Vector2, strength: float)
+var suspended: bool = false
+var ghost: Sprite2D
+var last_texture: Texture2D
+var blend_age: float = 1.0
+var jump_stretch: float = 0.0
 var visual_scale: float = 0.24
 var jumps_used: int = 0
 var double_jump_count: int = 0
@@ -35,6 +41,11 @@ func _ready() -> void:
 	sprite = Art.character("young_actions_idle")
 	sprite.scale = Vector2.ONE * visual_scale
 	add_child(sprite)
+	ghost=Art.character("young_actions_idle")
+	ghost.z_index=-1
+	ghost.hide()
+	add_child(ghost)
+	last_texture=sprite.texture
 	z_index = 3
 	collision_layer = 2
 	collision_mask = 1
@@ -47,7 +58,13 @@ func show_pose(id: String, seconds: float = 0.5) -> void:
 	pose_lock = seconds
 
 func _physics_process(delta: float) -> void:
+	if suspended:
+		axis=0
+		jump_queued=false
+		jump_buffer=0
+		return
 	anim += delta
+	jump_stretch=maxf(0.0,jump_stretch-delta)
 	stride += absf(velocity.x) * delta
 	landing=maxf(0.0,landing-delta)
 	for mote in dust:mote.age+=delta
@@ -76,6 +93,7 @@ func _physics_process(delta: float) -> void:
 				jumps_used=1
 				jump_buffer=0
 				coyote=0
+				jump_stretch=0.14
 				jumped.emit(false)
 			elif not is_on_floor() and jumps_used<2:
 				# Walking off a ledge still leaves one rescue jump.
@@ -85,12 +103,15 @@ func _physics_process(delta: float) -> void:
 				coyote=0
 				double_jump_count+=1
 				if not reduced_motion:air_rings.append({"at":global_position,"age":0.0})
+				jump_stretch=0.14
 				jumped.emit(true)
 	velocity.y += GRAVITY*delta
 	move_and_slide()
-	if is_on_floor() and not was_grounded and fall_speed>180 and not reduced_motion:
-		landing=0.16
-		dust.append({"at":global_position,"age":0.0})
+	if is_on_floor() and not was_grounded and fall_speed>180:
+		landed.emit(global_position,clampf(fall_speed/700.0,0.2,1.0))
+		if not reduced_motion:
+			landing=0.16
+			dust.append({"at":global_position,"age":0.0})
 	position.x = clampf(position.x,40,right_bound-40)
 	if absf(velocity.x)>10:
 		facing = 1 if velocity.x>0 else -1
@@ -102,7 +123,9 @@ func _physics_process(delta: float) -> void:
 			pose = "young_actions_jump"
 		elif absf(velocity.x)>35:
 			var frames = ["young_actions_walk_stride_a","young_actions_walk_passing","young_actions_walk_stride_b","young_actions_walk_passing"]
-			pose = frames[int(stride / 35.0) % 4]
+			if absf(velocity.x)>200:
+				frames=["young_actions_run_stride_a","young_actions_run_passing","young_actions_run_stride_b","young_actions_run_flight"]
+			pose = frames[int(stride / 43.0) % 4]
 		sprite.texture = Art.tex(pose)
 	# All transforms pivot at the supplied feet, so idle breathing never slides.
 	sprite.position.y = 0.0
@@ -112,10 +135,26 @@ func _physics_process(delta: float) -> void:
 	else:
 		sprite.rotation = velocity.x / SPEED * 0.025 if is_on_floor() else clampf(velocity.y / 12000.0,-0.035,0.035)
 		sprite.scale.y = visual_scale * (1.0 + sin(anim * 2.1) * 0.008) if absf(velocity.x)<35 and is_on_floor() else visual_scale
+		if jump_stretch>0:
+			sprite.scale.y*=1.0+sin(jump_stretch/0.14*PI)*0.045
 		if landing>0:
 			var settle=sin(landing/0.16*PI)*0.055
 			sprite.scale.y*=1.0-settle
 			sprite.scale.x*=1.0+settle*0.5
+
+	# A short crossfade smooths the supplied key poses, with identical foot pivots.
+	if sprite.texture!=last_texture:
+		ghost.texture=last_texture
+		last_texture=sprite.texture
+		blend_age=0.0
+	blend_age+=delta
+	var mix=1.0 if reduced_motion else clampf(blend_age/0.065,0,1)
+	sprite.modulate.a=mix
+	ghost.modulate.a=1.0-mix
+	ghost.visible=mix<1
+	ghost.scale=sprite.scale
+	ghost.rotation=sprite.rotation
+	ghost.position=sprite.position
 
 func _draw() -> void:
 	var support: float=get_parent().campus.support_y(position.x,position.y)
@@ -145,3 +184,6 @@ func reset_jumps() -> void:
 	jump_buffer=0
 	jump_queued=false
 	air_rings.clear()
+	jump_stretch=0
+	blend_age=1
+	if is_instance_valid(ghost):ghost.hide()

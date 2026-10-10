@@ -10,6 +10,7 @@ var feedback
 var scenery
 var bark: Sprite2D
 var platforms: Array[Rect2] = []
+var fun_ledges: Array[Node2D] = []
 var markers: Array[Node2D] = []
 var depth
 var foreground
@@ -29,6 +30,7 @@ func build(is_tutorial: bool) -> void:
 		child.queue_free()
 	objects.clear()
 	platforms.clear()
+	fun_ledges.clear()
 	markers.clear()
 	backgrounds.clear()
 	if tutorial:
@@ -196,6 +198,7 @@ func add_platform(rect: Rect2, asset: String) -> void:
 		ledge.height=32 if ledge.kind=="pencil" else 44
 		ledge.z_index=1
 		add_child(ledge)
+		fun_ledges.append(ledge)
 		return
 	# Align the top of each painted log with its collision top.
 	var texture = Art.tex(asset)
@@ -261,6 +264,7 @@ func nearest(pos: Vector2, range_px: float = 150) -> Dictionary:
 
 func _process(delta: float) -> void:
 	clock+=delta
+	for ledge in fun_ledges:ledge.reduced_motion=reduced_motion
 	if is_instance_valid(depth):
 		depth.reduced_motion = reduced_motion
 		foreground.reduced_motion = reduced_motion
@@ -325,3 +329,9 @@ func support_y(x: float, feet_y: float) -> float:
 		if x>=platform.position.x-6 and x<=platform.end.x+6 and platform.position.y>=feet_y-8:
 			ground_y=minf(ground_y,platform.position.y)
 	return ground_y
+
+
+func land_on_ledge(at: Vector2, strength: float) -> void:
+	for ledge in fun_ledges:
+		if at.x>=ledge.position.x-14 and at.x<=ledge.position.x+ledge.width+14 and absf(at.y-ledge.position.y)<5:
+			ledge.impact(strength)

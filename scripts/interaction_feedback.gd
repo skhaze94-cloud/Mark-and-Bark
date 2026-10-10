@@ -7,10 +7,13 @@ var effects: Array[Dictionary] = []
 func pulse(at: Vector2) -> void:
 	effects.append({"at":at,"age":0.0})
 
+func reward(at: Vector2, texture: Texture2D) -> void:
+	effects.append({"at":at,"age":0.0,"texture":texture})
+
 func _process(delta: float) -> void:
 	time+=delta
 	for effect in effects:effect.age+=delta
-	effects=effects.filter(func(e):return e.age<0.45)
+	effects=effects.filter(func(e):return e.age<(0.65 if e.has("texture") else 0.45))
 	queue_redraw()
 
 func _draw() -> void:
@@ -27,7 +30,14 @@ func _draw() -> void:
 		# The stable brackets identify the exact object, not just a nearby HUD label.
 		var icon=Art.tex("ui_parts_hint_bulb")
 		draw_texture_rect(icon,Rect2(rect.get_center().x-12,rect.position.y-32,24,24),false,Color(1,1,1,0.92))
+	for effect in effects:
+		if effect.has("texture"):
+			var phase: float=effect.age/0.65
+			var at: Vector2=effect.at+Vector2(0,-28 if campus.reduced_motion else -25-phase*35)
+			draw_texture_rect(effect.texture,Rect2(at-Vector2(20,30),Vector2(40,40)),false,Color(1,1,1,(1-phase)*0.9))
+			draw_arc(at,27,0,TAU,24,Color(1,0.88,0.52,(1-phase)*0.5),2,true)
 	if not campus.reduced_motion:
 		for effect in effects:
+			if effect.has("texture"):continue
 			var phase: float=effect.age/0.45
 			draw_arc(effect.at,14+phase*28,0,TAU,32,Color(1,0.88,0.52,(1-phase)*0.5),2,true)

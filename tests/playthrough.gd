@@ -72,6 +72,26 @@ func run() -> void:
 	root.add_child(game)
 	await ticks(5)
 	check(game.mode=="title","Title scene loads")
+	check(game.player.visual_scale==0.36 and game.campus.bark.texture==Art.tex("bark_actions_cheer"),"Title stages both friends with their original identities")
+	check(game.player.ghost.offset==game.player.sprite.offset and game.player.ghost.position==game.player.sprite.position,"Pose crossfades share the supplied character foot pivot")
+	var hud_buttons: Array[Button]=[]
+	collect_buttons(game.hud,hud_buttons)
+	check(hud_buttons.all(func(b):return b.focus_mode==Control.FOCUS_NONE),"Gameplay buttons cannot steal keyboard jump focus")
+	var menu_buttons: Array[Button]=[]
+	collect_buttons(game.modal,menu_buttons)
+	check(menu_buttons.all(func(b):return b.focus_mode==Control.FOCUS_ALL),"Menus retain keyboard focus navigation")
+	check(game.soundscape.music.stream!=null and game.soundscape.garden.stream!=null,"Original music and garden soundscape are bundled")
+	check(game.soundscape.music.stream.loop_end>350000 and game.soundscape.music.stream.loop_mode==AudioStreamWAV.LOOP_FORWARD,"Music has an explicit seamless forward loop")
+	var volume_before: float=Progress.settings.volume
+	Progress.settings.volume=0
+	game.soundscape._process(0)
+	check(game.soundscape.music.stream_paused and game.soundscape.garden.stream_paused,"Master mute silences music and ambience immediately")
+	Progress.settings.volume=volume_before
+	Progress.settings.music=false
+	game.soundscape._process(0)
+	check(game.soundscape.music.stream_paused,"Background music can be disabled independently")
+	Progress.settings.music=true
+	game.soundscape._process(0)
 	check(Art.tex("workshop_hub_v2").get_width()>1200,"Detailed workshop backdrop is bundled")
 	check(Art.tex("school_door_v2").get_image().detect_alpha()!=Image.ALPHA_NONE,"Doorway sprite has genuine transparency")
 	check(game.campus.depth!=null and game.campus.foreground.z_index>game.player.z_index,"Depth scenery and foreground layers are separate")
@@ -227,6 +247,18 @@ func run() -> void:
 	check(game.player.jumps_used==2 and game.player.velocity.y>v_before,"A third airborne press cannot add another jump")
 	await ticks(95)
 	check(game.player.is_on_floor() and game.player.jumps_used==0,"Landing recharges both jumps")
+	await press_key(KEY_SPACE)
+	await ticks(10)
+	game.show_pause()
+	var paused_at: Vector2=game.player.position
+	var paused_velocity: Vector2=game.player.velocity
+	await ticks(15)
+	check(game.player.position==paused_at and game.player.velocity==paused_velocity and game.player.suspended,"Pause freezes a real airborne jump without losing velocity")
+	check(game.modal_veil.visible and game.soundscape.music.stream_paused,"Pause has a readable backdrop and pauses the music")
+	game.close_modal()
+	await ticks(4)
+	check(game.player.position!=paused_at and not game.player.suspended,"Closing pause resumes the same jump")
+	await ticks(95)
 	check(is_equal_approx(game.player.sprite.scale.y,0.24) or absf(game.player.sprite.scale.y-0.24)<0.01,"Tiny character size remains stable while standing and moving")
 	# A real walk off a book ledge retains an air rescue after coyote time.
 	game.player.position=Vector2(1130,520)
@@ -247,6 +279,8 @@ func run() -> void:
 	await press_key(KEY_E)
 	await dismiss()
 	check(int(Progress.data.stage)==1,"Fair invitation starts quest")
+	check(game.quest_ribbon.step==1 and game.quest_ribbon.total==7 and "2 / 7" in game.step_label.text,"Quest ribbon and numbered objective advance together")
+	check(game.objective_icon.texture==Art.tex("collectibles_notebook"),"Objective pictogram matches the next story task")
 	await capture("02_hallway")
 	await walk_to(1910)
 	check(game.campus.room==1 and game.transitions_completed>=1,"Walking off hallway enters a separate garden room")
@@ -280,15 +314,22 @@ func run() -> void:
 	await press_key(KEY_E)
 	check(int(Progress.data.stage)==5 and game.busy,"Workshop opens after supplies")
 	game.assemble_next()
+	await ticks(2)
+	var card_icons: Array[TextureRect]=[]
+	collect_textures(game.modal,card_icons)
+	check(card_icons.size()>=4 and card_icons.all(func(t):return t.size.x<=285 and t.size.y<=280),"Assembly art and component icons stay inside their intended cards")
 	game.assemble_next()
 	game.assemble_next()
 	await ticks(3)
 	check(int(Progress.data.assembled)==3 and int(Progress.data.stage)==6,"All assembly steps persist")
+	check(game.modal_veil.visible and game.player.suspended,"Workshop keeps the world safely still during assembly")
 	await capture("04_workshop")
 	game.angle_choice=0
 	game.power_choice=0
 	game.launch_workshop()
-	await ticks(220)
+	await ticks(10)
+	check(game.flight_trail.get_point_count()>0,"Test plane receives a restrained golden flight trail")
+	await ticks(210)
 	check(not Progress.data.completed and game.busy,"Miss returns plane with a retry dialogue")
 	await dismiss()
 	check(game.busy and int(Progress.data.assembled)==3,"Miss reopens assembled workshop")
@@ -301,8 +342,13 @@ func run() -> void:
 	game.launch_workshop()
 	await ticks(160)
 	check(Progress.data.completed and int(Progress.data.stage)==7,"Reliable middle-angle medium-power solution hits target")
+	check(game.flight_trail.get_point_count()==0,"Successful delivery clears its temporary flight trail")
 	await dismiss()
 	check(game.busy,"Ending summary opens")
+	check(game.celebration.active and game.celebration.mouse_filter==Control.MOUSE_FILTER_IGNORE,"Ending confetti frames the summary without blocking buttons")
+	var ending_art: Array[TextureRect]=[]
+	collect_textures(game.modal,ending_art)
+	check(ending_art.size()==1 and ending_art[0].size==Vector2(175,175),"Science rosette stays inside the ending panel")
 	await capture("05_ending")
 	game.close_modal()
 	check(game.player.enabled,"Post-ending exploration remains available")
@@ -313,6 +359,8 @@ func run() -> void:
 	game.sync_room()
 	await ticks(10)
 	await leap_to(1060,520)
+	var book_ledge=game.campus.fun_ledges[0]
+	check(book_ledge.impact_age<0.3 and book_ledge.position==Vector2(960,520),"Landing feedback lights a book edge without moving its collider")
 	await leap_to(1300,405)
 	await leap_to(1545,285)
 	check("leaf_1" in Progress.data.leaves,"High book skyway rewards real platforming")
@@ -411,6 +459,7 @@ func run() -> void:
 	root.push_input(e,true)
 	await ticks(3)
 	check(game.player.jumps_used==2 and game.player.velocity.y<0,"Touch jump can be tapped again for the second jump")
+	check(game.hint_button.text=="Bark's hint","Touch input removes unnecessary keyboard hint labels")
 	await ticks(95)
 	var start_x: float=game.player.position.x
 	e=InputEventScreenTouch.new()
@@ -434,9 +483,20 @@ func run() -> void:
 	await ticks(8)
 	check(game.touch_fingers.is_empty() and not game.touches.right,"Both touch fingers release cleanly")
 	await ticks(70)
+	await press_key(KEY_SPACE)
+	check(game.player.position.y<600 and not game.input_touch,"Keyboard jump still works after using touch controls")
+	check("[H]" in game.hint_button.text,"Keyboard input restores its contextual hint shortcut")
+	await ticks(70)
 	Progress.settings.reduced_motion=true
 	game.apply_settings()
 	check(game.player.reduced_motion and game.campus.reduced_motion,"Reduced-motion setting reaches character and environment")
+	check(not game.player.ghost.visible and game.player.sprite.modulate.a==1,"Reduced motion switches pose blending to a fully opaque sprite")
+	game.show_settings(game.close_modal)
+	var settings_buttons: Array[Button]=[]
+	collect_buttons(game.modal,settings_buttons)
+	var toggles=settings_buttons.filter(func(b):return b is CheckButton)
+	check(toggles.size()==3 and toggles.all(func(b):return b.get_theme_color("font_color")==Color("203849") and ("On" in b.text or "Off" in b.text)),"Settings use readable navy text and explicit On/Off labels")
+	game.close_modal()
 	check(game.player.air_rings.is_empty(),"Reduced-motion and completed jumps leave no moving jump effects")
 	var stage=int(Progress.data.stage)
 	game.player.position=Vector2(3720,605)
@@ -453,11 +513,13 @@ func run() -> void:
 	check(game.campus.room==2 and game.room_transition.is_empty(),"Reduced-motion transition finishes without blocking input")
 	game.restart_checkpoint()
 	check(int(Progress.data.stage)==stage and Progress.data.bark_token,"Checkpoint restart preserves quest and discoveries")
+	Progress.settings.music=false
 	Progress.save_enabled=true
 	Progress.save_game()
 	Progress.reset_game(false)
 	Progress.load_save()
 	check(Progress.data.completed and Progress.data.bark_token and int(Progress.data.assembled)==3,"Disk save/load restores completed quest and inventory")
+	check(not Progress.settings.music,"Music preference survives disk save/load")
 	Progress.save_enabled=false
 	var fallback=Art.tex("deliberately_missing_test_asset")
 	check(fallback!=null,"Missing art has a safe fallback")
@@ -478,6 +540,9 @@ func run() -> void:
 	report.store_string(JSON.stringify(result,"\t"))
 	report.close()
 	print("RESULT: "+str(passed.size())+" passed; "+str(failures.size())+" failed")
+	await game.soundscape.drain()
+	game.queue_free()
+	await ticks(5)
 	get_tree().quit(0 if failures.is_empty() else 1)
 
 
@@ -497,3 +562,15 @@ func leap_to(x: float, top: float) -> void:
 	Input.action_release(action)
 	await ticks(5)
 	check(count<180 and absf(game.player.position.y-top)<3,"Real double jump lands on route ledge at "+str(x)+", "+str(top))
+
+
+func collect_buttons(parent: Node, result: Array[Button]) -> void:
+	for child in parent.get_children():
+		if child is Button:result.append(child)
+		collect_buttons(child,result)
+
+
+func collect_textures(parent: Node, result: Array[TextureRect]) -> void:
+	for child in parent.get_children():
+		if child is TextureRect:result.append(child)
+		collect_textures(child,result)

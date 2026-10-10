@@ -58,6 +58,18 @@ var shrinking_intro
 var tutorial_double_baseline: int = 0
 var jump_meter: Label
 var last_air_cheer: float = -10.0
+var soundscape
+var objective_icon: TextureRect
+var quest_ribbon
+var step_label: Label
+var toast_panel: Panel
+var toast_age: float = 0.0
+var modal_veil: ColorRect
+var celebration
+var flight_trail: Line2D
+var quitting: bool = false
+var hint_button: Button
+var dialogue_count: Label
 
 func sync_room() -> void:
 	campus.enter_room(campus.room_for(player.position.x))
@@ -115,6 +127,7 @@ func cancel_room_transition() -> void:
 	if is_instance_valid(transition_panel):transition_panel.hide()
 
 func _ready() -> void:
+	get_tree().auto_accept_quit=false
 	configure_input()
 	campus = CampusScript.new()
 	add_child(campus)
@@ -122,6 +135,7 @@ func _ready() -> void:
 	player = PlayerScript.new()
 	add_child(player)
 	player.jumped.connect(on_player_jump)
+	player.landed.connect(on_player_landed)
 	player.position=Vector2(960,610)
 	player.enabled=false
 	camera=Camera2D.new()
@@ -133,6 +147,11 @@ func _ready() -> void:
 	prediction.default_color=Color(1,0.9,0.5,0.8)
 	prediction.z_index=8
 	add_child(prediction)
+	flight_trail=Line2D.new()
+	flight_trail.width=2.5
+	flight_trail.default_color=Color(1,0.90,0.62,0.45)
+	flight_trail.z_index=8
+	add_child(flight_trail)
 	sound_player=AudioStreamPlayer.new()
 	add_child(sound_player)
 	for key in ["collect","jump","success","miss"]:
@@ -150,6 +169,9 @@ func _ready() -> void:
 	shrinking_intro=load("res://scripts/shrinking_intro.gd").new()
 	shrinking_intro.game=self
 	add_child(shrinking_intro)
+	soundscape=load("res://scripts/soundscape.gd").new()
+	soundscape.game=self
+	add_child(soundscape)
 	apply_settings()
 	show_title()
 
@@ -179,6 +201,7 @@ func label_at(parent: Node, text: String, rect: Rect2, size: int = 22, color: St
 	l.position=rect.position
 	l.size=rect.size
 	l.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	l.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	l.add_theme_font_override("font",Art.font)
 	l.add_theme_font_size_override("font_size",size)
 	l.add_theme_color_override("font_color",Color(color))
@@ -196,7 +219,14 @@ func button(parent: Node, text: String, rect: Rect2, callback: Callable, primary
 	b.add_theme_stylebox_override("normal",panel_style("203849" if primary else "fff5dc"))
 	b.add_theme_stylebox_override("hover",panel_style("365c6d" if primary else "e7d198"))
 	b.add_theme_stylebox_override("pressed",panel_style("1a313f" if primary else "d8bb73"))
-	b.add_theme_stylebox_override("focus",panel_style("365c6d" if primary else "e7d198"))
+	var focus_style=StyleBoxFlat.new()
+	focus_style.bg_color=Color.TRANSPARENT
+	focus_style.border_color=Color("edc872")
+	focus_style.set_border_width_all(3)
+	focus_style.set_corner_radius_all(18)
+	b.add_theme_stylebox_override("focus",focus_style)
+	if parent==hud or parent==touch_root or parent.get_parent()==hud:
+		b.focus_mode=Control.FOCUS_NONE
 	b.pressed.connect(callback)
 	parent.add_child(b)
 	return b
@@ -211,13 +241,36 @@ func build_ui() -> void:
 	layer.add_child(hud)
 	var top=Panel.new()
 	top.position=Vector2(22,18)
-	top.size=Vector2(1236,115)
+	top.size=Vector2(1236,112)
 	top.add_theme_stylebox_override("panel",panel_style("203849"))
 	hud.add_child(top)
-	zone_label=label_at(top,"THE BIG IDEA",Rect2(20,10,780,28),18,"e3c479")
-	objective=label_at(top,"",Rect2(20,43,780,60),22,"fff5dd")
+	objective_icon=TextureRect.new()
+	objective_icon.position=Vector2(18,36)
+	objective_icon.size=Vector2(48,48)
+	objective_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	objective_icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	objective_icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	top.add_child(objective_icon)
+	zone_label=label_at(top,"THE BIG IDEA",Rect2(80,10,730,24),16,"e3c479")
+	objective=label_at(top,"",Rect2(80,34,730,50),21,"fff5dd")
+	step_label=label_at(top,"",Rect2(625,91,185,18),13,"e3c479")
+	step_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
+	quest_ribbon=load("res://scripts/quest_ribbon.gd").new()
+	quest_ribbon.position=Vector2(80,92)
+	quest_ribbon.size=Vector2(245,18)
+	top.add_child(quest_ribbon)
 	counter=label_at(top,"",Rect2(850,15,180,86),17,"fff5dd")
-	jump_meter=label_at(hud,"",Rect2(25,540,225,55),18,"fff2bd")
+	var meter_panel=Panel.new()
+	meter_panel.position=Vector2(25,540)
+	meter_panel.size=Vector2(225,46)
+	meter_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var meter_style=panel_style("203849")
+	meter_style.bg_color.a=0.9
+	meter_style.set_border_width_all(1)
+	meter_style.shadow_size=3
+	meter_panel.add_theme_stylebox_override("panel",meter_style)
+	hud.add_child(meter_panel)
+	jump_meter=label_at(meter_panel,"",Rect2(12,11,205,28),17,"fff2bd")
 	jump_meter.add_theme_color_override("font_shadow_color",Color("203849"))
 	jump_meter.add_theme_constant_override("shadow_offset_y",2)
 	button(top,"Pause",Rect2(1070,28,145,55),show_pause)
@@ -237,11 +290,22 @@ func build_ui() -> void:
 	prompt.add_theme_color_override("font_shadow_color",Color("172e3c"))
 	prompt.add_theme_constant_override("shadow_offset_x",2)
 	prompt.add_theme_constant_override("shadow_offset_y",2)
-	toast_label=label_at(hud,"",Rect2(270,155,740,70),22,"fff2bd")
+	toast_panel=Panel.new()
+	toast_panel.position=Vector2(325,139)
+	toast_panel.size=Vector2(630,70)
+	toast_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var toast_style=panel_style("203849")
+	toast_style.bg_color.a=0.93
+	toast_style.set_border_width_all(1)
+	toast_style.shadow_size=5
+	toast_panel.add_theme_stylebox_override("panel",toast_style)
+	hud.add_child(toast_panel)
+	toast_label=label_at(toast_panel,"",Rect2(16,12,598,46),18,"fff2bd")
 	toast_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	toast_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	toast_label.add_theme_color_override("font_shadow_color",Color("172e3c"))
 	toast_label.add_theme_constant_override("shadow_offset_y",2)
-	button(hud,"Bark's hint  [H]",Rect2(985,624,265,68),request_hint)
+	hint_button=button(hud,"Bark's hint  [H]",Rect2(985,624,265,68),request_hint)
 	button(hud,"Notebook",Rect2(1018,545,232,60),show_notebook)
 	button(hud,"Skip tutorial",Rect2(24,155,180,50),finish_tutorial).name="SkipTutorial"
 	touch_root=Control.new()
@@ -257,6 +321,16 @@ func build_ui() -> void:
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	layer.add_child(overlay)
+	modal_veil=ColorRect.new()
+	modal_veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	modal_veil.color=Color(0.07,0.13,0.17,0.34)
+	modal_veil.mouse_filter=Control.MOUSE_FILTER_STOP
+	modal_veil.hide()
+	overlay.add_child(modal_veil)
+	celebration=load("res://scripts/celebration.gd").new()
+	celebration.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	celebration.hide()
+	overlay.add_child(celebration)
 	transition_panel = ColorRect.new()
 	transition_panel.color = Color("172f39")
 	transition_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -273,7 +347,9 @@ func close_modal() -> void:
 		overlay.remove_child(modal)
 		modal.queue_free()
 	modal=null
+	if is_instance_valid(modal_veil):modal_veil.hide()
 	busy=false
+	player.suspended=false
 	touches.left=false
 	touches.right=false
 	touch_fingers.clear()
@@ -288,24 +364,49 @@ func open_modal(rect: Rect2) -> Panel:
 	modal.size=rect.size
 	modal.add_theme_stylebox_override("panel",panel_style())
 	modal.mouse_filter=Control.MOUSE_FILTER_STOP
+	modal_veil.visible=mode in ["tutorial","campus"]
+	player.suspended=mode in ["tutorial","campus"]
 	overlay.add_child(modal)
 	return modal
 
 func show_title() -> void:
 	mode="title"
 	flight.clear()
+	flight_trail.clear_points()
 	hud.visible=false
-	var p=open_modal(Rect2(65,50,580,625))
-	label_at(p,"MARK & BARK",Rect2(34,25,520,64),42)
-	label_at(p,"THE BIG IDEA · FUNDATE",Rect2(36,92,500,45),25,"977134")
-	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,150,505,83),22)
-	button(p,"Continue adventure" if Progress.tutorial_done else "Start adventure",Rect2(36,253,506,64),start_continue,true)
-	button(p,"New adventure",Rect2(36,332,244,57),confirm_new)
-	button(p,"Replay tutorial",Rect2(296,332,246,57),start_tutorial)
-	button(p,"Settings & controls",Rect2(36,407,506,57),func():show_settings(show_title))
-	button(p,"Watch the campus film",Rect2(36,480,506,53),func():cinema.begin(return_from_film))
-	label_at(p,"Move: A/D or arrows · Double jump: Space twice\nInteract: E · Hint: H · Pause: Esc",Rect2(36,546,510,52),16)
+	campus.build(true)
+	for item in campus.objects:
+		item.sprite.hide()
+		item.label.hide()
+	for ledge in campus.fun_ledges:ledge.hide()
+	player.position=Vector2(925,610)
+	player.velocity=Vector2.ZERO
+	player.visual_scale=0.36
+	player.facing=1
+	player.pose_lock=0
+	player.reset_jumps()
+	campus.bark.position=Vector2(1125,610)
+	campus.bark.scale=Vector2.ONE*0.31
+	campus.bark.texture=Art.tex("bark_actions_cheer")
+	var decoration=load("res://scripts/title_garden.gd").new()
+	decoration.game=self
+	decoration.z_index=2
+	campus.add_child(decoration)
+	campus.world_label("Small friends. Big possibilities.",Vector2(795,236),19)
+	var p=open_modal(Rect2(48,42,602,638))
+	label_at(p,"ULTIMATE POLISH EDITION",Rect2(36,24,530,28),16,"977134")
+	label_at(p,"MARK & BARK",Rect2(34,63,535,64),43)
+	label_at(p,"THE BIG IDEA",Rect2(36,130,530,42),27,"977134")
+	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,188,535,68),21)
+	button(p,"Continue adventure" if Progress.tutorial_done else "Start adventure",Rect2(36,273,530,64),start_continue,true)
+	button(p,"New adventure",Rect2(36,354,253,57),confirm_new)
+	button(p,"Replay tutorial",Rect2(306,354,260,57),start_tutorial)
+	button(p,"Settings & controls",Rect2(36,428,530,57),func():show_settings(show_title))
+	button(p,"Watch the campus film",Rect2(36,500,530,53),func():cinema.begin(return_from_film))
+	label_at(p,"Move: A/D or arrows · Double jump: Space twice\nInteract: E · Hint: H · Pause: Esc",Rect2(36,578,530,46),15)
 	camera.position=Vector2(640,360)
+	camera.zoom=Vector2.ONE
+	ambient.color=Color("edece1")
 	player.enabled=false
 
 func confirm_new() -> void:
@@ -386,12 +487,15 @@ func say(lines: Array, done: Callable = Callable()) -> void:
 	dialogue_speaker=label_at(p,"",Rect2(192,18,780,36),23,"977134")
 	dialogue_text=label_at(p,"",Rect2(192,62,922,120),22)
 	button(p,"Skip story",Rect2(195,183,190,50),dismiss_dialogue)
-	button(p,"Next  [E]",Rect2(912,183,210,50),next_dialogue,true)
+	button(p,"Next" if input_touch else "Next  [E]",Rect2(912,183,210,50),next_dialogue,true)
+	dialogue_count=label_at(p,"",Rect2(750,197,125,28),16,"977134")
+	dialogue_count.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
 	refresh_dialogue()
 
 func refresh_dialogue() -> void:
 	var parts=String(dialogue_lines[dialogue_index]).split("|",true,1)
 	dialogue_speaker.text=parts[0]
+	dialogue_count.text=str(dialogue_index+1)+" / "+str(dialogue_lines.size())
 	dialogue_text.text=parts[1] if parts.size()>1 else parts[0]
 	dialogue_portrait.texture=Art.tex("young_front" if parts[0]=="Mark" else "bark_actions_hint")
 
@@ -495,6 +599,7 @@ func jump_pressed() -> void:
 		player.request_jump()
 
 func _physics_process(delta: float) -> void:
+	player.suspended=busy and mode in ["tutorial","campus"] and flight.is_empty()
 	clock+=delta
 	if mode in ["title","cinematic","shrinking"]:
 		return
@@ -511,6 +616,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		player.axis=0
 	var framing_x: float = player.position.x
+	if flight.is_empty() and not busy:framing_x+=clampf(player.velocity.x*0.12,-32,32)
 	if not flight.is_empty() and flight.kind=="workshop" and not Progress.settings.reduced_motion:
 		framing_x += minf(float(flight.t)*100.0,380.0)
 	var target=campus.camera_target(framing_x,player.position.y if flight.is_empty() else 610.0,player.velocity.y<-80 and flight.is_empty())
@@ -541,10 +647,12 @@ func _physics_process(delta: float) -> void:
 	if player.position.y>900:
 		restart_checkpoint()
 	if is_instance_valid(campus.bark):
-		var follow_x=player.position.x-90*player.facing
+		var follow_x=clampf(player.position.x-90*player.facing,bounds.x+40,bounds.y-40)
 		if not (mode=="tutorial" and tutorial_step==0):
 			campus.bark.position.x=lerpf(campus.bark.position.x,follow_x,1-exp(-delta*3))
 			campus.bark.position.y=lerpf(campus.bark.position.y,player.position.y if not player.is_on_floor() else campus.support_y(campus.bark.position.x,player.position.y),1-exp(-delta*7))
+		var support: float=campus.support_y(campus.bark.position.x,player.position.y)
+		if player.is_on_floor() and absf(campus.bark.position.y-support)<2:campus.bark.position.y=support
 		campus.bark.scale.x=0.20*player.facing
 		if not busy and clock>bark_pose_until:
 			var frames = ["bark_actions_walk_stride_a","bark_actions_walk_passing","bark_actions_walk_stride_b","bark_actions_walk_passing"]
@@ -553,7 +661,10 @@ func _physics_process(delta: float) -> void:
 			campus.bark.scale.y=0.20 if Progress.settings.reduced_motion or walking else 0.20*(1+sin(clock*1.8)*0.009)
 	update_flight(delta)
 	toast_time-=delta
+	toast_age+=delta
+	toast_panel.visible=toast_time>0
 	toast_label.visible=toast_time>0
+	toast_panel.modulate.a=1.0 if Progress.settings.reduced_motion else minf(clampf(toast_age/0.12,0,1),clampf(toast_time/0.3,0,1))
 	update_hud()
 
 func update_tutorial() -> void:
@@ -582,6 +693,7 @@ func collect_nearby() -> void:
 	for item in campus.objects:
 		if item.id.begins_with("leaf_") and item.visible and player.position.distance_to(item.pos)<95:
 			campus.depth.burst(item.pos+Vector2(0,-35))
+			campus.feedback.reward(item.pos,item.sprite.texture)
 			Progress.collect_leaf(item.id)
 			campus.refresh()
 			play_sound("collect")
@@ -603,18 +715,25 @@ func update_checkpoint(delta: float) -> void:
 func update_hud() -> void:
 	if mode=="title":return
 	objective.text=TUTORIAL_GOALS[mini(tutorial_step,7)] if mode=="tutorial" else GOALS[clampi(int(Progress.data.stage),0,7)]
-	zone_label.text="TINY GARDEN TUTORIAL" if mode=="tutorial" else "FUNDATE · "+last_zone
-	jump_meter.text="JUMPS  ◆ ◆" if player.is_on_floor() or player.jumps_used==0 else "LEAFY LIFT  ◆" if player.jumps_used==1 else "LAND TO RECHARGE"
+	zone_label.text="TINY GARDEN TUTORIAL" if mode=="tutorial" else last_zone
+	jump_meter.text="2 jumps ready  ◆ ◆" if player.is_on_floor() or player.jumps_used==0 else "1 leafy lift left  ◆" if player.jumps_used==1 else "Land to recharge"
+	quest_ribbon.total=8 if mode=="tutorial" else 7
+	quest_ribbon.step=tutorial_step if mode=="tutorial" else int(Progress.data.stage)
+	step_label.text="LESSON "+str(mini(tutorial_step+1,8))+" / 8" if mode=="tutorial" else "COMPLETE" if Progress.data.completed else "STEP "+str(mini(int(Progress.data.stage)+1,7))+" / 7"
+	var icons=["school_props_noticeboard","collectibles_notebook","school_props_plant","collectibles_books","school_props_desk","collectibles_pencil","collectibles_paper_plane","collectibles_science_rosette"]
+	if mode=="tutorial":icons=["bark_actions_point","young_actions_jump","bark_actions_cheer","collectibles_notebook","collectibles_leaf_token","ui_parts_hint_bulb","collectibles_paper_plane","ui_parts_reward_check"]
+	objective_icon.texture=Art.tex(icons[clampi(tutorial_step if mode=="tutorial" else int(Progress.data.stage),0,7)])
 	counter.text="Learn at your pace\nNo lost discoveries" if mode=="tutorial" else "Leaves  "+str(Progress.data.leaves.size())+" / 6\nNotes   "+str(Progress.data.discoveries.size())+" / 2\nBark token  "+("Found!" if Progress.data.bark_token else "Hidden")
 	hud.get_node("SkipTutorial").visible=mode=="tutorial"
 	touch_root.visible=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
+	hint_button.text="Bark's hint" if input_touch else "Bark's hint  [H]"
 	campus.feedback.focus_id=""
 	if busy or not flight.is_empty():
 		prompt.text=""
 	else:
 		var item=campus.nearest(player.position)
 		campus.feedback.focus_id=String(item.id) if not item.is_empty() else ""
-		prompt.text=("Use: " if touch_root.visible else "[E] ")+String(item.title) if not item.is_empty() else ""
+		prompt.text=("Use: " if input_touch else "[E] ")+String(item.title) if not item.is_empty() else ""
 
 	prompt_panel.visible=not prompt.text.is_empty()
 	prompt_panel.position=Vector2(255,547 if touch_root.visible else 638)
@@ -627,7 +746,10 @@ func interact_pressed() -> void:
 		toast("Walk a little closer to a notebook, sign or invention.")
 		return
 	campus.feedback.pulse(item.pos+Vector2(0,-20))
+	var texture: Texture2D=item.sprite.texture
 	interact_object(item.id)
+	if item.id in ["notebook","plant","books","pencil"] and Progress.data.get(item.id,false):
+		campus.feedback.reward(item.pos,texture)
 
 func interact_object(id: String) -> void:
 	idle_time=0
@@ -741,6 +863,7 @@ func show_workshop() -> void:
 		var desc=["Place the book base. A sturdy idea needs a sturdy beginning.","Add the pencil guide. Give your plane a direction.","Load the paper plane. Bark will provide one very scientific puff."]
 		label_at(p,desc[built],Rect2(34,89,590,110),24)
 		var image=TextureRect.new()
+		image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		image.texture=Art.tex(["collectibles_books","collectibles_pencil","collectibles_paper_plane"][built])
 		image.position=Vector2(666,80)
 		image.size=Vector2(285,280)
@@ -748,7 +871,9 @@ func show_workshop() -> void:
 		image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		p.add_child(image)
 		button(p,["Place books","Add pencil","Load plane"][built],Rect2(34,230,535,80),assemble_next,true)
-		label_at(p,"Assembly "+str(built)+" / 3\nYour components appear on the desk as you build.",Rect2(34,335,600,90),21)
+		for i in range(3):
+			component_card(p,["collectibles_books","collectibles_pencil","collectibles_paper_plane"][i],["Book base","Pencil guide","Paper plane"][i],Rect2(34+i*201,335,189,78),i<built)
+		label_at(p,"Your pieces appear on the desk as you build.",Rect2(34,425,600,40),17)
 	else:
 		label_at(p,"Choose your angle",Rect2(32,85,450,36),22)
 		for i in range(3):
@@ -792,6 +917,7 @@ func launch_tutorial() -> void:
 	toast("Bark: A gentle puff. Off it goes!")
 
 func spawn_plane(pos: Vector2) -> void:
+	flight_trail.clear_points()
 	if is_instance_valid(plane):plane.queue_free()
 	plane=Art.prop("collectibles_paper_plane",95)
 	plane.position=pos
@@ -803,6 +929,7 @@ func launch_workshop() -> void:
 	close_modal()
 	Progress.data.attempts=int(Progress.data.attempts)+1
 	Progress.save_game()
+	flight_trail.clear_points()
 	spawn_plane(trajectory(0))
 	flight={"kind":"workshop","t":0.0,"angle":angle_choice,"power":power_choice,"previous":trajectory(0)}
 	player.position=Vector2(4520,605)
@@ -820,6 +947,8 @@ func update_flight(delta: float) -> void:
 		plane.position=Vector2(1080,510).lerp(Vector2(1370,425),t)+Vector2(0,-sin(t*PI)*50)
 		if t>=1:
 			flight.clear()
+			flight_trail.clear_points()
+			campus.depth.burst(Vector2(1370,425))
 			plane.queue_free()
 			play_sound("success")
 			say(["Mark|It worked!","Bark|Of course! Now for my BIG demonstration—","Bark|...Ah. The supplies have gone on an adventure. Let's follow them."],finish_tutorial)
@@ -827,6 +956,10 @@ func update_flight(delta: float) -> void:
 	var pos=trajectory(float(flight.t),int(flight.angle),int(flight.power))
 	var previous: Vector2=flight.previous
 	plane.position=pos
+	if not Progress.settings.reduced_motion:
+		flight_trail.add_point(pos)
+		if flight_trail.get_point_count()>14:flight_trail.remove_point(0)
+	else:flight_trail.clear_points()
 	plane.rotation=(pos-previous).angle()
 	flight.previous=pos
 	# Swept target crossing is frame-rate independent and tolerant.
@@ -837,6 +970,7 @@ func update_flight(delta: float) -> void:
 			return
 	if pos.y>640 or pos.x>5300 or float(flight.t)>5:
 		flight.clear()
+		flight_trail.clear_points()
 		plane.queue_free()
 		player.enabled=true
 		play_sound("miss")
@@ -844,6 +978,8 @@ func update_flight(delta: float) -> void:
 
 func complete_invention() -> void:
 	flight.clear()
+	flight_trail.clear_points()
+	player.show_pose("young_actions_cheer",2.5)
 	if is_instance_valid(plane):plane.queue_free()
 	prediction.clear_points()
 	Progress.data.completed=true
@@ -856,10 +992,13 @@ func complete_invention() -> void:
 	say(["Mark|It worked!","Bark|Of course. We only had to discover twelve ways it didn't.","Mark|Three.","Bark|I was counting the ones before you arrived.","Mark|A first attempt, a better idea, and a friend. That's what we'll bring to the fair."],show_ending)
 
 func show_ending() -> void:
+	celebration.begin()
 	var p=open_modal(Rect2(235,130,810,490))
 	label_at(p,"BIG IDEA COMPLETE",Rect2(35,25,735,58),37)
+	label_at(p,"A ROSETTE FOR CURIOSITY & FRIENDSHIP",Rect2(35,181,730,25),15,"977134")
 	label_at(p,"Your invitation has reached the fair!\nYou built, experimented, helped, and tried again.",Rect2(35,100,730,86),23)
 	var image=TextureRect.new()
+	image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	image.texture=Art.tex("collectibles_science_rosette")
 	image.position=Vector2(560,205)
 	image.size=Vector2(175,175)
@@ -867,7 +1006,7 @@ func show_ending() -> void:
 	image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	p.add_child(image)
 	label_at(p,"Leaf discoveries: "+str(Progress.data.leaves.size())+" / 6\nFunny notebook pages: "+str(Progress.data.discoveries.size())+" / 2\nBark's secret token: "+("Found!" if Progress.data.bark_token else "Still waiting")+"\nInvention tests: "+str(Progress.data.attempts),Rect2(35,215,530,158),23)
-	button(p,"Explore the campus",Rect2(35,400,355,62),close_modal,true)
+	button(p,"Explore the campus",Rect2(35,400,355,62),func():player.pose_lock=0;celebration.hide();celebration.active=false;close_modal(),true)
 	button(p,"Play again",Rect2(420,400,350,62),func():Progress.reset_game();shrinking_intro.begin(start_tutorial))
 	toast("A science rosette for curiosity, friendship, and your big idea!")
 
@@ -894,7 +1033,7 @@ func restart_checkpoint() -> void:
 	toast("A fresh start nearby. Your discoveries are safe.")
 
 func show_settings(back: Callable) -> void:
-	var p=open_modal(Rect2(250,125,780,505))
+	var p=open_modal(Rect2(250,85,780,560))
 	label_at(p,"SETTINGS & CONTROLS",Rect2(30,22,720,48),29)
 	label_at(p,"Sound volume",Rect2(30,98,245,34),22)
 	var volume=HSlider.new()
@@ -907,32 +1046,61 @@ func show_settings(back: Callable) -> void:
 	p.add_child(volume)
 	volume.value_changed.connect(func(value):Progress.settings.volume=value;Progress.save_game();play_sound("collect"))
 	var reduced=CheckButton.new()
-	reduced.text="Reduced motion"
+	reduced.text="Reduced motion: "+("On" if Progress.settings.reduced_motion else "Off")
 	reduced.position=Vector2(28,167)
 	reduced.size=Vector2(710,54)
 	reduced.button_pressed=Progress.settings.reduced_motion
 	reduced.add_theme_font_size_override("font_size",22)
+	reduced.add_theme_font_override("font",Art.font)
+	reduced.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"))
+	reduced.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"))
+	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:
+		reduced.add_theme_color_override(state,Color("203849"))
 	p.add_child(reduced)
-	reduced.toggled.connect(func(value):Progress.settings.reduced_motion=value;Progress.save_game();apply_settings())
+	reduced.toggled.connect(func(value):reduced.text="Reduced motion: "+("On" if value else "Off");Progress.settings.reduced_motion=value;Progress.save_game();apply_settings())
 	var touch=CheckButton.new()
-	touch.text="Always show touch controls"
+	touch.text="Always show touch controls: "+("On" if Progress.settings.touch else "Off")
 	touch.position=Vector2(28,234)
 	touch.size=Vector2(710,54)
 	touch.button_pressed=Progress.settings.touch
 	touch.add_theme_font_size_override("font_size",22)
+	touch.add_theme_font_override("font",Art.font)
+	touch.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"))
+	touch.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"))
+	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:
+		touch.add_theme_color_override(state,Color("203849"))
 	p.add_child(touch)
-	touch.toggled.connect(func(value):Progress.settings.touch=value;Progress.save_game();apply_settings())
-	label_at(p,"A/D or arrows: move · Space/W/Up: jump, then jump again\nE/Enter: interact or next line · H: hint · Esc: pause\nEvery sound event also has a visible cue.",Rect2(30,310,720,105),19)
-	button(p,"Back",Rect2(230,425,315,58),func():Progress.save_game();back.call(),true)
+	touch.toggled.connect(func(value):touch.text="Always show touch controls: "+("On" if value else "Off");Progress.settings.touch=value;Progress.save_game();apply_settings())
+	var music=CheckButton.new()
+	music.text="Gentle background music: "+("On" if Progress.settings.get("music",true) else "Off")
+	music.position=Vector2(28,296)
+	music.size=Vector2(710,54)
+	music.button_pressed=bool(Progress.settings.get("music",true))
+	music.add_theme_font_size_override("font_size",22)
+	music.add_theme_font_override("font",Art.font)
+	music.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"))
+	music.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"))
+	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:
+		music.add_theme_color_override(state,Color("203849"))
+	p.add_child(music)
+	music.toggled.connect(func(value):music.text="Gentle background music: "+("On" if value else "Off");Progress.settings.music=value;Progress.save_game())
+	label_at(p,"A/D or arrows: move · Space/W/Up: jump, then jump again\nE/Enter: interact or next line · H: hint · Esc: pause\nEvery sound event also has a visible cue.",Rect2(30,358,720,90),19)
+	button(p,"Back",Rect2(230,480,315,58),func():Progress.save_game();back.call(),true)
 
 func apply_settings() -> void:
-	if is_instance_valid(player):player.reduced_motion=bool(Progress.settings.reduced_motion)
+	if is_instance_valid(player):
+		player.reduced_motion=bool(Progress.settings.reduced_motion)
+		if player.reduced_motion and is_instance_valid(player.ghost):
+			player.ghost.hide()
+			player.sprite.modulate.a=1
 	if is_instance_valid(campus):campus.reduced_motion=bool(Progress.settings.reduced_motion)
 	if is_instance_valid(touch_root):touch_root.visible=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
 
 func toast(text: String) -> void:
 	toast_label.text=text
 	toast_time=5
+	toast_age=0
+	toast_panel.show()
 	toast_label.show()
 
 func play_sound(id: String, pitch: float = 1.0) -> void:
@@ -944,7 +1112,7 @@ func play_sound(id: String, pitch: float = 1.0) -> void:
 
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_WM_CLOSE_REQUEST:
-		Progress.save_game()
+		request_quit()
 
 
 func build_world_finish() -> void:
@@ -976,3 +1144,37 @@ func on_player_jump(is_second: bool) -> void:
 		if clock-last_air_cheer>7 and mode=="campus":
 			last_air_cheer=clock
 			toast("Bark: Leafy lift! Even tiny inventors can reach big ideas.")
+
+
+func on_player_landed(at: Vector2, strength: float) -> void:
+	if mode not in ["tutorial","campus"]:return
+	campus.land_on_ledge(at,strength)
+
+func component_card(parent: Node, asset: String, text: String, rect: Rect2, complete: bool) -> void:
+	var card=Panel.new()
+	card.position=rect.position
+	card.size=rect.size
+	card.add_theme_stylebox_override("panel",panel_style("e3edd6" if complete else "fff5dc"))
+	parent.add_child(card)
+	var icon=TextureRect.new()
+	icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	icon.texture=Art.tex(asset)
+	icon.position=Vector2(10,14)
+	icon.size=Vector2(45,45)
+	icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	card.add_child(icon)
+	label_at(card,text,Rect2(62,15,116,24),15)
+	label_at(card,"Ready ✓" if complete else "To add",Rect2(62,43,116,24),14,"53715b" if complete else "977134")
+
+
+func request_quit() -> void:
+	if quitting:return
+	quitting=true
+	Progress.save_game()
+	player.enabled=false
+	player.suspended=true
+	sound_player.stop()
+	sound_player.stream=null
+	await soundscape.drain()
+	get_tree().quit()
