@@ -33,7 +33,7 @@ func plant(at: Vector2, size: float, shade: Color) -> void:
 	draw_texture_rect(texture,Rect2(-width/2,-height,width,height),false,Color(0.76,0.85,0.70,0.94))
 	draw_set_transform(Vector2.ZERO)
 
-func draw_ellipse(at: Vector2, radius: Vector2, color: Color) -> void:
+func paint_ellipse(at: Vector2, radius: Vector2, color: Color) -> void:
 	var points = PackedVector2Array()
 	for i in range(32): points.append(at + Vector2(cos(i * TAU / 32), sin(i * TAU / 32)) * radius)
 	draw_colored_polygon(points, color)
@@ -95,7 +95,7 @@ func garden(start: float, span: float) -> void:
 	for i in range(6):
 		var x = start + 90 + i * span/5 + offset
 		draw_line(Vector2(x,560),Vector2(x-18,235),Color(0.30,0.39,0.26,0.18),23)
-		draw_ellipse(Vector2(x,230),Vector2(155,115),Color(0.26,0.42,0.30,0.12))
+		paint_ellipse(Vector2(x,230),Vector2(155,115),Color(0.26,0.42,0.30,0.12))
 	# Bridge decking over a decorative stream below the safe walkway.
 	draw_texture_rect(Art.tex("garden_soil"),Rect2(start,626,span,94),true,Color(0.76,0.79,0.67))
 	# The painted backdrop already contains its bridge and stream; keep its detail.
@@ -103,7 +103,7 @@ func garden(start: float, span: float) -> void:
 	draw_line(Vector2(start,617),Vector2(start+span,617),Color("ddc389"),5)
 	for i in range(8):
 		var at = Vector2(start+130+i*span/8,670)
-		draw_ellipse(at,Vector2(28,5),Color(0.2,0.25,0.15,0.15))
+		paint_ellipse(at,Vector2(28,5),Color(0.2,0.25,0.15,0.15))
 	if not tutorial:
 		doorway(start+65,"← School",false)
 		doorway(start+span-65,"Workshop →",false)
@@ -115,5 +115,5 @@ func garden(start: float, span: float) -> void:
 		for i in range(4):
 			var at = Vector2(start+350+i*span/5+sin(time*0.55+i)*48,330+cos(time*0.8+i)*32)
 			var flap = absf(sin(time*6+i))
-			draw_ellipse(at+Vector2(-4,0),Vector2(2+flap*4,4),Color(1,0.91,0.61,0.60))
-			draw_ellipse(at+Vector2(4,0),Vector2(2+flap*4,4),Color(1,0.91,0.61,0.60))
+			paint_ellipse(at+Vector2(-4,0),Vector2(2+flap*4,4),Color(1,0.91,0.61,0.60))
+			paint_ellipse(at+Vector2(4,0),Vector2(2+flap*4,4),Color(1,0.91,0.61,0.60))
