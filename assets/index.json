@@ -1,0 +1,893 @@
+{
+  "young_front": {
+    "path": "res://assets/young_front.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_front_right": {
+    "path": "res://assets/young_front_right.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_right": {
+    "path": "res://assets/young_right.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_back_right": {
+    "path": "res://assets/young_back_right.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_back": {
+    "path": "res://assets/young_back.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_back_left": {
+    "path": "res://assets/young_back_left.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_left": {
+    "path": "res://assets/young_left.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_front_left": {
+    "path": "res://assets/young_front_left.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_front": {
+    "path": "res://assets/bark_front.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_front_right": {
+    "path": "res://assets/bark_front_right.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_right": {
+    "path": "res://assets/bark_right.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_back_right": {
+    "path": "res://assets/bark_back_right.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_back": {
+    "path": "res://assets/bark_back.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_back_left": {
+    "path": "res://assets/bark_back_left.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_left": {
+    "path": "res://assets/bark_left.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_front_left": {
+    "path": "res://assets/bark_front_left.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_idle": {
+    "path": "res://assets/young_actions_idle.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_walk_stride_a": {
+    "path": "res://assets/young_actions_walk_stride_a.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_walk_passing": {
+    "path": "res://assets/young_actions_walk_passing.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_walk_stride_b": {
+    "path": "res://assets/young_actions_walk_stride_b.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_run_stride_a": {
+    "path": "res://assets/young_actions_run_stride_a.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_run_passing": {
+    "path": "res://assets/young_actions_run_passing.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_run_stride_b": {
+    "path": "res://assets/young_actions_run_stride_b.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_run_flight": {
+    "path": "res://assets/young_actions_run_flight.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_jump": {
+    "path": "res://assets/young_actions_jump.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_crouch": {
+    "path": "res://assets/young_actions_crouch.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_notebook": {
+    "path": "res://assets/young_actions_notebook.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "young_actions_paper_plane": {
+    "path": "res://assets/young_actions_paper_plane.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_idle": {
+    "path": "res://assets/bark_actions_idle.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_walk_stride_a": {
+    "path": "res://assets/bark_actions_walk_stride_a.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_walk_passing": {
+    "path": "res://assets/bark_actions_walk_passing.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_walk_stride_b": {
+    "path": "res://assets/bark_actions_walk_stride_b.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_run_stride_a": {
+    "path": "res://assets/bark_actions_run_stride_a.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_run_passing": {
+    "path": "res://assets/bark_actions_run_passing.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_run_stride_b": {
+    "path": "res://assets/bark_actions_run_stride_b.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_hop": {
+    "path": "res://assets/bark_actions_hop.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_hint": {
+    "path": "res://assets/bark_actions_hint.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_point": {
+    "path": "res://assets/bark_actions_point.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_cheer": {
+    "path": "res://assets/bark_actions_cheer.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "bark_actions_carry": {
+    "path": "res://assets/bark_actions_carry.png",
+    "pivot": [
+      256,
+      612
+    ],
+    "size": [
+      512,
+      640
+    ]
+  },
+  "collectibles_notebook": {
+    "path": "res://assets/collectibles_notebook.png",
+    "pivot": [
+      189.0,
+      375
+    ],
+    "size": [
+      378,
+      379
+    ]
+  },
+  "collectibles_paper_plane": {
+    "path": "res://assets/collectibles_paper_plane.png",
+    "pivot": [
+      190.5,
+      260
+    ],
+    "size": [
+      381,
+      264
+    ]
+  },
+  "collectibles_leaf_token": {
+    "path": "res://assets/collectibles_leaf_token.png",
+    "pivot": [
+      136.5,
+      322
+    ],
+    "size": [
+      273,
+      326
+    ]
+  },
+  "collectibles_bark_token": {
+    "path": "res://assets/collectibles_bark_token.png",
+    "pivot": [
+      159.5,
+      317
+    ],
+    "size": [
+      319,
+      321
+    ]
+  },
+  "collectibles_science_rosette": {
+    "path": "res://assets/collectibles_science_rosette.png",
+    "pivot": [
+      141.0,
+      346
+    ],
+    "size": [
+      282,
+      350
+    ]
+  },
+  "collectibles_pencil": {
+    "path": "res://assets/collectibles_pencil.png",
+    "pivot": [
+      153.0,
+      298
+    ],
+    "size": [
+      306,
+      302
+    ]
+  },
+  "collectibles_books": {
+    "path": "res://assets/collectibles_books.png",
+    "pivot": [
+      199.0,
+      280
+    ],
+    "size": [
+      398,
+      284
+    ]
+  },
+  "collectibles_mug": {
+    "path": "res://assets/collectibles_mug.png",
+    "pivot": [
+      152.5,
+      278
+    ],
+    "size": [
+      305,
+      282
+    ]
+  },
+  "collectibles_envelope": {
+    "path": "res://assets/collectibles_envelope.png",
+    "pivot": [
+      197.5,
+      282
+    ],
+    "size": [
+      395,
+      286
+    ]
+  },
+  "collectibles_checklist": {
+    "path": "res://assets/collectibles_checklist.png",
+    "pivot": [
+      144.5,
+      340
+    ],
+    "size": [
+      289,
+      344
+    ]
+  },
+  "collectibles_energy_token": {
+    "path": "res://assets/collectibles_energy_token.png",
+    "pivot": [
+      166.5,
+      297
+    ],
+    "size": [
+      333,
+      301
+    ]
+  },
+  "collectibles_calm_token": {
+    "path": "res://assets/collectibles_calm_token.png",
+    "pivot": [
+      132.5,
+      306
+    ],
+    "size": [
+      265,
+      310
+    ]
+  },
+  "school_props_red_locker": {
+    "path": "res://assets/school_props_red_locker.png",
+    "pivot": [
+      94.0,
+      378
+    ],
+    "size": [
+      188,
+      382
+    ]
+  },
+  "school_props_navy_locker": {
+    "path": "res://assets/school_props_navy_locker.png",
+    "pivot": [
+      92.0,
+      377
+    ],
+    "size": [
+      184,
+      381
+    ]
+  },
+  "school_props_desk": {
+    "path": "res://assets/school_props_desk.png",
+    "pivot": [
+      182.5,
+      305
+    ],
+    "size": [
+      365,
+      309
+    ]
+  },
+  "school_props_chair": {
+    "path": "res://assets/school_props_chair.png",
+    "pivot": [
+      121.5,
+      346
+    ],
+    "size": [
+      243,
+      350
+    ]
+  },
+  "school_props_bookcase": {
+    "path": "res://assets/school_props_bookcase.png",
+    "pivot": [
+      157.0,
+      292
+    ],
+    "size": [
+      314,
+      296
+    ]
+  },
+  "school_props_chalkboard": {
+    "path": "res://assets/school_props_chalkboard.png",
+    "pivot": [
+      180.0,
+      297
+    ],
+    "size": [
+      360,
+      301
+    ]
+  },
+  "school_props_noticeboard": {
+    "path": "res://assets/school_props_noticeboard.png",
+    "pivot": [
+      177.0,
+      295
+    ],
+    "size": [
+      354,
+      299
+    ]
+  },
+  "school_props_lamp": {
+    "path": "res://assets/school_props_lamp.png",
+    "pivot": [
+      134.5,
+      290
+    ],
+    "size": [
+      269,
+      294
+    ]
+  },
+  "school_props_stump": {
+    "path": "res://assets/school_props_stump.png",
+    "pivot": [
+      166.5,
+      226
+    ],
+    "size": [
+      333,
+      230
+    ]
+  },
+  "school_props_log": {
+    "path": "res://assets/school_props_log.png",
+    "pivot": [
+      226.5,
+      225
+    ],
+    "size": [
+      453,
+      229
+    ]
+  },
+  "school_props_plant": {
+    "path": "res://assets/school_props_plant.png",
+    "pivot": [
+      148.0,
+      293
+    ],
+    "size": [
+      296,
+      297
+    ]
+  },
+  "school_props_science_volcano": {
+    "path": "res://assets/school_props_science_volcano.png",
+    "pivot": [
+      178.5,
+      282
+    ],
+    "size": [
+      357,
+      286
+    ]
+  },
+  "ui_parts_dialogue_panel": {
+    "path": "res://assets/ui_parts_dialogue_panel.png",
+    "pivot": [
+      200.5,
+      225
+    ],
+    "size": [
+      401,
+      229
+    ]
+  },
+  "ui_parts_progress_track": {
+    "path": "res://assets/ui_parts_progress_track.png",
+    "pivot": [
+      174.5,
+      109
+    ],
+    "size": [
+      349,
+      113
+    ]
+  },
+  "ui_parts_wood_button": {
+    "path": "res://assets/ui_parts_wood_button.png",
+    "pivot": [
+      162.5,
+      192
+    ],
+    "size": [
+      325,
+      196
+    ]
+  },
+  "ui_parts_paper_button": {
+    "path": "res://assets/ui_parts_paper_button.png",
+    "pivot": [
+      160.5,
+      154
+    ],
+    "size": [
+      321,
+      158
+    ]
+  },
+  "ui_parts_heart": {
+    "path": "res://assets/ui_parts_heart.png",
+    "pivot": [
+      147.5,
+      237
+    ],
+    "size": [
+      295,
+      241
+    ]
+  },
+  "ui_parts_star": {
+    "path": "res://assets/ui_parts_star.png",
+    "pivot": [
+      145.0,
+      273
+    ],
+    "size": [
+      290,
+      277
+    ]
+  },
+  "ui_parts_leaf": {
+    "path": "res://assets/ui_parts_leaf.png",
+    "pivot": [
+      114.5,
+      288
+    ],
+    "size": [
+      229,
+      292
+    ]
+  },
+  "ui_parts_hint_bulb": {
+    "path": "res://assets/ui_parts_hint_bulb.png",
+    "pivot": [
+      153.5,
+      313
+    ],
+    "size": [
+      307,
+      317
+    ]
+  },
+  "ui_parts_chapter_early": {
+    "path": "res://assets/ui_parts_chapter_early.png",
+    "pivot": [
+      170.5,
+      279
+    ],
+    "size": [
+      341,
+      283
+    ]
+  },
+  "ui_parts_chapter_middle": {
+    "path": "res://assets/ui_parts_chapter_middle.png",
+    "pivot": [
+      170.0,
+      278
+    ],
+    "size": [
+      340,
+      282
+    ]
+  },
+  "ui_parts_chapter_teen": {
+    "path": "res://assets/ui_parts_chapter_teen.png",
+    "pivot": [
+      169.5,
+      279
+    ],
+    "size": [
+      339,
+      283
+    ]
+  },
+  "ui_parts_reward_check": {
+    "path": "res://assets/ui_parts_reward_check.png",
+    "pivot": [
+      171.5,
+      273
+    ],
+    "size": [
+      343,
+      277
+    ]
+  },
+  "garden_soil": {
+    "path": "res://assets/garden_soil.png",
+    "pivot": [
+      256.0,
+      512
+    ],
+    "size": [
+      512,
+      512
+    ]
+  },
+  "sidewalk_concrete": {
+    "path": "res://assets/sidewalk_concrete.png",
+    "pivot": [
+      256.0,
+      512
+    ],
+    "size": [
+      512,
+      512
+    ]
+  },
+  "oak_floor": {
+    "path": "res://assets/oak_floor.png",
+    "pivot": [
+      256.0,
+      512
+    ],
+    "size": [
+      512,
+      512
+    ]
+  },
+  "school_hub": {
+    "path": "res://assets/school_hub.png",
+    "pivot": [
+      836.0,
+      941
+    ],
+    "size": [
+      1672,
+      941
+    ]
+  },
+  "garden_hub": {
+    "path": "res://assets/garden_hub.png",
+    "pivot": [
+      836.0,
+      941
+    ],
+    "size": [
+      1672,
+      941
+    ]
+  }
+}

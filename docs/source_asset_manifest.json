@@ -1,0 +1,6411 @@
+{
+  "pack": "Mark & Bark Detailed Raster Asset Pack",
+  "version": "1.0",
+  "unique_game_asset_count": 137,
+  "generated_master_count": 18,
+  "coordinate_system": "pixel rectangles use top-left origin; pivots supplied for both origins",
+  "native_resolution_policy": "native crops retained; normalized character canvases may resample without creating new detail",
+  "assets": [
+    {
+      "id": "young_front",
+      "category": "character",
+      "group": "young",
+      "name": "front",
+      "path": "characters/young_mark/native/view_front.png",
+      "width": 195,
+      "height": 500,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        149,
+        7,
+        195,
+        500
+      ],
+      "native_pivot_top_left_px": [
+        97.5,
+        496
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        191,
+        496
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_front.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "young_front_right",
+      "category": "character",
+      "group": "young",
+      "name": "front_right",
+      "path": "characters/young_mark/native/view_front_right.png",
+      "width": 216,
+      "height": 503,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        484,
+        6,
+        216,
+        503
+      ],
+      "native_pivot_top_left_px": [
+        108.0,
+        499
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007952
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        212,
+        499
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_front_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "young_right",
+      "category": "character",
+      "group": "young",
+      "name": "right",
+      "path": "characters/young_mark/native/view_right.png",
+      "width": 184,
+      "height": 498,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        843,
+        11,
+        184,
+        498
+      ],
+      "native_pivot_top_left_px": [
+        92.0,
+        494
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008032
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        180,
+        494
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "young_back_right",
+      "category": "character",
+      "group": "young",
+      "name": "back_right",
+      "path": "characters/young_mark/native/view_back_right.png",
+      "width": 197,
+      "height": 501,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        1191,
+        8,
+        197,
+        501
+      ],
+      "native_pivot_top_left_px": [
+        98.5,
+        497
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007984
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        193,
+        497
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_back_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "young_back",
+      "category": "character",
+      "group": "young",
+      "name": "back",
+      "path": "characters/young_mark/native/view_back.png",
+      "width": 207,
+      "height": 508,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        144,
+        509,
+        207,
+        508
+      ],
+      "native_pivot_top_left_px": [
+        103.5,
+        504
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007874
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        203,
+        504
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_back.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "young_back_left",
+      "category": "character",
+      "group": "young",
+      "name": "back_left",
+      "path": "characters/young_mark/native/view_back_left.png",
+      "width": 202,
+      "height": 507,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        486,
+        509,
+        202,
+        507
+      ],
+      "native_pivot_top_left_px": [
+        101.0,
+        503
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.00789
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        198,
+        503
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_back_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "young_left",
+      "category": "character",
+      "group": "young",
+      "name": "left",
+      "path": "characters/young_mark/native/view_left.png",
+      "width": 185,
+      "height": 505,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        850,
+        510,
+        185,
+        505
+      ],
+      "native_pivot_top_left_px": [
+        92.5,
+        501
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007921
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        181,
+        501
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "young_front_left",
+      "category": "character",
+      "group": "young",
+      "name": "front_left",
+      "path": "characters/young_mark/native/view_front_left.png",
+      "width": 206,
+      "height": 507,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young.png",
+      "source_rect": [
+        1181,
+        509,
+        206,
+        507
+      ],
+      "native_pivot_top_left_px": [
+        103.0,
+        503
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.00789
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        202,
+        503
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/young_mark/sprites/view_front_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.97561
+    },
+    {
+      "id": "middle_front",
+      "category": "character",
+      "group": "middle",
+      "name": "front",
+      "path": "characters/middle_mark/native/view_front.png",
+      "width": 189,
+      "height": 506,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        195,
+        3,
+        189,
+        506
+      ],
+      "native_pivot_top_left_px": [
+        94.5,
+        502
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007905
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        185,
+        502
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_front.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "middle_front_right",
+      "category": "character",
+      "group": "middle",
+      "name": "front_right",
+      "path": "characters/middle_mark/native/view_front_right.png",
+      "width": 203,
+      "height": 505,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        525,
+        6,
+        203,
+        505
+      ],
+      "native_pivot_top_left_px": [
+        101.5,
+        501
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007921
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        199,
+        501
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_front_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "middle_right",
+      "category": "character",
+      "group": "middle",
+      "name": "right",
+      "path": "characters/middle_mark/native/view_right.png",
+      "width": 180,
+      "height": 502,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        842,
+        7,
+        180,
+        502
+      ],
+      "native_pivot_top_left_px": [
+        90.0,
+        498
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007968
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        176,
+        498
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "middle_back_right",
+      "category": "character",
+      "group": "middle",
+      "name": "back_right",
+      "path": "characters/middle_mark/native/view_back_right.png",
+      "width": 200,
+      "height": 506,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        1170,
+        4,
+        200,
+        506
+      ],
+      "native_pivot_top_left_px": [
+        100.0,
+        502
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007905
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        196,
+        502
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_back_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "middle_back",
+      "category": "character",
+      "group": "middle",
+      "name": "back",
+      "path": "characters/middle_mark/native/view_back.png",
+      "width": 197,
+      "height": 504,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        186,
+        511,
+        197,
+        504
+      ],
+      "native_pivot_top_left_px": [
+        98.5,
+        500
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007937
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        193,
+        500
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_back.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "middle_back_left",
+      "category": "character",
+      "group": "middle",
+      "name": "back_left",
+      "path": "characters/middle_mark/native/view_back_left.png",
+      "width": 203,
+      "height": 505,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        524,
+        511,
+        203,
+        505
+      ],
+      "native_pivot_top_left_px": [
+        101.5,
+        501
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007921
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        199,
+        501
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_back_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "middle_left",
+      "category": "character",
+      "group": "middle",
+      "name": "left",
+      "path": "characters/middle_mark/native/view_left.png",
+      "width": 173,
+      "height": 504,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        853,
+        513,
+        173,
+        504
+      ],
+      "native_pivot_top_left_px": [
+        86.5,
+        500
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007937
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        169,
+        500
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "middle_front_left",
+      "category": "character",
+      "group": "middle",
+      "name": "front_left",
+      "path": "characters/middle_mark/native/view_front_left.png",
+      "width": 200,
+      "height": 505,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle.png",
+      "source_rect": [
+        1171,
+        513,
+        200,
+        505
+      ],
+      "native_pivot_top_left_px": [
+        100.0,
+        501
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007921
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        196,
+        501
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/middle_mark/sprites/view_front_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.963855
+    },
+    {
+      "id": "teen_front",
+      "category": "character",
+      "group": "teen",
+      "name": "front",
+      "path": "characters/teen_mark/native/view_front.png",
+      "width": 198,
+      "height": 508,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        177,
+        7,
+        198,
+        508
+      ],
+      "native_pivot_top_left_px": [
+        99.0,
+        504
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007874
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        194,
+        504
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_front.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "teen_front_right",
+      "category": "character",
+      "group": "teen",
+      "name": "front_right",
+      "path": "characters/teen_mark/native/view_front_right.png",
+      "width": 197,
+      "height": 508,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        521,
+        7,
+        197,
+        508
+      ],
+      "native_pivot_top_left_px": [
+        98.5,
+        504
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007874
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        193,
+        504
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_front_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "teen_right",
+      "category": "character",
+      "group": "teen",
+      "name": "right",
+      "path": "characters/teen_mark/native/view_right.png",
+      "width": 187,
+      "height": 505,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        824,
+        11,
+        187,
+        505
+      ],
+      "native_pivot_top_left_px": [
+        93.5,
+        501
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007921
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        183,
+        501
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "teen_back_right",
+      "category": "character",
+      "group": "teen",
+      "name": "back_right",
+      "path": "characters/teen_mark/native/view_back_right.png",
+      "width": 195,
+      "height": 507,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        1142,
+        8,
+        195,
+        507
+      ],
+      "native_pivot_top_left_px": [
+        97.5,
+        503
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.00789
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        191,
+        503
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_back_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "teen_back",
+      "category": "character",
+      "group": "teen",
+      "name": "back",
+      "path": "characters/teen_mark/native/view_back.png",
+      "width": 201,
+      "height": 505,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        177,
+        511,
+        201,
+        505
+      ],
+      "native_pivot_top_left_px": [
+        100.5,
+        501
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007921
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        197,
+        501
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_back.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "teen_back_left",
+      "category": "character",
+      "group": "teen",
+      "name": "back_left",
+      "path": "characters/teen_mark/native/view_back_left.png",
+      "width": 199,
+      "height": 505,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        521,
+        511,
+        199,
+        505
+      ],
+      "native_pivot_top_left_px": [
+        99.5,
+        501
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007921
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        195,
+        501
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_back_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "teen_left",
+      "category": "character",
+      "group": "teen",
+      "name": "left",
+      "path": "characters/teen_mark/native/view_left.png",
+      "width": 179,
+      "height": 504,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        850,
+        513,
+        179,
+        504
+      ],
+      "native_pivot_top_left_px": [
+        89.5,
+        500
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007937
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        175,
+        500
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "teen_front_left",
+      "category": "character",
+      "group": "teen",
+      "name": "front_left",
+      "path": "characters/teen_mark/native/view_front_left.png",
+      "width": 190,
+      "height": 502,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen.png",
+      "source_rect": [
+        1169,
+        515,
+        190,
+        502
+      ],
+      "native_pivot_top_left_px": [
+        95.0,
+        498
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007968
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        186,
+        498
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/teen_mark/sprites/view_front_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.96
+    },
+    {
+      "id": "bark_front",
+      "category": "character",
+      "group": "bark",
+      "name": "front",
+      "path": "characters/bark/native/view_front.png",
+      "width": 380,
+      "height": 466,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        20,
+        22,
+        380,
+        466
+      ],
+      "native_pivot_top_left_px": [
+        190.0,
+        462
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008584
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        376,
+        462
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_front.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "bark_front_right",
+      "category": "character",
+      "group": "bark",
+      "name": "front_right",
+      "path": "characters/bark/native/view_front_right.png",
+      "width": 334,
+      "height": 468,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        422,
+        21,
+        334,
+        468
+      ],
+      "native_pivot_top_left_px": [
+        167.0,
+        464
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008547
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        330,
+        464
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_front_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "bark_right",
+      "category": "character",
+      "group": "bark",
+      "name": "right",
+      "path": "characters/bark/native/view_right.png",
+      "width": 290,
+      "height": 468,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        841,
+        22,
+        290,
+        468
+      ],
+      "native_pivot_top_left_px": [
+        145.0,
+        464
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008547
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        286,
+        464
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "bark_back_right",
+      "category": "character",
+      "group": "bark",
+      "name": "back_right",
+      "path": "characters/bark/native/view_back_right.png",
+      "width": 346,
+      "height": 463,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        1168,
+        25,
+        346,
+        463
+      ],
+      "native_pivot_top_left_px": [
+        173.0,
+        459
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008639
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        342,
+        459
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_back_right.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "bark_back",
+      "category": "character",
+      "group": "bark",
+      "name": "back",
+      "path": "characters/bark/native/view_back.png",
+      "width": 369,
+      "height": 452,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        22,
+        518,
+        369,
+        452
+      ],
+      "native_pivot_top_left_px": [
+        184.5,
+        448
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.00885
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        365,
+        448
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_back.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "bark_back_left",
+      "category": "character",
+      "group": "bark",
+      "name": "back_left",
+      "path": "characters/bark/native/view_back_left.png",
+      "width": 319,
+      "height": 450,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        411,
+        522,
+        319,
+        450
+      ],
+      "native_pivot_top_left_px": [
+        159.5,
+        446
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008889
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        315,
+        446
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_back_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "bark_left",
+      "category": "character",
+      "group": "bark",
+      "name": "left",
+      "path": "characters/bark/native/view_left.png",
+      "width": 307,
+      "height": 467,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        766,
+        511,
+        307,
+        467
+      ],
+      "native_pivot_top_left_px": [
+        153.5,
+        463
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008565
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        303,
+        463
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "bark_front_left",
+      "category": "character",
+      "group": "bark",
+      "name": "front_left",
+      "path": "characters/bark/native/view_front_left.png",
+      "width": 356,
+      "height": 456,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark.png",
+      "source_rect": [
+        1160,
+        514,
+        356,
+        456
+      ],
+      "native_pivot_top_left_px": [
+        178.0,
+        452
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008772
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        352,
+        452
+      ],
+      "role": "turnaround",
+      "implementation_path": "characters/bark/sprites/view_front_left.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.742358
+    },
+    {
+      "id": "young_actions_idle",
+      "category": "character",
+      "group": "young_actions",
+      "name": "idle",
+      "path": "characters/young_mark/native/action_idle.png",
+      "width": 172,
+      "height": 387,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        126,
+        4,
+        172,
+        387
+      ],
+      "native_pivot_top_left_px": [
+        86.0,
+        383
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010336
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        168,
+        383
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_idle.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_walk_stride_a",
+      "category": "character",
+      "group": "young_actions",
+      "name": "walk_stride_a",
+      "path": "characters/young_mark/native/action_walk_stride_a.png",
+      "width": 222,
+      "height": 378,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        441,
+        9,
+        222,
+        378
+      ],
+      "native_pivot_top_left_px": [
+        111.0,
+        374
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010582
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        218,
+        374
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_walk_stride_a.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_walk_passing",
+      "category": "character",
+      "group": "young_actions",
+      "name": "walk_passing",
+      "path": "characters/young_mark/native/action_walk_passing.png",
+      "width": 242,
+      "height": 374,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        764,
+        12,
+        242,
+        374
+      ],
+      "native_pivot_top_left_px": [
+        121.0,
+        370
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010695
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        238,
+        370
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_walk_passing.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_walk_stride_b",
+      "category": "character",
+      "group": "young_actions",
+      "name": "walk_stride_b",
+      "path": "characters/young_mark/native/action_walk_stride_b.png",
+      "width": 242,
+      "height": 377,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        1147,
+        12,
+        242,
+        377
+      ],
+      "native_pivot_top_left_px": [
+        121.0,
+        373
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.01061
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        238,
+        373
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_walk_stride_b.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_run_stride_a",
+      "category": "character",
+      "group": "young_actions",
+      "name": "run_stride_a",
+      "path": "characters/young_mark/native/action_run_stride_a.png",
+      "width": 309,
+      "height": 337,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        28,
+        395,
+        309,
+        337
+      ],
+      "native_pivot_top_left_px": [
+        154.5,
+        333
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011869
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        305,
+        333
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_run_stride_a.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_run_passing",
+      "category": "character",
+      "group": "young_actions",
+      "name": "run_passing",
+      "path": "characters/young_mark/native/action_run_passing.png",
+      "width": 274,
+      "height": 340,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        415,
+        395,
+        274,
+        340
+      ],
+      "native_pivot_top_left_px": [
+        137.0,
+        336
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011765
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        270,
+        336
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_run_passing.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_run_stride_b",
+      "category": "character",
+      "group": "young_actions",
+      "name": "run_stride_b",
+      "path": "characters/young_mark/native/action_run_stride_b.png",
+      "width": 293,
+      "height": 334,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        747,
+        396,
+        293,
+        334
+      ],
+      "native_pivot_top_left_px": [
+        146.5,
+        330
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011976
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        289,
+        330
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_run_stride_b.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_run_flight",
+      "category": "character",
+      "group": "young_actions",
+      "name": "run_flight",
+      "path": "characters/young_mark/native/action_run_flight.png",
+      "width": 345,
+      "height": 300,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        1091,
+        391,
+        345,
+        300
+      ],
+      "native_pivot_top_left_px": [
+        172.5,
+        296
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013333
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        341,
+        296
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_run_flight.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_jump",
+      "category": "character",
+      "group": "young_actions",
+      "name": "jump",
+      "path": "characters/young_mark/native/action_jump.png",
+      "width": 283,
+      "height": 302,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        40,
+        724,
+        283,
+        302
+      ],
+      "native_pivot_top_left_px": [
+        141.5,
+        298
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013245
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        279,
+        298
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_jump.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_crouch",
+      "category": "character",
+      "group": "young_actions",
+      "name": "crouch",
+      "path": "characters/young_mark/native/action_crouch.png",
+      "width": 276,
+      "height": 283,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        391,
+        776,
+        276,
+        283
+      ],
+      "native_pivot_top_left_px": [
+        138.0,
+        279
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.014134
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        272,
+        279
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_crouch.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_notebook",
+      "category": "character",
+      "group": "young_actions",
+      "name": "notebook",
+      "path": "characters/young_mark/native/action_notebook.png",
+      "width": 213,
+      "height": 359,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        800,
+        714,
+        213,
+        359
+      ],
+      "native_pivot_top_left_px": [
+        106.5,
+        355
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011142
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        209,
+        355
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_notebook.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "young_actions_paper_plane",
+      "category": "character",
+      "group": "young_actions",
+      "name": "paper_plane",
+      "path": "characters/young_mark/native/action_paper_plane.png",
+      "width": 347,
+      "height": 338,
+      "alpha": true,
+      "source_atlas": "characters/young_mark/atlases/young_actions.png",
+      "source_rect": [
+        1084,
+        729,
+        347,
+        338
+      ],
+      "native_pivot_top_left_px": [
+        173.5,
+        334
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011834
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        343,
+        334
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/young_mark/sprites/action_paper_plane.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.266491
+    },
+    {
+      "id": "middle_actions_idle",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "idle",
+      "path": "characters/middle_mark/native/action_idle.png",
+      "width": 145,
+      "height": 359,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        181,
+        5,
+        145,
+        359
+      ],
+      "native_pivot_top_left_px": [
+        72.5,
+        355
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011142
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        141,
+        355
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_idle.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_walk_stride_a",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "walk_stride_a",
+      "path": "characters/middle_mark/native/action_walk_stride_a.png",
+      "width": 232,
+      "height": 363,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        464,
+        5,
+        232,
+        363
+      ],
+      "native_pivot_top_left_px": [
+        116.0,
+        359
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011019
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        228,
+        359
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_walk_stride_a.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_walk_passing",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "walk_passing",
+      "path": "characters/middle_mark/native/action_walk_passing.png",
+      "width": 250,
+      "height": 360,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        815,
+        8,
+        250,
+        360
+      ],
+      "native_pivot_top_left_px": [
+        125.0,
+        356
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011111
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        246,
+        356
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_walk_passing.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_walk_stride_b",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "walk_stride_b",
+      "path": "characters/middle_mark/native/action_walk_stride_b.png",
+      "width": 232,
+      "height": 365,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        1206,
+        3,
+        232,
+        365
+      ],
+      "native_pivot_top_left_px": [
+        116.0,
+        361
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010959
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        228,
+        361
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_walk_stride_b.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_run_stride_a",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "run_stride_a",
+      "path": "characters/middle_mark/native/action_run_stride_a.png",
+      "width": 272,
+      "height": 321,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        90,
+        366,
+        272,
+        321
+      ],
+      "native_pivot_top_left_px": [
+        136.0,
+        317
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012461
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        268,
+        317
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_run_stride_a.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_run_passing",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "run_passing",
+      "path": "characters/middle_mark/native/action_run_passing.png",
+      "width": 289,
+      "height": 314,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        450,
+        366,
+        289,
+        314
+      ],
+      "native_pivot_top_left_px": [
+        144.5,
+        310
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012739
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        285,
+        310
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_run_passing.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_run_stride_b",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "run_stride_b",
+      "path": "characters/middle_mark/native/action_run_stride_b.png",
+      "width": 247,
+      "height": 303,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        812,
+        368,
+        247,
+        303
+      ],
+      "native_pivot_top_left_px": [
+        123.5,
+        299
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013201
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        243,
+        299
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_run_stride_b.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_run_flight",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "run_flight",
+      "path": "characters/middle_mark/native/action_run_flight.png",
+      "width": 295,
+      "height": 300,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        1193,
+        365,
+        295,
+        300
+      ],
+      "native_pivot_top_left_px": [
+        147.5,
+        296
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013333
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        291,
+        296
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_run_flight.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_jump",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "jump",
+      "path": "characters/middle_mark/native/action_jump.png",
+      "width": 288,
+      "height": 341,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        67,
+        663,
+        288,
+        341
+      ],
+      "native_pivot_top_left_px": [
+        144.0,
+        337
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.01173
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        284,
+        337
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_jump.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_crouch",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "crouch",
+      "path": "characters/middle_mark/native/action_crouch.png",
+      "width": 288,
+      "height": 281,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        441,
+        711,
+        288,
+        281
+      ],
+      "native_pivot_top_left_px": [
+        144.0,
+        277
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.014235
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        284,
+        277
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_crouch.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_notebook",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "notebook",
+      "path": "characters/middle_mark/native/action_notebook.png",
+      "width": 189,
+      "height": 346,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        844,
+        662,
+        189,
+        346
+      ],
+      "native_pivot_top_left_px": [
+        94.5,
+        342
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011561
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        185,
+        342
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_notebook.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "middle_actions_paper_plane",
+      "category": "character",
+      "group": "middle_actions",
+      "name": "paper_plane",
+      "path": "characters/middle_mark/native/action_paper_plane.png",
+      "width": 346,
+      "height": 310,
+      "alpha": true,
+      "source_atlas": "characters/middle_mark/atlases/middle_actions.png",
+      "source_rect": [
+        1166,
+        687,
+        346,
+        310
+      ],
+      "native_pivot_top_left_px": [
+        173.0,
+        306
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012903
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        342,
+        306
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/middle_mark/sprites/action_paper_plane.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 1.367521
+    },
+    {
+      "id": "teen_actions_idle",
+      "category": "character",
+      "group": "teen_actions",
+      "name": "idle",
+      "path": "characters/teen_mark/native/action_idle.png",
+      "width": 221,
+      "height": 519,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen_actions.png",
+      "source_rect": [
+        213,
+        4,
+        221,
+        519
+      ],
+      "native_pivot_top_left_px": [
+        110.5,
+        515
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007707
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        217,
+        515
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/teen_mark/sprites/action_idle.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.939335
+    },
+    {
+      "id": "teen_actions_walk",
+      "category": "character",
+      "group": "teen_actions",
+      "name": "walk",
+      "path": "characters/teen_mark/native/action_walk.png",
+      "width": 293,
+      "height": 518,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen_actions.png",
+      "source_rect": [
+        624,
+        8,
+        293,
+        518
+      ],
+      "native_pivot_top_left_px": [
+        146.5,
+        514
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007722
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        289,
+        514
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/teen_mark/sprites/action_walk.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.939335
+    },
+    {
+      "id": "teen_actions_run",
+      "category": "character",
+      "group": "teen_actions",
+      "name": "run",
+      "path": "characters/teen_mark/native/action_run.png",
+      "width": 359,
+      "height": 495,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen_actions.png",
+      "source_rect": [
+        1064,
+        23,
+        359,
+        495
+      ],
+      "native_pivot_top_left_px": [
+        179.5,
+        491
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008081
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        355,
+        491
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/teen_mark/sprites/action_run.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.939335
+    },
+    {
+      "id": "teen_actions_jump",
+      "category": "character",
+      "group": "teen_actions",
+      "name": "jump",
+      "path": "characters/teen_mark/native/action_jump.png",
+      "width": 337,
+      "height": 482,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen_actions.png",
+      "source_rect": [
+        157,
+        523,
+        337,
+        482
+      ],
+      "native_pivot_top_left_px": [
+        168.5,
+        478
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.008299
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        333,
+        478
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/teen_mark/sprites/action_jump.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.939335
+    },
+    {
+      "id": "teen_actions_crouch",
+      "category": "character",
+      "group": "teen_actions",
+      "name": "crouch",
+      "path": "characters/teen_mark/native/action_crouch.png",
+      "width": 398,
+      "height": 393,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen_actions.png",
+      "source_rect": [
+        562,
+        582,
+        398,
+        393
+      ],
+      "native_pivot_top_left_px": [
+        199.0,
+        389
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010178
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        394,
+        389
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/teen_mark/sprites/action_crouch.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.939335
+    },
+    {
+      "id": "teen_actions_notebook",
+      "category": "character",
+      "group": "teen_actions",
+      "name": "notebook",
+      "path": "characters/teen_mark/native/action_notebook.png",
+      "width": 277,
+      "height": 517,
+      "alpha": true,
+      "source_atlas": "characters/teen_mark/atlases/teen_actions.png",
+      "source_rect": [
+        1096,
+        500,
+        277,
+        517
+      ],
+      "native_pivot_top_left_px": [
+        138.5,
+        513
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.007737
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        273,
+        513
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/teen_mark/sprites/action_notebook.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.939335
+    },
+    {
+      "id": "bark_actions_idle",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "idle",
+      "path": "characters/bark/native/action_idle.png",
+      "width": 266,
+      "height": 354,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        65,
+        10,
+        266,
+        354
+      ],
+      "native_pivot_top_left_px": [
+        133.0,
+        350
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011299
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        262,
+        350
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_idle.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_walk_stride_a",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "walk_stride_a",
+      "path": "characters/bark/native/action_walk_stride_a.png",
+      "width": 269,
+      "height": 354,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        425,
+        10,
+        269,
+        354
+      ],
+      "native_pivot_top_left_px": [
+        134.5,
+        350
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011299
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        265,
+        350
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_walk_stride_a.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_walk_passing",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "walk_passing",
+      "path": "characters/bark/native/action_walk_passing.png",
+      "width": 276,
+      "height": 349,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        779,
+        15,
+        276,
+        349
+      ],
+      "native_pivot_top_left_px": [
+        138.0,
+        345
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011461
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        272,
+        345
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_walk_passing.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_walk_stride_b",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "walk_stride_b",
+      "path": "characters/bark/native/action_walk_stride_b.png",
+      "width": 273,
+      "height": 350,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        1135,
+        14,
+        273,
+        350
+      ],
+      "native_pivot_top_left_px": [
+        136.5,
+        346
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011429
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        269,
+        346
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_walk_stride_b.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_run_stride_a",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "run_stride_a",
+      "path": "characters/bark/native/action_run_stride_a.png",
+      "width": 292,
+      "height": 330,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        50,
+        374,
+        292,
+        330
+      ],
+      "native_pivot_top_left_px": [
+        146.0,
+        326
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012121
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        288,
+        326
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_run_stride_a.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_run_passing",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "run_passing",
+      "path": "characters/bark/native/action_run_passing.png",
+      "width": 297,
+      "height": 324,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        411,
+        370,
+        297,
+        324
+      ],
+      "native_pivot_top_left_px": [
+        148.5,
+        320
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012346
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        293,
+        320
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_run_passing.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_run_stride_b",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "run_stride_b",
+      "path": "characters/bark/native/action_run_stride_b.png",
+      "width": 274,
+      "height": 333,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        784,
+        372,
+        274,
+        333
+      ],
+      "native_pivot_top_left_px": [
+        137.0,
+        329
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012012
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        270,
+        329
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_run_stride_b.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_hop",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "hop",
+      "path": "characters/bark/native/action_hop.png",
+      "width": 318,
+      "height": 311,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        1115,
+        364,
+        318,
+        311
+      ],
+      "native_pivot_top_left_px": [
+        159.0,
+        307
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012862
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        314,
+        307
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_hop.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_hint",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "hint",
+      "path": "characters/bark/native/action_hint.png",
+      "width": 286,
+      "height": 343,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        60,
+        706,
+        286,
+        343
+      ],
+      "native_pivot_top_left_px": [
+        143.0,
+        339
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011662
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        282,
+        339
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_hint.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_point",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "point",
+      "path": "characters/bark/native/action_point.png",
+      "width": 350,
+      "height": 352,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        388,
+        699,
+        350,
+        352
+      ],
+      "native_pivot_top_left_px": [
+        175.0,
+        348
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011364
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        346,
+        348
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_point.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_cheer",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "cheer",
+      "path": "characters/bark/native/action_cheer.png",
+      "width": 308,
+      "height": 359,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        754,
+        696,
+        308,
+        359
+      ],
+      "native_pivot_top_left_px": [
+        154.0,
+        355
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011142
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        304,
+        355
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_cheer.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "bark_actions_carry",
+      "category": "character",
+      "group": "bark_actions",
+      "name": "carry",
+      "path": "characters/bark/native/action_carry.png",
+      "width": 244,
+      "height": 353,
+      "alpha": true,
+      "source_atlas": "characters/bark/atlases/bark_actions.png",
+      "source_rect": [
+        1156,
+        702,
+        244,
+        353
+      ],
+      "native_pivot_top_left_px": [
+        122.0,
+        349
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011331
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        240,
+        349
+      ],
+      "role": "key_pose",
+      "implementation_path": "characters/bark/sprites/action_carry.png",
+      "implementation_size": [
+        512,
+        640
+      ],
+      "implementation_pivot_top_left_px": [
+        256,
+        612
+      ],
+      "implementation_pivot_bottom_left_normalized": [
+        0.5,
+        0.04375
+      ],
+      "normalization_scale": 0.982659
+    },
+    {
+      "id": "collectibles_notebook",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "notebook",
+      "path": "props/collectibles/native/notebook.png",
+      "width": 378,
+      "height": 379,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        15,
+        34,
+        378,
+        379
+      ],
+      "native_pivot_top_left_px": [
+        189.0,
+        375
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010554
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        374,
+        375
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_paper_plane",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "paper_plane",
+      "path": "props/collectibles/native/paper_plane.png",
+      "width": 381,
+      "height": 264,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        396,
+        111,
+        381,
+        264
+      ],
+      "native_pivot_top_left_px": [
+        190.5,
+        260
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.015152
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        377,
+        260
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_leaf_token",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "leaf_token",
+      "path": "props/collectibles/native/leaf_token.png",
+      "width": 273,
+      "height": 326,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        766,
+        76,
+        273,
+        326
+      ],
+      "native_pivot_top_left_px": [
+        136.5,
+        322
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.01227
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        269,
+        322
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_bark_token",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "bark_token",
+      "path": "props/collectibles/native/bark_token.png",
+      "width": 319,
+      "height": 321,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        1113,
+        77,
+        319,
+        321
+      ],
+      "native_pivot_top_left_px": [
+        159.5,
+        317
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012461
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        315,
+        317
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_science_rosette",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "science_rosette",
+      "path": "props/collectibles/native/science_rosette.png",
+      "width": 282,
+      "height": 350,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        63,
+        413,
+        282,
+        350
+      ],
+      "native_pivot_top_left_px": [
+        141.0,
+        346
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011429
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        278,
+        346
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_pencil",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "pencil",
+      "path": "props/collectibles/native/pencil.png",
+      "width": 306,
+      "height": 302,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        401,
+        424,
+        306,
+        302
+      ],
+      "native_pivot_top_left_px": [
+        153.0,
+        298
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013245
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        302,
+        298
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_books",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "books",
+      "path": "props/collectibles/native/books.png",
+      "width": 398,
+      "height": 284,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        701,
+        451,
+        398,
+        284
+      ],
+      "native_pivot_top_left_px": [
+        199.0,
+        280
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.014085
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        394,
+        280
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_mug",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "mug",
+      "path": "props/collectibles/native/mug.png",
+      "width": 305,
+      "height": 282,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        1126,
+        445,
+        305,
+        282
+      ],
+      "native_pivot_top_left_px": [
+        152.5,
+        278
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.014184
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        301,
+        278
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_envelope",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "envelope",
+      "path": "props/collectibles/native/envelope.png",
+      "width": 395,
+      "height": 286,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        34,
+        762,
+        395,
+        286
+      ],
+      "native_pivot_top_left_px": [
+        197.5,
+        282
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013986
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        391,
+        282
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_checklist",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "checklist",
+      "path": "props/collectibles/native/checklist.png",
+      "width": 289,
+      "height": 344,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        461,
+        712,
+        289,
+        344
+      ],
+      "native_pivot_top_left_px": [
+        144.5,
+        340
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011628
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        285,
+        340
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_energy_token",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "energy_token",
+      "path": "props/collectibles/native/energy_token.png",
+      "width": 333,
+      "height": 301,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        767,
+        735,
+        333,
+        301
+      ],
+      "native_pivot_top_left_px": [
+        166.5,
+        297
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013289
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        329,
+        297
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "collectibles_calm_token",
+      "category": "prop",
+      "group": "collectibles",
+      "name": "calm_token",
+      "path": "props/collectibles/native/calm_token.png",
+      "width": 265,
+      "height": 310,
+      "alpha": true,
+      "source_atlas": "props/collectibles/atlases/collectibles.png",
+      "source_rect": [
+        1139,
+        742,
+        265,
+        310
+      ],
+      "native_pivot_top_left_px": [
+        132.5,
+        306
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012903
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        261,
+        306
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_red_locker",
+      "category": "prop",
+      "group": "school_props",
+      "name": "red_locker",
+      "path": "props/world/native/red_locker.png",
+      "width": 188,
+      "height": 382,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        84,
+        31,
+        188,
+        382
+      ],
+      "native_pivot_top_left_px": [
+        94.0,
+        378
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010471
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        184,
+        378
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_navy_locker",
+      "category": "prop",
+      "group": "school_props",
+      "name": "navy_locker",
+      "path": "props/world/native/navy_locker.png",
+      "width": 184,
+      "height": 381,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        450,
+        31,
+        184,
+        381
+      ],
+      "native_pivot_top_left_px": [
+        92.0,
+        377
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.010499
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        180,
+        377
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_desk",
+      "category": "prop",
+      "group": "school_props",
+      "name": "desk",
+      "path": "props/world/native/desk.png",
+      "width": 365,
+      "height": 309,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        724,
+        101,
+        365,
+        309
+      ],
+      "native_pivot_top_left_px": [
+        182.5,
+        305
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012945
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        361,
+        305
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_chair",
+      "category": "prop",
+      "group": "school_props",
+      "name": "chair",
+      "path": "props/world/native/chair.png",
+      "width": 243,
+      "height": 350,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        1146,
+        61,
+        243,
+        350
+      ],
+      "native_pivot_top_left_px": [
+        121.5,
+        346
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.011429
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        239,
+        346
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_bookcase",
+      "category": "prop",
+      "group": "school_props",
+      "name": "bookcase",
+      "path": "props/world/native/bookcase.png",
+      "width": 314,
+      "height": 296,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        25,
+        452,
+        314,
+        296
+      ],
+      "native_pivot_top_left_px": [
+        157.0,
+        292
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013514
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        310,
+        292
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_chalkboard",
+      "category": "prop",
+      "group": "school_props",
+      "name": "chalkboard",
+      "path": "props/world/native/chalkboard.png",
+      "width": 360,
+      "height": 301,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        359,
+        442,
+        360,
+        301
+      ],
+      "native_pivot_top_left_px": [
+        180.0,
+        297
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013289
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        356,
+        297
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_noticeboard",
+      "category": "prop",
+      "group": "school_props",
+      "name": "noticeboard",
+      "path": "props/world/native/noticeboard.png",
+      "width": 354,
+      "height": 299,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        732,
+        443,
+        354,
+        299
+      ],
+      "native_pivot_top_left_px": [
+        177.0,
+        295
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013378
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        350,
+        295
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_lamp",
+      "category": "prop",
+      "group": "school_props",
+      "name": "lamp",
+      "path": "props/world/native/lamp.png",
+      "width": 269,
+      "height": 294,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        1133,
+        449,
+        269,
+        294
+      ],
+      "native_pivot_top_left_px": [
+        134.5,
+        290
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013605
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        265,
+        290
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_stump",
+      "category": "prop",
+      "group": "school_props",
+      "name": "stump",
+      "path": "props/world/native/stump.png",
+      "width": 333,
+      "height": 230,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        14,
+        821,
+        333,
+        230
+      ],
+      "native_pivot_top_left_px": [
+        166.5,
+        226
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.017391
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        329,
+        226
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_log",
+      "category": "prop",
+      "group": "school_props",
+      "name": "log",
+      "path": "props/world/native/log.png",
+      "width": 453,
+      "height": 229,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        356,
+        816,
+        453,
+        229
+      ],
+      "native_pivot_top_left_px": [
+        226.5,
+        225
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.017467
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        449,
+        225
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_plant",
+      "category": "prop",
+      "group": "school_props",
+      "name": "plant",
+      "path": "props/world/native/plant.png",
+      "width": 296,
+      "height": 297,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        792,
+        752,
+        296,
+        297
+      ],
+      "native_pivot_top_left_px": [
+        148.0,
+        293
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013468
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        292,
+        293
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "school_props_science_volcano",
+      "category": "prop",
+      "group": "school_props",
+      "name": "science_volcano",
+      "path": "props/world/native/science_volcano.png",
+      "width": 357,
+      "height": 286,
+      "alpha": true,
+      "source_atlas": "props/world/atlases/school_props.png",
+      "source_rect": [
+        1084,
+        761,
+        357,
+        286
+      ],
+      "native_pivot_top_left_px": [
+        178.5,
+        282
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013986
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        353,
+        282
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_dialogue_panel",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "dialogue_panel",
+      "path": "ui/native/dialogue_panel.png",
+      "width": 401,
+      "height": 229,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        27,
+        147,
+        401,
+        229
+      ],
+      "native_pivot_top_left_px": [
+        200.5,
+        225
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.017467
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        397,
+        225
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_progress_track",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "progress_track",
+      "path": "ui/native/progress_track.png",
+      "width": 349,
+      "height": 113,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        429,
+        219,
+        349,
+        113
+      ],
+      "native_pivot_top_left_px": [
+        174.5,
+        109
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.035398
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        345,
+        109
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_wood_button",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "wood_button",
+      "path": "ui/native/wood_button.png",
+      "width": 325,
+      "height": 196,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        782,
+        169,
+        325,
+        196
+      ],
+      "native_pivot_top_left_px": [
+        162.5,
+        192
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.020408
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        321,
+        192
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_paper_button",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "paper_button",
+      "path": "ui/native/paper_button.png",
+      "width": 321,
+      "height": 158,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        1111,
+        204,
+        321,
+        158
+      ],
+      "native_pivot_top_left_px": [
+        160.5,
+        154
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.025316
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        317,
+        154
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_heart",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "heart",
+      "path": "ui/native/heart.png",
+      "width": 295,
+      "height": 241,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        53,
+        444,
+        295,
+        241
+      ],
+      "native_pivot_top_left_px": [
+        147.5,
+        237
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.016598
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        291,
+        237
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_star",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "star",
+      "path": "ui/native/star.png",
+      "width": 290,
+      "height": 277,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        423,
+        412,
+        290,
+        277
+      ],
+      "native_pivot_top_left_px": [
+        145.0,
+        273
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.01444
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        286,
+        273
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_leaf",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "leaf",
+      "path": "ui/native/leaf.png",
+      "width": 229,
+      "height": 292,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        818,
+        407,
+        229,
+        292
+      ],
+      "native_pivot_top_left_px": [
+        114.5,
+        288
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.013699
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        225,
+        288
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_hint_bulb",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "hint_bulb",
+      "path": "ui/native/hint_bulb.png",
+      "width": 307,
+      "height": 317,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        1116,
+        390,
+        307,
+        317
+      ],
+      "native_pivot_top_left_px": [
+        153.5,
+        313
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.012618
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        303,
+        313
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_chapter_early",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "chapter_early",
+      "path": "ui/native/chapter_early.png",
+      "width": 341,
+      "height": 283,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        32,
+        718,
+        341,
+        283
+      ],
+      "native_pivot_top_left_px": [
+        170.5,
+        279
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.014134
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        337,
+        279
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_chapter_middle",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "chapter_middle",
+      "path": "ui/native/chapter_middle.png",
+      "width": 340,
+      "height": 282,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        391,
+        718,
+        340,
+        282
+      ],
+      "native_pivot_top_left_px": [
+        170.0,
+        278
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.014184
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        336,
+        278
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_chapter_teen",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "chapter_teen",
+      "path": "ui/native/chapter_teen.png",
+      "width": 339,
+      "height": 283,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        746,
+        718,
+        339,
+        283
+      ],
+      "native_pivot_top_left_px": [
+        169.5,
+        279
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.014134
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        335,
+        279
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "ui_parts_reward_check",
+      "category": "ui",
+      "group": "ui_parts",
+      "name": "reward_check",
+      "path": "ui/native/reward_check.png",
+      "width": 343,
+      "height": 277,
+      "alpha": true,
+      "source_atlas": "ui/atlases/ui_parts.png",
+      "source_rect": [
+        1092,
+        723,
+        343,
+        277
+      ],
+      "native_pivot_top_left_px": [
+        171.5,
+        273
+      ],
+      "native_pivot_bottom_left_normalized": [
+        0.5,
+        0.01444
+      ],
+      "meaningful_alpha_bounds": [
+        4,
+        4,
+        339,
+        273
+      ],
+      "role": "sprite"
+    },
+    {
+      "id": "red_painted_metal",
+      "category": "material",
+      "group": "school_materials",
+      "name": "red_painted_metal",
+      "path": "materials/tiles/red_painted_metal.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.65,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/school_materials.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "navy_painted_metal",
+      "category": "material",
+      "group": "school_materials",
+      "name": "navy_painted_metal",
+      "path": "materials/tiles/navy_painted_metal.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.65,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/school_materials.png",
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "desk_oak",
+      "category": "material",
+      "group": "school_materials",
+      "name": "desk_oak",
+      "path": "materials/tiles/desk_oak.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/school_materials.png",
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "cream_plaster",
+      "category": "material",
+      "group": "school_materials",
+      "name": "cream_plaster",
+      "path": "materials/tiles/cream_plaster.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/school_materials.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "blue_gray_linoleum",
+      "category": "material",
+      "group": "school_materials",
+      "name": "blue_gray_linoleum",
+      "path": "materials/tiles/blue_gray_linoleum.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/school_materials.png",
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "cork",
+      "category": "material",
+      "group": "school_materials",
+      "name": "cork",
+      "path": "materials/tiles/cork.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/school_materials.png",
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "warm_oak_bark",
+      "category": "material",
+      "group": "nature_materials",
+      "name": "warm_oak_bark",
+      "path": "materials/tiles/warm_oak_bark.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/nature_materials.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "mature_oak_bark",
+      "category": "material",
+      "group": "nature_materials",
+      "name": "mature_oak_bark",
+      "path": "materials/tiles/mature_oak_bark.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/nature_materials.png",
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "mossy_oak_bark",
+      "category": "material",
+      "group": "nature_materials",
+      "name": "mossy_oak_bark",
+      "path": "materials/tiles/mossy_oak_bark.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/nature_materials.png",
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "grass",
+      "category": "material",
+      "group": "nature_materials",
+      "name": "grass",
+      "path": "materials/tiles/grass.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/nature_materials.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "garden_soil",
+      "category": "material",
+      "group": "nature_materials",
+      "name": "garden_soil",
+      "path": "materials/tiles/garden_soil.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/nature_materials.png",
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "sidewalk_concrete",
+      "category": "material",
+      "group": "nature_materials",
+      "name": "sidewalk_concrete",
+      "path": "materials/tiles/sidewalk_concrete.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/nature_materials.png",
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "navy_hoodie_cotton",
+      "category": "material",
+      "group": "cloth_materials",
+      "name": "navy_hoodie_cotton",
+      "path": "materials/tiles/navy_hoodie_cotton.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/cloth_materials.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "gold_shirt_cotton",
+      "category": "material",
+      "group": "cloth_materials",
+      "name": "gold_shirt_cotton",
+      "path": "materials/tiles/gold_shirt_cotton.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/cloth_materials.png",
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "blue_denim",
+      "category": "material",
+      "group": "cloth_materials",
+      "name": "blue_denim",
+      "path": "materials/tiles/blue_denim.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/cloth_materials.png",
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "cream_sleeve_cotton",
+      "category": "material",
+      "group": "cloth_materials",
+      "name": "cream_sleeve_cotton",
+      "path": "materials/tiles/cream_sleeve_cotton.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/cloth_materials.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "brown_canvas",
+      "category": "material",
+      "group": "cloth_materials",
+      "name": "brown_canvas",
+      "path": "materials/tiles/brown_canvas.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/cloth_materials.png",
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "cream_rubber",
+      "category": "material",
+      "group": "cloth_materials",
+      "name": "cream_rubber",
+      "path": "materials/tiles/cream_rubber.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/cloth_materials.png",
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "blank_paper",
+      "category": "material",
+      "group": "creative_materials",
+      "name": "blank_paper",
+      "path": "materials/tiles/blank_paper.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/creative_materials.png",
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "ruled_paper",
+      "category": "material",
+      "group": "creative_materials",
+      "name": "ruled_paper",
+      "path": "materials/tiles/ruled_paper.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/creative_materials.png",
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "chalkboard_surface",
+      "category": "material",
+      "group": "creative_materials",
+      "name": "chalkboard_surface",
+      "path": "materials/tiles/chalkboard_surface.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/creative_materials.png",
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "warm_brick",
+      "category": "material",
+      "group": "creative_materials",
+      "name": "warm_brick",
+      "path": "materials/tiles/warm_brick.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/creative_materials.png",
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "oak_floor",
+      "category": "material",
+      "group": "creative_materials",
+      "name": "oak_floor",
+      "path": "materials/tiles/oak_floor.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/creative_materials.png",
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "moss_ground",
+      "category": "material",
+      "group": "creative_materials",
+      "name": "moss_ground",
+      "path": "materials/tiles/moss_ground.png",
+      "width": 512,
+      "height": 512,
+      "alpha": false,
+      "role": "base_color",
+      "color_space": "sRGB",
+      "recommended_sampler": "mirrored_repeat",
+      "metallic": 0.0,
+      "roughness_starting_value": 0.85,
+      "ordinary_repeat_verified_seamless": false,
+      "source_atlas": "materials/atlases/creative_materials.png",
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "id": "school_hub",
+      "category": "environment",
+      "group": "environments",
+      "name": "school_hub",
+      "path": "environments/school_hub.png",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "role": "flattened_backdrop",
+      "parallax_layers": false,
+      "collision_geometry": false
+    },
+    {
+      "id": "garden_hub",
+      "category": "environment",
+      "group": "environments",
+      "name": "garden_hub",
+      "path": "environments/garden_hub.png",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "role": "flattened_backdrop",
+      "parallax_layers": false,
+      "collision_geometry": false
+    },
+    {
+      "id": "neighbourhood_hub",
+      "category": "environment",
+      "group": "environments",
+      "name": "neighbourhood_hub",
+      "path": "environments/neighbourhood_hub.png",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "role": "flattened_backdrop",
+      "parallax_layers": false,
+      "collision_geometry": false
+    }
+  ],
+  "atlases": [
+    {
+      "id": "young",
+      "path": "characters/young_mark/atlases/young.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 2,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "young_front",
+          "rect": [
+            149,
+            7,
+            195,
+            500
+          ]
+        },
+        {
+          "id": "young_front_right",
+          "rect": [
+            484,
+            6,
+            216,
+            503
+          ]
+        },
+        {
+          "id": "young_right",
+          "rect": [
+            843,
+            11,
+            184,
+            498
+          ]
+        },
+        {
+          "id": "young_back_right",
+          "rect": [
+            1191,
+            8,
+            197,
+            501
+          ]
+        },
+        {
+          "id": "young_back",
+          "rect": [
+            144,
+            509,
+            207,
+            508
+          ]
+        },
+        {
+          "id": "young_back_left",
+          "rect": [
+            486,
+            509,
+            202,
+            507
+          ]
+        },
+        {
+          "id": "young_left",
+          "rect": [
+            850,
+            510,
+            185,
+            505
+          ]
+        },
+        {
+          "id": "young_front_left",
+          "rect": [
+            1181,
+            509,
+            206,
+            507
+          ]
+        }
+      ]
+    },
+    {
+      "id": "middle",
+      "path": "characters/middle_mark/atlases/middle.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 2,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "middle_front",
+          "rect": [
+            195,
+            3,
+            189,
+            506
+          ]
+        },
+        {
+          "id": "middle_front_right",
+          "rect": [
+            525,
+            6,
+            203,
+            505
+          ]
+        },
+        {
+          "id": "middle_right",
+          "rect": [
+            842,
+            7,
+            180,
+            502
+          ]
+        },
+        {
+          "id": "middle_back_right",
+          "rect": [
+            1170,
+            4,
+            200,
+            506
+          ]
+        },
+        {
+          "id": "middle_back",
+          "rect": [
+            186,
+            511,
+            197,
+            504
+          ]
+        },
+        {
+          "id": "middle_back_left",
+          "rect": [
+            524,
+            511,
+            203,
+            505
+          ]
+        },
+        {
+          "id": "middle_left",
+          "rect": [
+            853,
+            513,
+            173,
+            504
+          ]
+        },
+        {
+          "id": "middle_front_left",
+          "rect": [
+            1171,
+            513,
+            200,
+            505
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teen",
+      "path": "characters/teen_mark/atlases/teen.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 2,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "teen_front",
+          "rect": [
+            177,
+            7,
+            198,
+            508
+          ]
+        },
+        {
+          "id": "teen_front_right",
+          "rect": [
+            521,
+            7,
+            197,
+            508
+          ]
+        },
+        {
+          "id": "teen_right",
+          "rect": [
+            824,
+            11,
+            187,
+            505
+          ]
+        },
+        {
+          "id": "teen_back_right",
+          "rect": [
+            1142,
+            8,
+            195,
+            507
+          ]
+        },
+        {
+          "id": "teen_back",
+          "rect": [
+            177,
+            511,
+            201,
+            505
+          ]
+        },
+        {
+          "id": "teen_back_left",
+          "rect": [
+            521,
+            511,
+            199,
+            505
+          ]
+        },
+        {
+          "id": "teen_left",
+          "rect": [
+            850,
+            513,
+            179,
+            504
+          ]
+        },
+        {
+          "id": "teen_front_left",
+          "rect": [
+            1169,
+            515,
+            190,
+            502
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bark",
+      "path": "characters/bark/atlases/bark.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 2,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "bark_front",
+          "rect": [
+            20,
+            22,
+            380,
+            466
+          ]
+        },
+        {
+          "id": "bark_front_right",
+          "rect": [
+            422,
+            21,
+            334,
+            468
+          ]
+        },
+        {
+          "id": "bark_right",
+          "rect": [
+            841,
+            22,
+            290,
+            468
+          ]
+        },
+        {
+          "id": "bark_back_right",
+          "rect": [
+            1168,
+            25,
+            346,
+            463
+          ]
+        },
+        {
+          "id": "bark_back",
+          "rect": [
+            22,
+            518,
+            369,
+            452
+          ]
+        },
+        {
+          "id": "bark_back_left",
+          "rect": [
+            411,
+            522,
+            319,
+            450
+          ]
+        },
+        {
+          "id": "bark_left",
+          "rect": [
+            766,
+            511,
+            307,
+            467
+          ]
+        },
+        {
+          "id": "bark_front_left",
+          "rect": [
+            1160,
+            514,
+            356,
+            456
+          ]
+        }
+      ]
+    },
+    {
+      "id": "young_actions",
+      "path": "characters/young_mark/atlases/young_actions.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 3,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "young_actions_idle",
+          "rect": [
+            126,
+            4,
+            172,
+            387
+          ]
+        },
+        {
+          "id": "young_actions_walk_stride_a",
+          "rect": [
+            441,
+            9,
+            222,
+            378
+          ]
+        },
+        {
+          "id": "young_actions_walk_passing",
+          "rect": [
+            764,
+            12,
+            242,
+            374
+          ]
+        },
+        {
+          "id": "young_actions_walk_stride_b",
+          "rect": [
+            1147,
+            12,
+            242,
+            377
+          ]
+        },
+        {
+          "id": "young_actions_run_stride_a",
+          "rect": [
+            28,
+            395,
+            309,
+            337
+          ]
+        },
+        {
+          "id": "young_actions_run_passing",
+          "rect": [
+            415,
+            395,
+            274,
+            340
+          ]
+        },
+        {
+          "id": "young_actions_run_stride_b",
+          "rect": [
+            747,
+            396,
+            293,
+            334
+          ]
+        },
+        {
+          "id": "young_actions_run_flight",
+          "rect": [
+            1091,
+            391,
+            345,
+            300
+          ]
+        },
+        {
+          "id": "young_actions_jump",
+          "rect": [
+            40,
+            724,
+            283,
+            302
+          ]
+        },
+        {
+          "id": "young_actions_crouch",
+          "rect": [
+            391,
+            776,
+            276,
+            283
+          ]
+        },
+        {
+          "id": "young_actions_notebook",
+          "rect": [
+            800,
+            714,
+            213,
+            359
+          ]
+        },
+        {
+          "id": "young_actions_paper_plane",
+          "rect": [
+            1084,
+            729,
+            347,
+            338
+          ]
+        }
+      ]
+    },
+    {
+      "id": "middle_actions",
+      "path": "characters/middle_mark/atlases/middle_actions.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 3,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "middle_actions_idle",
+          "rect": [
+            181,
+            5,
+            145,
+            359
+          ]
+        },
+        {
+          "id": "middle_actions_walk_stride_a",
+          "rect": [
+            464,
+            5,
+            232,
+            363
+          ]
+        },
+        {
+          "id": "middle_actions_walk_passing",
+          "rect": [
+            815,
+            8,
+            250,
+            360
+          ]
+        },
+        {
+          "id": "middle_actions_walk_stride_b",
+          "rect": [
+            1206,
+            3,
+            232,
+            365
+          ]
+        },
+        {
+          "id": "middle_actions_run_stride_a",
+          "rect": [
+            90,
+            366,
+            272,
+            321
+          ]
+        },
+        {
+          "id": "middle_actions_run_passing",
+          "rect": [
+            450,
+            366,
+            289,
+            314
+          ]
+        },
+        {
+          "id": "middle_actions_run_stride_b",
+          "rect": [
+            812,
+            368,
+            247,
+            303
+          ]
+        },
+        {
+          "id": "middle_actions_run_flight",
+          "rect": [
+            1193,
+            365,
+            295,
+            300
+          ]
+        },
+        {
+          "id": "middle_actions_jump",
+          "rect": [
+            67,
+            663,
+            288,
+            341
+          ]
+        },
+        {
+          "id": "middle_actions_crouch",
+          "rect": [
+            441,
+            711,
+            288,
+            281
+          ]
+        },
+        {
+          "id": "middle_actions_notebook",
+          "rect": [
+            844,
+            662,
+            189,
+            346
+          ]
+        },
+        {
+          "id": "middle_actions_paper_plane",
+          "rect": [
+            1166,
+            687,
+            346,
+            310
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teen_actions",
+      "path": "characters/teen_mark/atlases/teen_actions.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 3,
+      "nominal_rows": 2,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "teen_actions_idle",
+          "rect": [
+            213,
+            4,
+            221,
+            519
+          ]
+        },
+        {
+          "id": "teen_actions_walk",
+          "rect": [
+            624,
+            8,
+            293,
+            518
+          ]
+        },
+        {
+          "id": "teen_actions_run",
+          "rect": [
+            1064,
+            23,
+            359,
+            495
+          ]
+        },
+        {
+          "id": "teen_actions_jump",
+          "rect": [
+            157,
+            523,
+            337,
+            482
+          ]
+        },
+        {
+          "id": "teen_actions_crouch",
+          "rect": [
+            562,
+            582,
+            398,
+            393
+          ]
+        },
+        {
+          "id": "teen_actions_notebook",
+          "rect": [
+            1096,
+            500,
+            277,
+            517
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bark_actions",
+      "path": "characters/bark/atlases/bark_actions.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 3,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "bark_actions_idle",
+          "rect": [
+            65,
+            10,
+            266,
+            354
+          ]
+        },
+        {
+          "id": "bark_actions_walk_stride_a",
+          "rect": [
+            425,
+            10,
+            269,
+            354
+          ]
+        },
+        {
+          "id": "bark_actions_walk_passing",
+          "rect": [
+            779,
+            15,
+            276,
+            349
+          ]
+        },
+        {
+          "id": "bark_actions_walk_stride_b",
+          "rect": [
+            1135,
+            14,
+            273,
+            350
+          ]
+        },
+        {
+          "id": "bark_actions_run_stride_a",
+          "rect": [
+            50,
+            374,
+            292,
+            330
+          ]
+        },
+        {
+          "id": "bark_actions_run_passing",
+          "rect": [
+            411,
+            370,
+            297,
+            324
+          ]
+        },
+        {
+          "id": "bark_actions_run_stride_b",
+          "rect": [
+            784,
+            372,
+            274,
+            333
+          ]
+        },
+        {
+          "id": "bark_actions_hop",
+          "rect": [
+            1115,
+            364,
+            318,
+            311
+          ]
+        },
+        {
+          "id": "bark_actions_hint",
+          "rect": [
+            60,
+            706,
+            286,
+            343
+          ]
+        },
+        {
+          "id": "bark_actions_point",
+          "rect": [
+            388,
+            699,
+            350,
+            352
+          ]
+        },
+        {
+          "id": "bark_actions_cheer",
+          "rect": [
+            754,
+            696,
+            308,
+            359
+          ]
+        },
+        {
+          "id": "bark_actions_carry",
+          "rect": [
+            1156,
+            702,
+            244,
+            353
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collectibles",
+      "path": "props/collectibles/atlases/collectibles.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 3,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "collectibles_notebook",
+          "rect": [
+            15,
+            34,
+            378,
+            379
+          ]
+        },
+        {
+          "id": "collectibles_paper_plane",
+          "rect": [
+            396,
+            111,
+            381,
+            264
+          ]
+        },
+        {
+          "id": "collectibles_leaf_token",
+          "rect": [
+            766,
+            76,
+            273,
+            326
+          ]
+        },
+        {
+          "id": "collectibles_bark_token",
+          "rect": [
+            1113,
+            77,
+            319,
+            321
+          ]
+        },
+        {
+          "id": "collectibles_science_rosette",
+          "rect": [
+            63,
+            413,
+            282,
+            350
+          ]
+        },
+        {
+          "id": "collectibles_pencil",
+          "rect": [
+            401,
+            424,
+            306,
+            302
+          ]
+        },
+        {
+          "id": "collectibles_books",
+          "rect": [
+            701,
+            451,
+            398,
+            284
+          ]
+        },
+        {
+          "id": "collectibles_mug",
+          "rect": [
+            1126,
+            445,
+            305,
+            282
+          ]
+        },
+        {
+          "id": "collectibles_envelope",
+          "rect": [
+            34,
+            762,
+            395,
+            286
+          ]
+        },
+        {
+          "id": "collectibles_checklist",
+          "rect": [
+            461,
+            712,
+            289,
+            344
+          ]
+        },
+        {
+          "id": "collectibles_energy_token",
+          "rect": [
+            767,
+            735,
+            333,
+            301
+          ]
+        },
+        {
+          "id": "collectibles_calm_token",
+          "rect": [
+            1139,
+            742,
+            265,
+            310
+          ]
+        }
+      ]
+    },
+    {
+      "id": "school_props",
+      "path": "props/world/atlases/school_props.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 3,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "school_props_red_locker",
+          "rect": [
+            84,
+            31,
+            188,
+            382
+          ]
+        },
+        {
+          "id": "school_props_navy_locker",
+          "rect": [
+            450,
+            31,
+            184,
+            381
+          ]
+        },
+        {
+          "id": "school_props_desk",
+          "rect": [
+            724,
+            101,
+            365,
+            309
+          ]
+        },
+        {
+          "id": "school_props_chair",
+          "rect": [
+            1146,
+            61,
+            243,
+            350
+          ]
+        },
+        {
+          "id": "school_props_bookcase",
+          "rect": [
+            25,
+            452,
+            314,
+            296
+          ]
+        },
+        {
+          "id": "school_props_chalkboard",
+          "rect": [
+            359,
+            442,
+            360,
+            301
+          ]
+        },
+        {
+          "id": "school_props_noticeboard",
+          "rect": [
+            732,
+            443,
+            354,
+            299
+          ]
+        },
+        {
+          "id": "school_props_lamp",
+          "rect": [
+            1133,
+            449,
+            269,
+            294
+          ]
+        },
+        {
+          "id": "school_props_stump",
+          "rect": [
+            14,
+            821,
+            333,
+            230
+          ]
+        },
+        {
+          "id": "school_props_log",
+          "rect": [
+            356,
+            816,
+            453,
+            229
+          ]
+        },
+        {
+          "id": "school_props_plant",
+          "rect": [
+            792,
+            752,
+            296,
+            297
+          ]
+        },
+        {
+          "id": "school_props_science_volcano",
+          "rect": [
+            1084,
+            761,
+            357,
+            286
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ui_parts",
+      "path": "ui/atlases/ui_parts.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "nominal_columns": 4,
+      "nominal_rows": 3,
+      "uniform_grid_safe": false,
+      "frames": [
+        {
+          "id": "ui_parts_dialogue_panel",
+          "rect": [
+            27,
+            147,
+            401,
+            229
+          ]
+        },
+        {
+          "id": "ui_parts_progress_track",
+          "rect": [
+            429,
+            219,
+            349,
+            113
+          ]
+        },
+        {
+          "id": "ui_parts_wood_button",
+          "rect": [
+            782,
+            169,
+            325,
+            196
+          ]
+        },
+        {
+          "id": "ui_parts_paper_button",
+          "rect": [
+            1111,
+            204,
+            321,
+            158
+          ]
+        },
+        {
+          "id": "ui_parts_heart",
+          "rect": [
+            53,
+            444,
+            295,
+            241
+          ]
+        },
+        {
+          "id": "ui_parts_star",
+          "rect": [
+            423,
+            412,
+            290,
+            277
+          ]
+        },
+        {
+          "id": "ui_parts_leaf",
+          "rect": [
+            818,
+            407,
+            229,
+            292
+          ]
+        },
+        {
+          "id": "ui_parts_hint_bulb",
+          "rect": [
+            1116,
+            390,
+            307,
+            317
+          ]
+        },
+        {
+          "id": "ui_parts_chapter_early",
+          "rect": [
+            32,
+            718,
+            341,
+            283
+          ]
+        },
+        {
+          "id": "ui_parts_chapter_middle",
+          "rect": [
+            391,
+            718,
+            340,
+            282
+          ]
+        },
+        {
+          "id": "ui_parts_chapter_teen",
+          "rect": [
+            746,
+            718,
+            339,
+            283
+          ]
+        },
+        {
+          "id": "ui_parts_reward_check",
+          "rect": [
+            1092,
+            723,
+            343,
+            277
+          ]
+        }
+      ]
+    },
+    {
+      "id": "school_materials",
+      "path": "materials/atlases/school_materials.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 3,
+      "nominal_rows": 2,
+      "uniform_grid_safe": true
+    },
+    {
+      "id": "nature_materials",
+      "path": "materials/atlases/nature_materials.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 3,
+      "nominal_rows": 2,
+      "uniform_grid_safe": true
+    },
+    {
+      "id": "cloth_materials",
+      "path": "materials/atlases/cloth_materials.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 3,
+      "nominal_rows": 2,
+      "uniform_grid_safe": true
+    },
+    {
+      "id": "creative_materials",
+      "path": "materials/atlases/creative_materials.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "nominal_columns": 3,
+      "nominal_rows": 2,
+      "uniform_grid_safe": true
+    }
+  ],
+  "key_pose_previews": {
+    "young_actions": {
+      "walk_key_pose_preview": {
+        "frames": [
+          "young_actions_walk_stride_a",
+          "young_actions_walk_passing",
+          "young_actions_walk_stride_b",
+          "young_actions_walk_passing"
+        ],
+        "fps": 6,
+        "production_ready_cycle": false
+      },
+      "run_key_pose_preview": {
+        "frames": [
+          "young_actions_run_stride_a",
+          "young_actions_run_passing",
+          "young_actions_run_stride_b",
+          "young_actions_run_flight"
+        ],
+        "fps": 8,
+        "production_ready_cycle": false
+      }
+    },
+    "middle_actions": {
+      "walk_key_pose_preview": {
+        "frames": [
+          "middle_actions_walk_stride_a",
+          "middle_actions_walk_passing",
+          "middle_actions_walk_stride_b",
+          "middle_actions_walk_passing"
+        ],
+        "fps": 6,
+        "production_ready_cycle": false
+      },
+      "run_key_pose_preview": {
+        "frames": [
+          "middle_actions_run_stride_a",
+          "middle_actions_run_passing",
+          "middle_actions_run_stride_b",
+          "middle_actions_run_flight"
+        ],
+        "fps": 8,
+        "production_ready_cycle": false
+      }
+    },
+    "bark_actions": {
+      "walk_key_pose_preview": {
+        "frames": [
+          "bark_actions_walk_stride_a",
+          "bark_actions_walk_passing",
+          "bark_actions_walk_stride_b",
+          "bark_actions_walk_passing"
+        ],
+        "fps": 6,
+        "production_ready_cycle": false
+      },
+      "run_key_pose_preview": {
+        "frames": [
+          "bark_actions_run_stride_a",
+          "bark_actions_run_passing",
+          "bark_actions_run_stride_b",
+          "bark_actions_hop"
+        ],
+        "fps": 8,
+        "production_ready_cycle": false
+      }
+    }
+  },
+  "limitations": [
+    "Raster sprites, surface color tiles and flattened environments; no 3D meshes, rigs or UV-specific maps.",
+    "Generated action poses require animator cleanup, in-between frames and foot-lock review for final gameplay.",
+    "Direction views vary slightly; source and normalized versions are retained for adjustment.",
+    "Regular repeat is not certified seamless. Use mirrored repeat and inspect repeated motifs.",
+    "Age bands describe Mark in the story, not an independently assessed audience rating."
+  ]
+}
