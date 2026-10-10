@@ -11,7 +11,7 @@ func _ready() -> void:
 	load_save()
 
 func reset_game(write: bool = true) -> void:
-	data = {"stage":0, "notebook":false, "plant":false, "plant_restored":false, "books":false, "pencil":false, "assembled":0, "leaves":[], "bark_token":false, "discoveries":[], "checkpoint":220.0, "completed":false, "attempts":0}
+	data = {"shrunken":false, "stage":0, "notebook":false, "plant":false, "plant_restored":false, "books":false, "pencil":false, "assembled":0, "leaves":[], "bark_token":false, "discoveries":[], "checkpoint":220.0, "completed":false, "attempts":0}
 	if write:
 		save_game()
 

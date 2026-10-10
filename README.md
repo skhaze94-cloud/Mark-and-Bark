@@ -1,6 +1,6 @@
-# Mark & Bark: The Big Idea
+# Mark & Bark: The Big Idea — Fundate
 
-A playable Godot 4 project, updated with a cinematic 2.5D edition and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+The **Fundate** adds a shrinking-ray opening, forgiving double jumps, and taller miniature-campus routes to this playable Godot 4 project: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
@@ -10,6 +10,21 @@ A playable Godot 4 project, updated with a cinematic 2.5D edition and distinct r
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
 No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
+
+## The Fundate
+
+Bark's ray shrinks both friends in a **15-second, skippable opening**. Ordinary books become mountains and pencils become bridges. Their familiar Big Ideas Fair quest continues at miniature scale.
+
+Press **Space/W/Up again in midair**, or tap **Jump** again, for Bark's leafy lift. Mark gets one air jump, with no precise timing required; landing restores both jumps. Walking off a ledge still leaves an air rescue. Coyote time and landing input buffering are retained. A jump meter, soft wind ring, higher second-jump sound and Bark's cheer make the lift clear. The tutorial teaches it separately from the first jump; skipping unlocks it immediately.
+
+Climb the optional **Book-Spine Skyway** in the hallway, **Leaf-Top Lookout** in the garden, and **Pencil Express** in the workshop. Three leaf tokens, the garden notebook and Bark token reward the higher routes. Ground paths and required supplies stay accessible. The camera rises for high jumps, while room exits still preserve progress and play their named transitions.
+
+The title's **Start adventure**, **New adventure**, and ending's **Play again** use the ray introduction. **Watch the campus film** remains a separate optional tour. Reduced motion replaces the shrink animation with a static size reveal and disables wind rings; every essential action still works. Existing save paths and version-1 saves are preserved.
+
+See [Fundate notes and verification](docs/FUNDATE.md).
+
+![Tiny friends after the ray](docs/previews/fundate_intro.png)
+![The new leaf-top route](docs/previews/fundate_platforms.png)
 
 ## Grounded interactions update
 
@@ -21,7 +36,7 @@ This update was runtime-tested in Godot **4.4.1**, with the previous release's G
 
 ## Cinematic edition
 
-A 28-second skippable campus film opens a first adventure. Choose **Watch the campus film** on the title screen to replay it. E, Enter, Escape, or the large touch button skips it. Watching the film never changes quest progress.
+A 28-second skippable campus film is available as an optional tour. Choose **Watch the campus film** on the title screen to replay it. E, Enter, Escape, or the large touch button skips it. Watching the film never changes quest progress.
 
 New high-resolution transparent art adds an oak invention blackboard, a reading-nook cabinet and leafy canopy framing. Rear lockers, furniture, plants and near leaves occupy separate anchored render layers with cast shadows. Warm dust-lit shafts, a restrained world-only highlight glow and colour finish, gentle character breathing, and soft landing squash/dust enrich the stages. UI stays crisp above the world shader. Reduced motion fixes the film camera and disables scenery drift, animated dust and landing effects. This remains a 2D game with layered depth and the original character identities and pivots.
 
@@ -44,7 +59,7 @@ See [visual overhaul notes](docs/VISUAL_OVERHAUL.md) for implementation details,
 | Action | Keyboard | Touch |
 |---|---|---|
 | Move | A/D or left/right arrows | Hold left/right controls |
-| Jump | Space, W, or up arrow | Jump |
+| Jump / leafy double jump | Space, W, or up arrow; press again in midair | Tap Jump, then tap it again in midair |
 | Interact / next dialogue line | E or Enter | Use / Next |
 | Bark's hint | H | Hint button |
 | Pause | Escape | Pause button |
@@ -55,7 +70,7 @@ Settings include sound volume and reduced motion. Every sound has a visible coun
 
 ## Adventure
 
-Learn movement, jumping, notebook interaction, leaf collection, hints, and plane launching in the quiet garden. Then explore a connected hallway, discovery garden, and classroom workshop.
+Learn movement, jumping, a midair double jump, notebook interaction, leaf collection, hints, and plane launching in the quiet garden. Then explore a connected hallway, discovery garden, and classroom workshop.
 
 Recover Mark's notebook, return Bark's misplaced plant, gather the books and pencil, assemble the machine, and deliver the invitation to the fair board. The garden includes an elevated route, six optional leaves, two comic notebook entries, a hidden Bark token, and a shortcut unlocked by helping the garden.
 

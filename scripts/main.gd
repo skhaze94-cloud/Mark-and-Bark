@@ -3,7 +3,7 @@ extends Node2D
 const PlayerScript = preload("res://scripts/player.gd")
 const CampusScript = preload("res://scripts/campus.gd")
 const GOALS = ["Read the Big Ideas Fair invitation in the school hallway.","Find Mark's scattered design notebook in the garden.","Find the wandering plant and return it to the stump display.","Collect the book base and pencil guide for your invention.","Bring your supplies to the classroom invention desk.","Assemble your paper-plane machine at the desk.","Test your invention and deliver the invitation to the fair board.","Big idea complete! Explore the campus and find its secrets."]
-const TUTORIAL_GOALS = ["Walk right to meet Bark.","Jump over the low log. You can try as often as you like.","Walk to your notebook and interact with it.","Collect the bright leaf just ahead.","Ask Bark for a hint.","Interact with the practice plane for a gentle launch.","Watch your paper plane reach the target!"]
+const TUTORIAL_GOALS = ["Walk right to meet Bark.","Jump over the low log. You can try as often as you like.","Jump, then press Jump again in the air for Bark's leafy lift!", "Walk to your notebook and interact with it.","Collect the bright leaf just ahead.","Ask Bark for a hint.","Interact with the practice plane for a gentle launch.","Watch your paper plane reach the target!"]
 var campus: Node2D
 var player: CharacterBody2D
 var camera: Camera2D
@@ -54,6 +54,10 @@ var ambient: CanvasModulate
 var cinema
 var finish_material: ShaderMaterial
 var bark_pose_until: float = 0.0
+var shrinking_intro
+var tutorial_double_baseline: int = 0
+var jump_meter: Label
+var last_air_cheer: float = -10.0
 
 func sync_room() -> void:
 	campus.enter_room(campus.room_for(player.position.x))
@@ -117,6 +121,7 @@ func _ready() -> void:
 	campus.build(true)
 	player = PlayerScript.new()
 	add_child(player)
+	player.jumped.connect(on_player_jump)
 	player.position=Vector2(960,610)
 	player.enabled=false
 	camera=Camera2D.new()
@@ -142,6 +147,9 @@ func _ready() -> void:
 	cinema=load("res://scripts/campus_film.gd").new()
 	cinema.game=self
 	add_child(cinema)
+	shrinking_intro=load("res://scripts/shrinking_intro.gd").new()
+	shrinking_intro.game=self
+	add_child(shrinking_intro)
 	apply_settings()
 	show_title()
 
@@ -209,6 +217,9 @@ func build_ui() -> void:
 	zone_label=label_at(top,"THE BIG IDEA",Rect2(20,10,780,28),18,"e3c479")
 	objective=label_at(top,"",Rect2(20,43,780,60),22,"fff5dd")
 	counter=label_at(top,"",Rect2(850,15,180,86),17,"fff5dd")
+	jump_meter=label_at(hud,"",Rect2(25,540,225,55),18,"fff2bd")
+	jump_meter.add_theme_color_override("font_shadow_color",Color("203849"))
+	jump_meter.add_theme_constant_override("shadow_offset_y",2)
 	button(top,"Pause",Rect2(1070,28,145,55),show_pause)
 	prompt_panel=Panel.new()
 	prompt_panel.position=Vector2(255,638)
@@ -286,14 +297,14 @@ func show_title() -> void:
 	hud.visible=false
 	var p=open_modal(Rect2(65,50,580,625))
 	label_at(p,"MARK & BARK",Rect2(34,25,520,64),42)
-	label_at(p,"THE BIG IDEA",Rect2(36,92,500,45),28,"977134")
-	label_at(p,"One curious kid. One very lively tree.\nOne invention waiting to happen.",Rect2(36,150,505,83),22)
+	label_at(p,"THE BIG IDEA · FUNDATE",Rect2(36,92,500,45),25,"977134")
+	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,150,505,83),22)
 	button(p,"Continue adventure" if Progress.tutorial_done else "Start adventure",Rect2(36,253,506,64),start_continue,true)
 	button(p,"New adventure",Rect2(36,332,244,57),confirm_new)
 	button(p,"Replay tutorial",Rect2(296,332,246,57),start_tutorial)
 	button(p,"Settings & controls",Rect2(36,407,506,57),func():show_settings(show_title))
 	button(p,"Watch the campus film",Rect2(36,480,506,53),func():cinema.begin(return_from_film))
-	label_at(p,"Move: A/D or arrows · Jump: Space\nInteract: E · Hint: H · Pause: Esc",Rect2(36,546,510,52),16)
+	label_at(p,"Move: A/D or arrows · Double jump: Space twice\nInteract: E · Hint: H · Pause: Esc",Rect2(36,546,510,52),16)
 	camera.position=Vector2(640,360)
 	player.enabled=false
 
@@ -302,13 +313,13 @@ func confirm_new() -> void:
 	label_at(p,"Start a new adventure?",Rect2(30,26,560,50),30)
 	label_at(p,"This resets your current quest and discoveries. Your accessibility settings stay the same.",Rect2(30,95,560,95),22)
 	button(p,"Keep my adventure",Rect2(30,220,260,65),show_title)
-	button(p,"Start fresh",Rect2(320,220,270,65),func():Progress.reset_game();cinema.begin(start_tutorial),true)
+	button(p,"Start fresh",Rect2(320,220,270,65),func():Progress.reset_game();shrinking_intro.begin(start_tutorial),true)
 
 func start_continue() -> void:
 	if Progress.tutorial_done:
 		start_campus()
 	else:
-		cinema.begin(start_tutorial)
+		shrinking_intro.begin(start_tutorial)
 
 func start_tutorial() -> void:
 	cancel_room_transition()
@@ -317,6 +328,9 @@ func start_tutorial() -> void:
 	tutorial_step=0
 	tutorial_jumped=false
 	tutorial_seen_jump=false
+	tutorial_double_baseline=player.double_jump_count
+	player.visual_scale=0.24
+	player.reset_jumps()
 	campus.build(true)
 	player.position=Vector2(120,605)
 	player.velocity=Vector2.ZERO
@@ -325,11 +339,12 @@ func start_tutorial() -> void:
 	player.enabled=true
 	idle_time=0
 	camera.position=Vector2(640,360)
-	say(["Mark|What if my invention doesn't work?","Bark|Then we've invented a very interesting first attempt.","Mark|You've already tried it, haven't you?","Bark|Define 'tried.' And possibly 'where the supplies went.'\nLet's practise in the quiet garden first!"])
+	say(["Mark|We're tiny! How will we get to the fair?","Bark|Small steps. Big jumps. And one extra leafy lift from me!","Mark|And our invention?","Bark|Still a very interesting first attempt. Let's practise our tiny adventure here."])
 	update_hud()
 
 func finish_tutorial() -> void:
 	Progress.tutorial_done=true
+	Progress.data.shrunken=true
 	Progress.save_game()
 	start_campus()
 
@@ -337,6 +352,9 @@ func start_campus() -> void:
 	cancel_room_transition()
 	close_modal()
 	mode="campus"
+	player.visual_scale=0.24
+	player.reset_jumps()
+	Progress.data.shrunken=true
 	flight.clear()
 	prediction.clear_points()
 	if is_instance_valid(plane):
@@ -395,6 +413,13 @@ func dismiss_dialogue() -> void:
 		callback.call()
 
 func _input(event: InputEvent) -> void:
+	if mode=="shrinking" and event is InputEventScreenTouch:
+		input_touch=true
+		shrinking_intro.skip_button.text="Skip intro"
+		if event.pressed and Rect2(1030,15,220,48).has_point(event.position):
+			shrinking_intro.finish()
+			get_viewport().set_input_as_handled()
+		return
 	if mode=="cinematic" and event is InputEventScreenTouch:
 		input_touch=true
 		cinema.skip_button.text="Skip film"
@@ -437,6 +462,11 @@ func _input(event: InputEvent) -> void:
 		apply_settings()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.echo:return
+	if mode=="shrinking":
+		if event.is_action_pressed("interact") or event.is_action_pressed("pause"):shrinking_intro.finish()
+		get_viewport().set_input_as_handled()
+		return
 	if mode=="cinematic":
 		if event.is_action_pressed("interact") or event.is_action_pressed("pause"):cinema.finish()
 		get_viewport().set_input_as_handled()
@@ -463,11 +493,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func jump_pressed() -> void:
 	if not busy and mode in ["tutorial","campus"] and flight.is_empty():
 		player.request_jump()
-		play_sound("jump")
 
 func _physics_process(delta: float) -> void:
 	clock+=delta
-	if mode in ["title","cinematic"]:
+	if mode in ["title","cinematic","shrinking"]:
 		return
 	if not room_transition.is_empty():
 		update_room_transition(delta)
@@ -484,8 +513,12 @@ func _physics_process(delta: float) -> void:
 	var framing_x: float = player.position.x
 	if not flight.is_empty() and flight.kind=="workshop" and not Progress.settings.reduced_motion:
 		framing_x += minf(float(flight.t)*100.0,380.0)
-	var target=campus.camera_target(framing_x)
-	camera.position=target if Progress.settings.reduced_motion else camera.position.lerp(target,1-exp(-delta*5))
+	var target=campus.camera_target(framing_x,player.position.y if flight.is_empty() else 610.0,player.velocity.y<-80 and flight.is_empty())
+	if Progress.settings.reduced_motion:
+		camera.position=target
+	else:
+		camera.position.x=lerpf(camera.position.x,target.x,1-exp(-delta*5))
+		camera.position.y=lerpf(camera.position.y,target.y,1-exp(-delta*12))
 	var bounds: Vector2 = Vector2(0,1550) if mode=="tutorial" else campus.ROOM_BOUNDS[campus.room]
 	camera.position.x = clampf(camera.position.x,bounds.x+640,bounds.y-640)
 	campus.depth.camera_x = camera.position.x
@@ -511,13 +544,13 @@ func _physics_process(delta: float) -> void:
 		var follow_x=player.position.x-90*player.facing
 		if not (mode=="tutorial" and tutorial_step==0):
 			campus.bark.position.x=lerpf(campus.bark.position.x,follow_x,1-exp(-delta*3))
-			campus.bark.position.y=610
-		campus.bark.scale.x=0.26*player.facing
+			campus.bark.position.y=lerpf(campus.bark.position.y,player.position.y if not player.is_on_floor() else campus.support_y(campus.bark.position.x,player.position.y),1-exp(-delta*7))
+		campus.bark.scale.x=0.20*player.facing
 		if not busy and clock>bark_pose_until:
 			var frames = ["bark_actions_walk_stride_a","bark_actions_walk_passing","bark_actions_walk_stride_b","bark_actions_walk_passing"]
 			var walking = absf(campus.bark.position.x-follow_x)>15
 			campus.bark.texture=Art.tex(frames[int(clock*6)%4] if walking else "bark_actions_idle")
-			campus.bark.scale.y=0.26 if Progress.settings.reduced_motion or walking else 0.26*(1+sin(clock*1.8)*0.009)
+			campus.bark.scale.y=0.20 if Progress.settings.reduced_motion or walking else 0.20*(1+sin(clock*1.8)*0.009)
 	update_flight(delta)
 	toast_time-=delta
 	toast_label.visible=toast_time>0
@@ -531,9 +564,13 @@ func update_tutorial() -> void:
 		say(["Bark|Hello, inventor! Next, jump over that little log.\nSpace or the Jump button will do it."])
 	elif tutorial_step==1 and player.position.x>550 and tutorial_seen_jump:
 		tutorial_step=2
-		toast("Great jump! Now open your notebook.")
-	elif tutorial_step==3 and player.position.distance_to(Vector2(840,545))<95:
-		tutorial_step=4
+		tutorial_double_baseline=player.double_jump_count
+		say(["Bark|Nice landing! Now jump and press Jump AGAIN while you're in the air. I'll give you a leafy lift!","Mark|A double jump! That high book ledge looks much less high now."])
+	elif tutorial_step==2 and player.double_jump_count>tutorial_double_baseline and player.position.y<480:
+		tutorial_step=3
+		toast("Double jump! Brilliant. Now find your notebook on the ground.")
+	elif tutorial_step==4 and player.position.distance_to(Vector2(840,545))<95:
+		tutorial_step=5
 		var leaf=campus.object("tutorial_leaf")
 		leaf.visible=false
 		leaf.sprite.hide()
@@ -565,8 +602,9 @@ func update_checkpoint(delta: float) -> void:
 
 func update_hud() -> void:
 	if mode=="title":return
-	objective.text=TUTORIAL_GOALS[mini(tutorial_step,6)] if mode=="tutorial" else GOALS[clampi(int(Progress.data.stage),0,7)]
-	zone_label.text="GARDEN TUTORIAL" if mode=="tutorial" else last_zone
+	objective.text=TUTORIAL_GOALS[mini(tutorial_step,7)] if mode=="tutorial" else GOALS[clampi(int(Progress.data.stage),0,7)]
+	zone_label.text="TINY GARDEN TUTORIAL" if mode=="tutorial" else "FUNDATE · "+last_zone
+	jump_meter.text="JUMPS  ◆ ◆" if player.is_on_floor() or player.jumps_used==0 else "LEAFY LIFT  ◆" if player.jumps_used==1 else "LAND TO RECHARGE"
 	counter.text="Learn at your pace\nNo lost discoveries" if mode=="tutorial" else "Leaves  "+str(Progress.data.leaves.size())+" / 6\nNotes   "+str(Progress.data.discoveries.size())+" / 2\nBark token  "+("Found!" if Progress.data.bark_token else "Hidden")
 	hud.get_node("SkipTutorial").visible=mode=="tutorial"
 	touch_root.visible=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
@@ -594,12 +632,12 @@ func interact_pressed() -> void:
 func interact_object(id: String) -> void:
 	idle_time=0
 	if mode=="tutorial":
-		if id=="tutorial_notebook" and tutorial_step==2:
-			tutorial_step=3
+		if id=="tutorial_notebook" and tutorial_step==3:
+			tutorial_step=4
 			player.show_pose("young_actions_notebook",1)
 			say(["Mark|My notebook! Every invention starts with a question.","Bark|Mine starts with 'what happens if I poke this?'\nNow collect that lovely leaf."])
-		elif id=="tutorial_plane" and tutorial_step==5:
-			tutorial_step=6
+		elif id=="tutorial_plane" and tutorial_step==6:
+			tutorial_step=7
 			launch_tutorial()
 		else:
 			toast("Let's finish the current garden lesson first.")
@@ -633,7 +671,7 @@ func interact_object(id: String) -> void:
 				Progress.advance(3)
 				campus.refresh()
 				play_sound("success")
-				say(["Mark|There. Back where it belongs.","Bark|A little helping makes a big difference!\nThe garden shortcut is open. Find the books on the low branch route and the pencil near the workshop."])
+				say(["Mark|There. Back where it belongs.","Bark|A little helping makes a big difference!\nThe garden shortcut is open. Find the books on the low branch route and the pencil near the workshop. The leaf-tops hide extra surprises!"])
 			else:toast("This display is waiting for its potted plant. Find it farther right in the garden.")
 		"books","pencil":
 			if stage<3:toast("Help restore the garden display first.")
@@ -674,12 +712,12 @@ func request_hint() -> void:
 	campus.bark.texture=Art.tex("bark_actions_hint")
 	bark_pose_until=clock+3
 	if mode=="tutorial":
-		if tutorial_step==4:
-			tutorial_step=5
+		if tutorial_step==5:
+			tutorial_step=6
 			say(["Bark|Good inventors ask questions!\nWalk to the paper plane on the right and interact to launch it."])
-		else:say(["Bark|"+TUTORIAL_GOALS[mini(tutorial_step,6)]+"\nThere is no hurry. We can try again."])
+		else:say(["Bark|"+TUTORIAL_GOALS[mini(tutorial_step,7)]+"\nThere is no hurry. We can try again."])
 	else:
-		var clues=["The hallway noticeboard is between the lockers and the reading nook.","The notebook is at the garden entrance, just right of the school.","Pick up the plant farther right in the garden, then return it to the stump display on the left.","Books are on the lowest right-hand garden branch. Jump up from below! The pencil is just beyond it.","The invention desk is in the classroom on the far right. The garden shortcut can help.","At the desk, add the books, then the pencil, then load your plane.","Try the middle angle and medium power. I'll show you the flight path at the workshop.","Six leaves, two funny notebook pages, and one secret Bark token are waiting to be found!"]
+		var clues=["The hallway noticeboard is between the lockers and the reading nook.","The notebook is at the garden entrance, just right of the school.","Pick up the plant farther right in the garden, then return it to the stump display on the left.","Books are on the lowest right-hand garden branch. Jump up from below! The pencil is just beyond it. Press Jump again in the air to reach the optional leaf-tops.","The invention desk is in the classroom on the far right. The garden shortcut can help.","At the desk, add the books, then the pencil, then load your plane.","Try the middle angle and medium power. I'll show you the flight path at the workshop.","Six leaves, two funny notebook pages, and one secret Bark token are waiting to be found!"]
 		show_prediction=true
 		say(["Bark|"+clues[clampi(int(Progress.data.stage),0,7)]])
 
@@ -830,7 +868,7 @@ func show_ending() -> void:
 	p.add_child(image)
 	label_at(p,"Leaf discoveries: "+str(Progress.data.leaves.size())+" / 6\nFunny notebook pages: "+str(Progress.data.discoveries.size())+" / 2\nBark's secret token: "+("Found!" if Progress.data.bark_token else "Still waiting")+"\nInvention tests: "+str(Progress.data.attempts),Rect2(35,215,530,158),23)
 	button(p,"Explore the campus",Rect2(35,400,355,62),close_modal,true)
-	button(p,"Play again",Rect2(420,400,350,62),func():Progress.reset_game();cinema.begin(start_tutorial))
+	button(p,"Play again",Rect2(420,400,350,62),func():Progress.reset_game();shrinking_intro.begin(start_tutorial))
 	toast("A science rosette for curiosity, friendship, and your big idea!")
 
 func show_pause() -> void:
@@ -849,6 +887,7 @@ func restart_checkpoint() -> void:
 	prediction.clear_points()
 	if is_instance_valid(plane):plane.queue_free()
 	player.velocity=Vector2.ZERO
+	player.reset_jumps()
 	player.position=Vector2(120 if mode=="tutorial" else checkpoint,605)
 	player.enabled=true
 	if mode=="campus":sync_room()
@@ -883,7 +922,7 @@ func show_settings(back: Callable) -> void:
 	touch.add_theme_font_size_override("font_size",22)
 	p.add_child(touch)
 	touch.toggled.connect(func(value):Progress.settings.touch=value;Progress.save_game();apply_settings())
-	label_at(p,"A/D or arrows: move · Space/W/Up: jump\nE/Enter: interact or next line · H: hint · Esc: pause\nEvery sound event also has a visible cue.",Rect2(30,310,720,105),19)
+	label_at(p,"A/D or arrows: move · Space/W/Up: jump, then jump again\nE/Enter: interact or next line · H: hint · Esc: pause\nEvery sound event also has a visible cue.",Rect2(30,310,720,105),19)
 	button(p,"Back",Rect2(230,425,315,58),func():Progress.save_game();back.call(),true)
 
 func apply_settings() -> void:
@@ -896,9 +935,10 @@ func toast(text: String) -> void:
 	toast_time=5
 	toast_label.show()
 
-func play_sound(id: String) -> void:
+func play_sound(id: String, pitch: float = 1.0) -> void:
 	if sounds.has(id) and float(Progress.settings.volume)>0:
 		sound_player.stream=sounds[id]
+		sound_player.pitch_scale=pitch
 		sound_player.volume_db=linear_to_db(float(Progress.settings.volume))
 		sound_player.play()
 
@@ -926,3 +966,13 @@ func return_from_film() -> void:
 	player.right_bound=1550
 	ambient.color=Color("edece1")
 	show_title()
+
+
+func on_player_jump(is_second: bool) -> void:
+	play_sound("jump",1.18 if is_second else 1.0)
+	if is_second:
+		campus.bark.texture=Art.tex("bark_actions_cheer")
+		bark_pose_until=clock+0.9
+		if clock-last_air_cheer>7 and mode=="campus":
+			last_air_cheer=clock
+			toast("Bark: Leafy lift! Even tiny inventors can reach big ideas.")

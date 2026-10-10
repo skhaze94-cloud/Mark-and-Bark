@@ -72,13 +72,14 @@ func build(is_tutorial: bool) -> void:
 	add_child(ground)
 	if tutorial:
 		add_platform(Rect2(410,575,100,35),"school_props_log")
+		add_platform(Rect2(555,385,185,20),"fun_book")
 		add_object("tutorial_notebook","collectibles_notebook",Vector2(680,610),"Your notebook",100)
 		add_object("tutorial_leaf","collectibles_leaf_token",Vector2(840,545),"A bright leaf",65)
 		add_object("tutorial_plane","collectibles_paper_plane",Vector2(1080,590),"Practice plane",110)
 		add_object("tutorial_target","ui_parts_reward_check",Vector2(1370,480),"Practice target",115)
 		bark = Art.character("bark_actions_idle")
 		bark.position = Vector2(320,610)
-		bark.scale = Vector2.ONE*0.26
+		bark.scale = Vector2.ONE*0.20
 		add_child(bark)
 	else:
 		add_object("invitation","school_props_noticeboard",Vector2(810,600),"Big Ideas Fair invitation",215)
@@ -89,10 +90,22 @@ func build(is_tutorial: bool) -> void:
 			add_platform(rect,"school_props_log")
 		add_object("books","collectibles_books",Vector2(3290,490),"Book base",95)
 		add_object("pencil","collectibles_pencil",Vector2(3500,600),"Pencil guide",110)
-		add_object("doodle_1","collectibles_notebook",Vector2(2550,430),"Notebook discovery",70)
+		add_object("doodle_1","collectibles_notebook",Vector2(2500,255),"Notebook discovery",70)
 		add_object("doodle_2","collectibles_notebook",Vector2(5200,600),"Notebook discovery",70)
-		add_object("bark_token","collectibles_bark_token",Vector2(2820,350),"Bark's secret token",75)
-		var leaf_positions = [Vector2(1480,540),Vector2(2090,525),Vector2(2390,600),Vector2(3100,405),Vector2(3850,540),Vector2(5330,540)]
+		add_object("bark_token","collectibles_bark_token",Vector2(2830,240),"Bark's secret token",75)
+		# Three optional sky routes; the original required-item route stays intact.
+		for rect in [Rect2(960,520,205,20),Rect2(1210,405,195,20),Rect2(1450,285,195,20)]:
+			add_platform(rect,"fun_book")
+		for rect in [Rect2(2400,255,200,20),Rect2(2740,250,205,20),Rect2(3035,285,210,20)]:
+			add_platform(rect,"fun_leaf")
+		for rect in [Rect2(4630,470,205,20),Rect2(4870,350,200,20),Rect2(5180,260,230,20)]:
+			add_platform(rect,"fun_pencil" if rect.position.y==350 else "fun_book")
+		world_label("BOOK-SPINE SKYWAY",Vector2(1160,255),16)
+		world_label("THE LEAF-TOP LOOKOUT",Vector2(2390,310),16)
+		world_label("THE PENCIL EXPRESS",Vector2(4810,395),16)
+		decorate("collectibles_books",Vector2(1160,610),230)
+		decorate("collectibles_pencil",Vector2(5220,610),270)
+		var leaf_positions = [Vector2(1545,270),Vector2(2090,525),Vector2(2390,600),Vector2(3135,270),Vector2(3850,540),Vector2(5310,245)]
 		for i in range(6):
 			add_object("leaf_"+str(i+1),"collectibles_leaf_token",leaf_positions[i],"Leaf discovery",55)
 		add_object("shortcut","ui_parts_wood_button",Vector2(3630,610),"Garden shortcut to workshop",120)
@@ -101,7 +114,7 @@ func build(is_tutorial: bool) -> void:
 		add_object("volcano","school_props_science_volcano",Vector2(4020,610),"Bark's volcano inspection",185)
 		decorate("school_props_lamp",Vector2(4310,460),100)
 		bark = Art.character("bark_actions_idle")
-		bark.scale = Vector2.ONE*0.26
+		bark.scale = Vector2.ONE*0.20
 		bark.position = Vector2(340,610)
 		add_child(bark)
 	bark.z_index = 3
@@ -175,6 +188,15 @@ func add_platform(rect: Rect2, asset: String) -> void:
 	shape.one_way_collision_margin = 8
 	body.add_child(shape)
 	add_child(body)
+	if asset.begins_with("fun_"):
+		var ledge=load("res://scripts/fun_platform.gd").new()
+		ledge.position=rect.position
+		ledge.width=rect.size.x
+		ledge.kind=asset.trim_prefix("fun_")
+		ledge.height=32 if ledge.kind=="pencil" else 44
+		ledge.z_index=1
+		add_child(ledge)
+		return
 	# Align the top of each painted log with its collision top.
 	var texture = Art.tex(asset)
 	var painted_height = texture.get_height()*rect.size.x/texture.get_width()
@@ -250,6 +272,9 @@ func _process(delta: float) -> void:
 			item.sprite.position.y = item.pos.y
 
 func _draw() -> void:
+	# Continuous ceiling above the workshop keeps rising camera views finished.
+	if not tutorial:
+		draw_texture_rect(Art.tex("oak_floor"),Rect2(3700,-450,1900,450),true,Color(0.46,0.40,0.31))
 	var tile = Art.tex("garden_soil" if tutorial else "oak_floor")
 	draw_texture_rect(tile,Rect2(0,610,width,110),true,Color(0.60,0.56,0.46))
 	draw_rect(Rect2(0,610,width,6),Color("ddbd6d"))
@@ -267,9 +292,10 @@ func platform_style() -> StyleBoxFlat:
 func room_for(x: float) -> int:
 	return 0 if x < 1700 else 1 if x < 3700 else 2
 
-func camera_target(x: float) -> Vector2:
+func camera_target(x: float, feet_y: float = 610, rising: bool = false) -> Vector2:
 	var bounds: Vector2 = Vector2(0,1550) if tutorial else ROOM_BOUNDS[room]
-	return Vector2(clampf(x,bounds.x+640,bounds.y-640),360)
+	var height=clampf(feet_y+100.0-(60.0 if rising else 0.0),60.0,360.0)
+	return Vector2(clampf(x,bounds.x+640,bounds.y-640),height)
 
 func enter_room(index: int) -> void:
 	room = clampi(index,0,2)

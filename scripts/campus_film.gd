@@ -91,7 +91,7 @@ func update_shot() -> void:
 		game.player.show_pose(shot.pose,8)
 		game.campus.bark.position=Vector2(shot.x-115,610)
 		game.campus.bark.texture=Art.tex("bark_actions_hint" if next_shot==0 else "bark_actions_point" if next_shot==1 else "bark_actions_cheer")
-		game.campus.bark.scale=Vector2.ONE*0.26
+		game.campus.bark.scale=Vector2.ONE*0.20
 		game.ambient.color=Color("f0eddf") if shot.room==1 else Color("e5e6e8") if shot.room==0 else Color("eee4d5")
 		title.text=shot.title
 		caption.text=shot.caption
@@ -118,7 +118,7 @@ func finish() -> void:
 	root.hide()
 	game.camera.zoom=Vector2.ONE
 	game.player.pose_lock=0
-	game.player.sprite.scale=Vector2(0.31*game.player.facing,0.31)
+	game.player.sprite.scale=Vector2(game.player.visual_scale*game.player.facing,game.player.visual_scale)
 	game.busy=false
 	for item in staged:
 		if is_instance_valid(item):item.queue_free()

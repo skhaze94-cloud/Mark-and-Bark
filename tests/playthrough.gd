@@ -76,6 +76,42 @@ func run() -> void:
 	check(Art.tex("school_door_v2").get_image().detect_alpha()!=Image.ALPHA_NONE,"Doorway sprite has genuine transparency")
 	check(game.campus.depth!=null and game.campus.foreground.z_index>game.player.z_index,"Depth scenery and foreground layers are separate")
 	await capture("01_title")
+	var before_intro=JSON.stringify(Progress.data)
+	game.start_continue()
+	await ticks(2)
+	check(game.mode=="shrinking" and not game.player.enabled,"New adventure starts the shrinking-ray story")
+	game.shrinking_intro.age=6.8
+	game.shrinking_intro.update_story()
+	check(is_equal_approx(game.player.visual_scale,0.24) and game.campus.bark.scale.x<0.21,"Ray visibly shrinks both friends around their foot pivots")
+	check(JSON.stringify(Progress.data)==before_intro,"Watching the ray does not change inventory or quest")
+	await press_key(KEY_E)
+	await dismiss()
+	check(game.mode=="tutorial" and Progress.data.shrunken,"Keyboard skips the ray into a miniature tutorial")
+	Progress.settings.reduced_motion=true
+	game.shrinking_intro.begin(game.start_tutorial)
+	game.shrinking_intro.age=5.6
+	game.shrinking_intro.update_story()
+	check(game.player.visual_scale==0.24 and game.camera.zoom==Vector2.ONE,"Reduced-motion ray uses a calm static size reveal")
+	game.shrinking_intro.age=14.99
+	await ticks(3)
+	await dismiss()
+	check(game.mode=="tutorial" and not game.shrinking_intro.running,"Ray finishes automatically and restores playable tutorial")
+	game.shrinking_intro.begin(game.start_tutorial)
+	var intro_touch=InputEventScreenTouch.new()
+	intro_touch.position=Vector2(1140,38)
+	intro_touch.index=0
+	intro_touch.pressed=true
+	root.push_input(intro_touch,true)
+	await ticks(2)
+	check(not game.shrinking_intro.running and game.mode=="tutorial","Touch skips ray intro through its visible control")
+	intro_touch=InputEventScreenTouch.new()
+	intro_touch.position=Vector2(1140,38)
+	intro_touch.index=0
+	intro_touch.pressed=false
+	root.push_input(intro_touch,true)
+	await dismiss()
+	Progress.settings.reduced_motion=false
+	game.return_from_film()
 	for id in ["invention_board_v3","reading_nook_v3","canopy_v3"]:
 		check(Art.tex(id).get_image().detect_alpha()!=Image.ALPHA_NONE,"Cinematic cutout has transparency: "+id)
 	var before_film=JSON.stringify(Progress.data)
@@ -150,15 +186,25 @@ func run() -> void:
 	await press_key(KEY_SPACE)
 	await walk_to(680)
 	check(game.tutorial_step==2,"Real jump clears tutorial log")
+	await dismiss()
+	await ticks(50)
+	await press_key(KEY_SPACE)
+	await ticks(24)
+	await press_key(KEY_SPACE)
+	await ticks(3)
+	check(game.tutorial_step==3 and game.player.jumps_used==2,"Tutorial teaches a real midair leafy double jump")
+	await walk_to(790)
+	await ticks(70)
+	await walk_to(680)
 	check(game.campus.feedback.focus_id=="tutorial_notebook","Nearby interaction cue identifies the notebook")
 	await press_key(KEY_E)
 	await dismiss()
-	check(game.tutorial_step==3,"Keyboard interacts with notebook")
+	check(game.tutorial_step==4,"Keyboard interacts with notebook")
 	await walk_to(855)
-	check(game.tutorial_step==4,"Tutorial leaf auto-collects")
+	check(game.tutorial_step==5,"Tutorial leaf auto-collects")
 	await press_key(KEY_H)
 	await dismiss()
-	check(game.tutorial_step==5,"Hint advances tutorial")
+	check(game.tutorial_step==6,"Hint advances tutorial")
 	await walk_to(1080)
 	await press_key(KEY_E)
 	await ticks(110)
@@ -170,6 +216,33 @@ func run() -> void:
 	game.finish_tutorial()
 	await dismiss()
 	check(game.mode=="campus" and game.player.enabled,"Skip tutorial unlocks main gameplay")
+	await ticks(10)
+	var second_count=game.player.double_jump_count
+	await press_key(KEY_SPACE)
+	await ticks(24)
+	await press_key(KEY_SPACE)
+	check(game.player.jumps_used==2 and game.player.double_jump_count==second_count+1,"Keyboard grants one extra jump in midair")
+	var v_before: float=game.player.velocity.y
+	await press_key(KEY_SPACE)
+	check(game.player.jumps_used==2 and game.player.velocity.y>v_before,"A third airborne press cannot add another jump")
+	await ticks(95)
+	check(game.player.is_on_floor() and game.player.jumps_used==0,"Landing recharges both jumps")
+	check(is_equal_approx(game.player.sprite.scale.y,0.24) or absf(game.player.sprite.scale.y-0.24)<0.01,"Tiny character size remains stable while standing and moving")
+	# A real walk off a book ledge retains an air rescue after coyote time.
+	game.player.position=Vector2(1130,520)
+	game.player.velocity=Vector2.ZERO
+	game.player.reset_jumps()
+	await ticks(5)
+	Input.action_press("right")
+	await ticks(20)
+	Input.action_release("right")
+	await ticks(10)
+	await press_key(KEY_SPACE)
+	check(game.player.jumps_used==2 and game.player.velocity.y<0,"Walking off a ledge leaves one forgiving rescue jump")
+	game.player.position=Vector2(700,605)
+	game.player.velocity=Vector2.ZERO
+	game.player.reset_jumps()
+	await ticks(12)
 	await walk_to(810)
 	await press_key(KEY_E)
 	await dismiss()
@@ -233,6 +306,52 @@ func run() -> void:
 	await capture("05_ending")
 	game.close_modal()
 	check(game.player.enabled,"Post-ending exploration remains available")
+	# Climb the new routes with input and collision, rather than teleporting to rewards.
+	game.player.position=Vector2(990,605)
+	game.player.velocity=Vector2.ZERO
+	game.player.reset_jumps()
+	game.sync_room()
+	await ticks(10)
+	await leap_to(1060,520)
+	await leap_to(1300,405)
+	await leap_to(1545,285)
+	check("leaf_1" in Progress.data.leaves,"High book skyway rewards real platforming")
+	await press_key(KEY_SPACE)
+	await ticks(23)
+	await press_key(KEY_SPACE)
+	await ticks(25)
+	var screen_feet: Vector2=game.get_viewport().get_canvas_transform()*game.player.position
+	check(game.camera.position.y<230 and screen_feet.y>230 and screen_feet.y<420,"Camera rises to keep high-route double jumps visible")
+	await ticks(80)
+	game.player.position=Vector2(2500,425)
+	game.player.velocity=Vector2.ZERO
+	game.player.reset_jumps()
+	game.sync_room()
+	await ticks(10)
+	await leap_to(2500,255)
+	await press_key(KEY_E)
+	await dismiss()
+	check("doodle_1" in Progress.data.discoveries,"High garden notebook is reachable and interactable")
+	await leap_to(2830,250)
+	await press_key(KEY_E)
+	await dismiss()
+	check(Progress.data.bark_token,"Bark token rewards the higher leaf-top route")
+	await leap_to(3135,285)
+	check("leaf_4" in Progress.data.leaves,"Leaf-top gap is safely crossed using double jump")
+	game.player.position=Vector2(4690,605)
+	game.player.velocity=Vector2.ZERO
+	game.player.reset_jumps()
+	game.sync_room()
+	await ticks(10)
+	await leap_to(4720,470)
+	await leap_to(4950,350)
+	await leap_to(5310,260)
+	check("leaf_6" in Progress.data.leaves,"Workshop pencil express reaches its high reward")
+	game.player.position=Vector2(4490,605)
+	game.player.velocity=Vector2.ZERO
+	game.player.reset_jumps()
+	game.sync_room()
+	await ticks(12)
 	var count=Progress.data.leaves.size()
 	Progress.collect_leaf("leaf_1")
 	Progress.collect_leaf("leaf_1")
@@ -278,7 +397,21 @@ func run() -> void:
 	root.push_input(e,true)
 	await ticks(8)
 	check(game.player.position.y<580,"Touch jump uses real character physics")
-	await ticks(70)
+	await ticks(15)
+	e=InputEventScreenTouch.new()
+	e.index=1
+	e.position=Vector2(315,650)
+	e.pressed=true
+	root.push_input(e,true)
+	await ticks(2)
+	e=InputEventScreenTouch.new()
+	e.index=1
+	e.position=Vector2(315,650)
+	e.pressed=false
+	root.push_input(e,true)
+	await ticks(3)
+	check(game.player.jumps_used==2 and game.player.velocity.y<0,"Touch jump can be tapped again for the second jump")
+	await ticks(95)
 	var start_x: float=game.player.position.x
 	e=InputEventScreenTouch.new()
 	e.index=0
@@ -304,6 +437,7 @@ func run() -> void:
 	Progress.settings.reduced_motion=true
 	game.apply_settings()
 	check(game.player.reduced_motion and game.campus.reduced_motion,"Reduced-motion setting reaches character and environment")
+	check(game.player.air_rings.is_empty(),"Reduced-motion and completed jumps leave no moving jump effects")
 	var stage=int(Progress.data.stage)
 	game.player.position=Vector2(3720,605)
 	game.sync_room()
@@ -345,3 +479,21 @@ func run() -> void:
 	report.close()
 	print("RESULT: "+str(passed.size())+" passed; "+str(failures.size())+" failed")
 	get_tree().quit(0 if failures.is_empty() else 1)
+
+
+func leap_to(x: float, top: float) -> void:
+	var action="right" if x>game.player.position.x else "left"
+	if absf(x-game.player.position.x)>12:Input.action_press(action)
+	await press_key(KEY_SPACE)
+	await ticks(23)
+	await press_key(KEY_SPACE)
+	var count=0
+	while count<180:
+		if absf(game.player.position.x-x)<15 or (action=="right" and game.player.position.x>x) or (action=="left" and game.player.position.x<x):
+			Input.action_release(action)
+		if game.player.is_on_floor() and absf(game.player.position.y-top)<3:break
+		await ticks(1)
+		count+=1
+	Input.action_release(action)
+	await ticks(5)
+	check(count<180 and absf(game.player.position.y-top)<3,"Real double jump lands on route ledge at "+str(x)+", "+str(top))
