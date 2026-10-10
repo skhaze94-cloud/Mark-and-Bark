@@ -76,6 +76,46 @@ func run() -> void:
 	check(Art.tex("school_door_v2").get_image().detect_alpha()!=Image.ALPHA_NONE,"Doorway sprite has genuine transparency")
 	check(game.campus.depth!=null and game.campus.foreground.z_index>game.player.z_index,"Depth scenery and foreground layers are separate")
 	await capture("01_title")
+	for id in ["invention_board_v3","reading_nook_v3","canopy_v3"]:
+		check(Art.tex(id).get_image().detect_alpha()!=Image.ALPHA_NONE,"Cinematic cutout has transparency: "+id)
+	var before_film=JSON.stringify(Progress.data)
+	game.cinema.begin(game.return_from_film)
+	await ticks(3)
+	check(game.mode=="cinematic" and not game.player.enabled,"Film disables adventure controls")
+	check(game.campus.scenery.planes.size()>=10,"Furniture and foliage have independent depth planes")
+	for time in [2.0,9.0,16.0,23.0]:
+		game.cinema.age=time
+		game.cinema.update_shot()
+		await ticks(2)
+	check(game.cinema.shot_index==3 and JSON.stringify(Progress.data)==before_film,"Four film shots preserve quest progress")
+	await press_key(KEY_E)
+	check(game.mode=="title" and not game.cinema.running and game.camera.zoom==Vector2.ONE,"Keyboard skips film and restores title camera")
+	Progress.settings.reduced_motion=true
+	game.cinema.begin(game.return_from_film)
+	game.cinema.age=16
+	game.cinema.update_shot()
+	check(game.camera.zoom==Vector2.ONE and game.camera.position.x==4650,"Reduced-motion film avoids camera movement and zoom")
+	game.cinema.age=27.99
+	await ticks(3)
+	check(game.mode=="title" and not game.cinema.running,"Film ends automatically")
+	game.cinema.begin(game.return_from_film)
+	var film_touch=InputEventScreenTouch.new()
+	film_touch.index=0
+	film_touch.position=Vector2(1140,32)
+	film_touch.pressed=true
+	root.push_input(film_touch,true)
+	await ticks(2)
+	check(game.mode=="title" and not game.cinema.running,"Touch skips film through visible control")
+	film_touch=InputEventScreenTouch.new()
+	film_touch.index=0
+	film_touch.position=Vector2(1140,32)
+	film_touch.pressed=false
+	root.push_input(film_touch,true)
+	Progress.settings.reduced_motion=false
+	game.cinema.begin(game.start_tutorial)
+	game.cinema.finish()
+	await dismiss()
+	check(game.mode=="tutorial" and game.tutorial_step==0,"Opening film hands off to tutorial")
 	game.start_tutorial()
 	await dismiss()
 	check(game.tutorial_step==0,"Tutorial starts with walking")

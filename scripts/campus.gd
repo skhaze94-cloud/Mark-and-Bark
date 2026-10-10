@@ -5,6 +5,7 @@ var width: float = 5600
 var tutorial: bool = false
 var clock: float = 0
 var reduced_motion: bool = false
+var scenery
 var bark: Sprite2D
 var platforms: Array[Rect2] = []
 var markers: Array[Node2D] = []
@@ -43,6 +44,9 @@ func build(is_tutorial: bool) -> void:
 	foreground.foreground = true
 	foreground.z_index = 12
 	add_child(foreground)
+	scenery=load("res://scripts/scenery_planes.gd").new()
+	add_child(scenery)
+	scenery.build(tutorial)
 	add_lights()
 	var ground = StaticBody2D.new()
 	ground.collision_layer = 1
@@ -65,10 +69,6 @@ func build(is_tutorial: bool) -> void:
 		bark.scale = Vector2.ONE*0.26
 		add_child(bark)
 	else:
-		decorate("school_props_red_locker",Vector2(410,610),215)
-		decorate("school_props_navy_locker",Vector2(565,610),215)
-		decorate("school_props_bookcase",Vector2(1140,610),230)
-		decorate("school_props_chair",Vector2(1310,610),155)
 		add_object("invitation","school_props_noticeboard",Vector2(810,600),"Big Ideas Fair invitation",215)
 		add_object("notebook","collectibles_notebook",Vector2(1910,600),"Mark's scattered design",110)
 		add_object("plant_bed","school_props_stump",Vector2(2320,610),"Garden display · return the plant",180)
@@ -87,7 +87,6 @@ func build(is_tutorial: bool) -> void:
 		add_object("workshop","school_props_desk",Vector2(4430,610),"Mark & Bark's invention desk",310)
 		add_object("fair_target","school_props_noticeboard",Vector2(5050,360),"The Big Ideas Fair target",205)
 		add_object("volcano","school_props_science_volcano",Vector2(4020,610),"Bark's volcano inspection",185)
-		decorate("school_props_chalkboard",Vector2(4620,320),240)
 		decorate("school_props_lamp",Vector2(4310,460),100)
 		bark = Art.character("bark_actions_idle")
 		bark.scale = Vector2.ONE*0.26
@@ -227,6 +226,7 @@ func _process(delta: float) -> void:
 	if is_instance_valid(depth):
 		depth.reduced_motion = reduced_motion
 		foreground.reduced_motion = reduced_motion
+		scenery.reduced_motion = reduced_motion
 		for backdrop in backgrounds:
 			backdrop.sprite.position.x = backdrop.base if reduced_motion else backdrop.base+(depth.camera_x-backdrop.center)*0.08
 	for item in objects:

@@ -51,6 +51,8 @@ var transition_title: Label
 var room_transition: Dictionary = {}
 var transitions_completed: int = 0
 var ambient: CanvasModulate
+var cinema
+var finish_material: ShaderMaterial
 var bark_pose_until: float = 0.0
 
 func sync_room() -> void:
@@ -135,7 +137,11 @@ func _ready() -> void:
 	ambient = CanvasModulate.new()
 	ambient.color = Color("edece1")
 	add_child(ambient)
+	build_world_finish()
 	build_ui()
+	cinema=load("res://scripts/campus_film.gd").new()
+	cinema.game=self
+	add_child(cinema)
 	apply_settings()
 	show_title()
 
@@ -189,6 +195,7 @@ func button(parent: Node, text: String, rect: Rect2, callback: Callable, primary
 
 func build_ui() -> void:
 	var layer=CanvasLayer.new()
+	layer.layer=20
 	add_child(layer)
 	hud=Control.new()
 	hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -277,7 +284,7 @@ func show_title() -> void:
 	mode="title"
 	flight.clear()
 	hud.visible=false
-	var p=open_modal(Rect2(65,75,580,585))
+	var p=open_modal(Rect2(65,50,580,625))
 	label_at(p,"MARK & BARK",Rect2(34,25,520,64),42)
 	label_at(p,"THE BIG IDEA",Rect2(36,92,500,45),28,"977134")
 	label_at(p,"One curious kid. One very lively tree.\nOne invention waiting to happen.",Rect2(36,150,505,83),22)
@@ -285,7 +292,8 @@ func show_title() -> void:
 	button(p,"New adventure",Rect2(36,332,244,57),confirm_new)
 	button(p,"Replay tutorial",Rect2(296,332,246,57),start_tutorial)
 	button(p,"Settings & controls",Rect2(36,407,506,57),func():show_settings(show_title))
-	label_at(p,"Move: A/D or arrows · Jump: Space\nInteract: E · Hint: H · Pause: Esc",Rect2(36,485,510,78),18)
+	button(p,"Watch the campus film",Rect2(36,480,506,53),func():cinema.begin(return_from_film))
+	label_at(p,"Move: A/D or arrows · Jump: Space\nInteract: E · Hint: H · Pause: Esc",Rect2(36,546,510,52),16)
 	camera.position=Vector2(640,360)
 	player.enabled=false
 
@@ -294,13 +302,13 @@ func confirm_new() -> void:
 	label_at(p,"Start a new adventure?",Rect2(30,26,560,50),30)
 	label_at(p,"This resets your current quest and discoveries. Your accessibility settings stay the same.",Rect2(30,95,560,95),22)
 	button(p,"Keep my adventure",Rect2(30,220,260,65),show_title)
-	button(p,"Start fresh",Rect2(320,220,270,65),func():Progress.reset_game();start_tutorial(),true)
+	button(p,"Start fresh",Rect2(320,220,270,65),func():Progress.reset_game();cinema.begin(start_tutorial),true)
 
 func start_continue() -> void:
 	if Progress.tutorial_done:
 		start_campus()
 	else:
-		start_tutorial()
+		cinema.begin(start_tutorial)
 
 func start_tutorial() -> void:
 	cancel_room_transition()
@@ -387,6 +395,13 @@ func dismiss_dialogue() -> void:
 		callback.call()
 
 func _input(event: InputEvent) -> void:
+	if mode=="cinematic" and event is InputEventScreenTouch:
+		input_touch=true
+		cinema.skip_button.text="Skip film"
+		if event.pressed and Rect2(1040,9,214,46).has_point(event.position):
+			cinema.finish()
+			get_viewport().set_input_as_handled()
+		return
 	if not room_transition.is_empty():
 		if event is InputEventScreenTouch:get_viewport().set_input_as_handled()
 		return
@@ -422,6 +437,10 @@ func _input(event: InputEvent) -> void:
 		apply_settings()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if mode=="cinematic":
+		if event.is_action_pressed("interact") or event.is_action_pressed("pause"):cinema.finish()
+		get_viewport().set_input_as_handled()
+		return
 	if not room_transition.is_empty():
 		get_viewport().set_input_as_handled()
 		return
@@ -448,7 +467,7 @@ func jump_pressed() -> void:
 
 func _physics_process(delta: float) -> void:
 	clock+=delta
-	if mode=="title":
+	if mode in ["title","cinematic"]:
 		return
 	if not room_transition.is_empty():
 		update_room_transition(delta)
@@ -471,6 +490,7 @@ func _physics_process(delta: float) -> void:
 	camera.position.x = clampf(camera.position.x,bounds.x+640,bounds.y-640)
 	campus.depth.camera_x = camera.position.x
 	campus.foreground.camera_x = camera.position.x
+	campus.scenery.camera_x = camera.position.x
 	if not busy and flight.is_empty():
 		idle_time+=delta
 		if absf(player.velocity.x)>20:idle_time=0
@@ -801,7 +821,7 @@ func show_ending() -> void:
 	p.add_child(image)
 	label_at(p,"Leaf discoveries: "+str(Progress.data.leaves.size())+" / 6\nFunny notebook pages: "+str(Progress.data.discoveries.size())+" / 2\nBark's secret token: "+("Found!" if Progress.data.bark_token else "Still waiting")+"\nInvention tests: "+str(Progress.data.attempts),Rect2(35,215,530,158),23)
 	button(p,"Explore the campus",Rect2(35,400,355,62),close_modal,true)
-	button(p,"Play again",Rect2(420,400,350,62),func():Progress.reset_game();start_tutorial())
+	button(p,"Play again",Rect2(420,400,350,62),func():Progress.reset_game();cinema.begin(start_tutorial))
 	toast("A science rosette for curiosity, friendship, and your big idea!")
 
 func show_pause() -> void:
@@ -877,3 +897,23 @@ func _notification(what: int) -> void:
 	if what==NOTIFICATION_WM_CLOSE_REQUEST:
 		Progress.save_game()
 
+
+func build_world_finish() -> void:
+	var layer=CanvasLayer.new()
+	layer.layer=5
+	add_child(layer)
+	var finish=ColorRect.new()
+	finish.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	finish.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	finish_material=ShaderMaterial.new()
+	finish_material.shader=load("res://shaders/storybook_finish.gdshader")
+	finish.material=finish_material
+	layer.add_child(finish)
+
+func return_from_film() -> void:
+	campus.build(true)
+	player.position=Vector2(960,610)
+	player.velocity=Vector2.ZERO
+	player.right_bound=1550
+	ambient.color=Color("edece1")
+	show_title()

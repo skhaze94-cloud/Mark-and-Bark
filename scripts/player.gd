@@ -15,6 +15,8 @@ var anim: float = 0.0
 var right_bound: float = 5500.0
 var pose_lock: float = 0.0
 var stride: float = 0.0
+var landing: float = 0.0
+var dust: Array[Dictionary] = []
 
 func _ready() -> void:
 	var shape = CollisionShape2D.new()
@@ -41,7 +43,12 @@ func show_pose(id: String, seconds: float = 0.5) -> void:
 func _physics_process(delta: float) -> void:
 	anim += delta
 	stride += absf(velocity.x) * delta
+	landing=maxf(0.0,landing-delta)
+	for mote in dust:mote.age+=delta
+	dust=dust.filter(func(m):return m.age<0.32)
 	queue_redraw()
+	var was_grounded=is_on_floor()
+	var fall_speed=velocity.y
 	if not enabled:
 		velocity.x = move_toward(velocity.x,0,1400*delta)
 		jump_queued = false
@@ -59,6 +66,9 @@ func _physics_process(delta: float) -> void:
 			coyote = 0
 	velocity.y += GRAVITY*delta
 	move_and_slide()
+	if is_on_floor() and not was_grounded and fall_speed>180 and not reduced_motion:
+		landing=0.16
+		dust.append({"at":global_position,"age":0.0})
 	position.x = clampf(position.x,40,right_bound-40)
 	if absf(velocity.x)>10:
 		facing = 1 if velocity.x>0 else -1
@@ -80,6 +90,10 @@ func _physics_process(delta: float) -> void:
 	else:
 		sprite.rotation = velocity.x / SPEED * 0.025 if is_on_floor() else clampf(velocity.y / 12000.0,-0.035,0.035)
 		sprite.scale.y = 0.31 * (1.0 + sin(anim * 2.1) * 0.008) if absf(velocity.x)<35 and is_on_floor() else 0.31
+		if landing>0:
+			var settle=sin(landing/0.16*PI)*0.055
+			sprite.scale.y*=1.0-settle
+			sprite.scale.x*=1.0+settle*0.5
 
 func _draw() -> void:
 	var height = maxf(0.0,610.0-position.y)
@@ -88,4 +102,10 @@ func _draw() -> void:
 	for i in range(32):
 		points.append(Vector2(cos(i*TAU/32)*radius,610.0-position.y+sin(i*TAU/32)*7))
 	draw_colored_polygon(points,Color(0.09,0.14,0.13,0.23))
+	if not reduced_motion:
+		for mote in dust:
+			var local: Vector2=mote.at-global_position
+			for i in range(6):
+				var outward=(i-2.5)*9.0*(1.0+mote.age*3)
+				draw_circle(local+Vector2(outward,-sin(mote.age/0.32*PI)*7),2.4,Color(0.90,0.80,0.60,(1.0-mote.age/0.32)*0.32))
 

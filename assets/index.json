@@ -907,5 +907,38 @@
       512,
       1480
     ]
+  },
+  "invention_board_v3": {
+    "path": "res://assets/invention_board_v3.png",
+    "size": [
+      1672,
+      941
+    ],
+    "pivot": [
+      836.0,
+      941
+    ]
+  },
+  "reading_nook_v3": {
+    "path": "res://assets/reading_nook_v3.png",
+    "size": [
+      1671,
+      941
+    ],
+    "pivot": [
+      835.5,
+      917
+    ]
+  },
+  "canopy_v3": {
+    "path": "res://assets/canopy_v3.png",
+    "size": [
+      1829,
+      860
+    ],
+    "pivot": [
+      914.5,
+      860
+    ]
   }
 }

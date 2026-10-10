@@ -1,6 +1,6 @@
 # Mark & Bark: The Big Idea
 
-A playable Godot 4.4.1 project, updated with a 2.5D visual overhaul and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+A playable Godot 4.4.1 project, updated with a cinematic 2.5D edition and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
@@ -10,6 +10,14 @@ A playable Godot 4.4.1 project, updated with a 2.5D visual overhaul and distinct
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
 No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
+
+## Cinematic edition
+
+A 28-second skippable campus film opens a first adventure. Choose **Watch the campus film** on the title screen to replay it. E, Enter, Escape, or the large touch button skips it. Watching the film never changes quest progress.
+
+New high-resolution transparent art adds an oak invention blackboard, a reading-nook cabinet and leafy canopy framing. Rear lockers, furniture, plants and near leaves have separate parallax speeds and cast shadows. Warm dust-lit shafts, a restrained world-only highlight glow and colour finish, gentle character breathing, and soft landing squash/dust enrich the stages. UI stays crisp above the world shader. Reduced motion fixes the film camera and disables scenery drift, animated dust and landing effects. This remains a 2D game with layered depth and the original character identities and pivots.
+
+See [cinematic edition notes](docs/CINEMATIC_EDITION.md). New art and the recorded generation prompts are included in this editable project.
 
 ## Visual overhaul and room travel
 
@@ -55,6 +63,9 @@ Quest progress, discoveries, completed tutorial, settings and safe ground checkp
 - `scripts/main.gd`: story, tutorial gates, quest interactions, UI, touch input and launcher.
 - `scripts/player.gd`: CharacterBody2D movement, coyote time, jump buffering and aligned key poses.
 - `scripts/campus.gd`: room layout, props, platforms, pickups and collision geometry.
+- `scripts/scenery_planes.gd`: separate furniture and foliage depth planes.
+- `scripts/campus_film.gd`: four-shot skippable opening and safe tutorial handoff.
+- `shaders/storybook_finish.gdshader`: Compatibility world colour and highlight finish.
 - `scripts/depth_layer.gd`: perspective accents, sunbeams, foliage, butterflies and discovery effects.
 - `scripts/progress.gd`: persistent state and save validation.
 - `scripts/art.gd`: manifest-backed texture access and missing-image fallback.
