@@ -1,7 +1,7 @@
 extends Node2D
 const TITLES=["SCHOOL · THE LIBRARY LADDER","HOME · THE BEDROOM BEANSTALK","HOME · THE INVENTION ATTIC"]
 const QUESTS=["Mark's missing design","The pocket-sized power cell","The golden ray lens"]
-const ASSETS=["collectibles_notebook","collectibles_energy_token","collectibles_calm_token"]
+const ASSETS=["collectibles_notebook","mega_power_cell","mega_ray_lens"]
 const RISES=[[140,180,190,195,180,210,190,185],[145,195,205,210,220,200,220,205,200],[150,205,215,230,225,220,230,225,220,225,215]]
 const CENTERS=[[720,985,750,495,760,1025,770,510],[710,980,720,455,725,1000,740,470,745],[710,960,690,445,710,975,725,470,740,990,735]]
 var level=0
@@ -17,9 +17,10 @@ var top=0.0
 var clock=0.0
 var reduced_motion=false
 var scenery
+var checkpoints=[]
 func build(i):
 	for c in get_children():remove_child(c);c.queue_free()
-	level=i;room=0;platforms=[];ledges=[];pickups=[]
+	level=i;room=0;platforms=[];ledges=[];pickups=[];checkpoints=[]
 	scenery=load("res://scripts/mega_scenery.gd").new();scenery.level=i;scenery.z_index=-10;add_child(scenery)
 	body(Rect2(0,650,1600,100),false)
 	var y=650.0
@@ -30,7 +31,7 @@ func build(i):
 		platforms.append(r);body(r,true)
 		var l=load("res://scripts/fun_platform.gd").new();l.position=r.position;l.width=w;l.kind="book" if i==0 else "pencil" if n%3==1 else "book";l.z_index=1;add_child(l);ledges.append(l)
 		if n%2==1:
-			var icon=Art.prop("ui_parts_hint_bulb",35);icon.position=Vector2(r.position.x+30,y);add_child(icon)
+			var icon=Art.prop("ui_parts_hint_bulb",35);icon.position=Vector2(r.position.x+30,y);add_child(icon);checkpoints.append({"index":n,"sprite":icon})
 		label(str(n+1),Vector2(r.end.x-35,y+10),15)
 		if n<8:
 			pickup("leaf",n,"collectibles_leaf_token",Vector2(CENTERS[i][n]+65,y-22),52)
@@ -67,6 +68,9 @@ func refresh():
 	var r=Mega.runs[level]
 	for p in pickups:p.sprite.visible=not (p.id in r.leaves if p.kind=="leaf" else r.token)
 	if not quest.is_empty():quest.sprite.visible=not r.quest
+	for c in checkpoints:
+		c.sprite.texture=Art.tex("ui_parts_reward_check" if c.index<=r.checkpoint else "ui_parts_hint_bulb")
+	if is_instance_valid(scenery):scenery.queue_redraw()
 func _process(delta):
 	clock+=delta
 	for l in ledges:l.reduced_motion=reduced_motion

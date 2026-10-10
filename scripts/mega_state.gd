@@ -42,7 +42,13 @@ func finish():
 	best[current].leaves=maxi(best[current].leaves,runs[current].leaves.size())
 	best[current].token=best[current].token or runs[current].token
 	unlocked=mini(3,maxi(unlocked,current+2));save()
+func sync_best():
+	for i in range(3):
+		if best[i].complete:
+			best[i].leaves=maxi(best[i].leaves,runs[i].leaves.size())
+			best[i].token=best[i].token or runs[i].token
 func save():
+	sync_best()
 	if not enabled:return
 	var f=FileAccess.open(PATH+".tmp",FileAccess.WRITE)
 	if f:

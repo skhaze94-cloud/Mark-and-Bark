@@ -951,5 +951,27 @@
       0,
       0
     ]
+  },
+  "mega_power_cell": {
+    "path": "res://assets/mega_power_cell.svg",
+    "pivot": [
+      128,
+      235
+    ],
+    "size": [
+      256,
+      256
+    ]
+  },
+  "mega_ray_lens": {
+    "path": "res://assets/mega_ray_lens.svg",
+    "pivot": [
+      128,
+      235
+    ],
+    "size": [
+      256,
+      256
+    ]
   }
 }

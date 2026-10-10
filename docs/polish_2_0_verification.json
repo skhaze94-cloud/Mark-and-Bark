@@ -1,0 +1,62 @@
+{
+  "edition": "2.0 Ultimate Polish",
+  "engine": "Godot 4.4.1 stable",
+  "base_commit": "42a07b3d62028330d4df434ffab38859be043eaa",
+  "checks": {
+    "headless_campaign": {
+      "passed": 93,
+      "failed": 0
+    },
+    "native_OpenGL_campaign": {
+      "passed": 93,
+      "failed": 0
+    },
+    "headless_polish": {
+      "passed": 60,
+      "failed": 0
+    },
+    "native_OpenGL_polish": {
+      "passed": 60,
+      "failed": 0
+    },
+    "original_chapter_regression": {
+      "passed": 175,
+      "failed": 0
+    },
+    "fresh_zip_import": "passed without script or asset errors",
+    "fresh_zip_campaign": {
+      "passed": 93,
+      "failed": 0
+    },
+    "fresh_zip_polish": {
+      "passed": 60,
+      "failed": 0
+    },
+    "rendered_polish_fixtures": 11
+  },
+  "scope": [
+    "Three unchanged authored climbing routes, three quest items, 24 optional leaves and three hidden tokens",
+    "Preserved original chapter, original character artwork and foot pivots",
+    "Compatible campaign and settings saves"
+  ],
+  "verified_polish": [
+    "bounded menu/portrait layout",
+    "thin in-header progress meter and quest pictograms",
+    "readable notices with paused reading time",
+    "opaque contact pose without ghost Mark",
+    "completed checkpoint visuals and safe retry",
+    "secret-branch return hint",
+    "best scores update after ending exploration",
+    "input-safe level fades and static reduced-motion alternative",
+    "level-select and ending Back return to exploration",
+    "mouse-held movement and multi-finger touch",
+    "immediate master mute",
+    "correctly imported cell/lens art"
+  ],
+  "limitations": [
+    "Source project requires Godot; no standalone OS executables",
+    "No physical mobile-device testing",
+    "2D layered depth; no new 3D models",
+    "Static rendering-work reduction verified structurally; no quantitative FPS gain claimed"
+  ]
+}

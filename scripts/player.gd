@@ -6,6 +6,7 @@ const JUMP = -620.0
 const AIR_JUMP = -590.0
 signal jumped(is_second: bool)
 signal landed(at: Vector2, strength: float)
+var spring_contact: bool = false
 var suspended: bool = false
 var ghost: Sprite2D
 var last_texture: Texture2D
@@ -148,7 +149,7 @@ func _physics_process(delta: float) -> void:
 		last_texture=sprite.texture
 		blend_age=0.0
 	blend_age+=delta
-	var mix=1.0 if reduced_motion else clampf(blend_age/0.065,0,1)
+	var mix=1.0 if reduced_motion or spring_contact else clampf(blend_age/0.065,0,1)
 	sprite.modulate.a=mix
 	ghost.modulate.a=1.0-mix
 	ghost.visible=mix<1
@@ -179,6 +180,7 @@ func _draw() -> void:
 
 
 func reset_jumps() -> void:
+	spring_contact=false
 	jumps_used=0
 	coyote=0
 	jump_buffer=0

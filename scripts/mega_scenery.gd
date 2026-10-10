@@ -1,9 +1,11 @@
 extends Node2D
 var level=0
 var reduced_motion=false
-var clock=0.0
-func _process(d):
-	clock+=d;queue_redraw()
+var motes
+func _ready():
+	motes=load("res://scripts/mega_dust.gd").new();add_child(motes)
+func _process(_d):
+	motes.reduced_motion=reduced_motion
 func box(r,c,rad=8):
 	if rad>0:
 		var shade=StyleBoxFlat.new();shade.bg_color=Color(.16,.13,.09,.11);shade.set_corner_radius_all(rad)
@@ -43,7 +45,11 @@ func _draw():
 			sprite("school_props_navy_locker",Vector2(1380,y+330),265)
 			if y==260:
 				box(Rect2(520,y+65,560,210),"54705e",12)
-				for k in range(4):draw_line(Vector2(565,y+110+k*35),Vector2(1010-k*42,y+110+k*35),Color(.93,.92,.75,.28),2)
+				draw_string(Art.font,Vector2(562,y+119),"DESIGN RECOVERED!" if Mega.runs[0].quest else "BIG IDEAS FAIR",HORIZONTAL_ALIGNMENT_LEFT,-1,28,Color("e8e7c9"))
+				draw_string(Art.font,Vector2(562,y+159),"TRY · LEARN · TRY AGAIN",HORIZONTAL_ALIGNMENT_LEFT,-1,19,Color("cfdbc1"))
+				for k in range(3):
+					var at=Vector2(588+k*177,y+221)
+					draw_arc(at,22,PI,TAU,24,Color("dedcc3"),2);draw_line(at+Vector2(23,0),at+Vector2(104,-18),Color("dedcc3"),2)
 			elif y<260:
 				# Upper library alcoves replace repeated blackboards.
 				box(Rect2(410,y+30,740,280),"ae9063",12)
@@ -51,9 +57,15 @@ func _draw():
 				for k in range(9):
 					var height=130+(k*37)%95
 					var color=["536d69","b29965","768b88","a97c57"][k%4]
-					box(Rect2(448+k*73,y+283-height,56,height),color,5)
+					var spine=Rect2(448+k*73,y+283-height,56,height)
+					box(spine,color,5)
+					draw_rect(Rect2(spine.position+Vector2(4,6),Vector2(6,height-12)),Color(.16,.23,.22,.22))
+					draw_line(spine.position+Vector2(13,9),spine.position+Vector2(43,9),Color("e6d2a4"),2)
+					draw_circle(spine.position+Vector2(28,height*.4),7,Color("d4bd86"))
+					for band in [21,height-38]:draw_line(spine.position+Vector2(8,band),spine.position+Vector2(48,band),Color(.93,.88,.70,.36),2)
 					draw_line(Vector2(456+k*73,y+263),Vector2(493+k*73,y+263),Color("e9d4a2"),3)
 		elif level==1:
+			draw_colored_polygon(PackedVector2Array([Vector2(1450,y+86),Vector2(1480,y+108),Vector2(1480,y+333),Vector2(1450,y+321)]),Color("776041"))
 			box(Rect2(1090,y+80,360,245),"897254",16)
 			box(Rect2(1104,y+94,160,218),"c4a56b",8);box(Rect2(1278,y+94,156,218),"b79a62",8)
 			draw_circle(Vector2(1244,y+203),7,Color("f2d385"));draw_circle(Vector2(1298,y+203),7,Color("f2d385"))
@@ -63,6 +75,8 @@ func _draw():
 		else:
 			for x in [70,1460]:box(Rect2(x,y,50,380),"65503b",0)
 			draw_line(Vector2(110,y),Vector2(790,y+280),Color("71583c"),30);draw_line(Vector2(1490,y),Vector2(810,y+280),Color("71583c"),30)
+			for at in [Vector2(110,y),Vector2(790,y+280),Vector2(1490,y),Vector2(810,y+280)]:
+				draw_circle(at,6,Color("483c2c"));draw_circle(at+Vector2(-1,-2),2,Color("b8a17d"))
 			sprite("collectibles_books",Vector2(210,y+330),175)
 			sprite("school_props_lamp",Vector2(1390,y+270),150)
 	# Anchored foreground furniture grounds the miniature scale.
@@ -88,8 +102,3 @@ func _draw():
 			box(Rect2(x,455,260,195),"a07a46",10);draw_line(Vector2(x+20,475),Vector2(x+240,630),Color("dfbf86"),14)
 		sprite("school_props_desk",Vector2(820,650),420);sprite("school_props_science_volcano",Vector2(845,454),115)
 		sprite("collectibles_pencil",Vector2(1070,650),340)
-	if not reduced_motion:
-		for i in range(32):
-			var x=100+fmod(i*137+sin(clock*.35+i)*12,1400)
-			var y=-2100+fmod(i*113+clock*6,2750)
-			draw_circle(Vector2(x,y),1.5,Color(1,.96,.8,.25))

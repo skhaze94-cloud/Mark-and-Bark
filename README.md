@@ -1,6 +1,6 @@
-# Mark & Bark — The Tiny, Tall Adventure
+# Mark & Bark — Ultimate Polish 2.0
 
-The **Mega Vertical Adventure** update turns platforming into the main game. Bark accidentally presses the shrinking ray. Mark and Bark must climb three giant school and home environments, recover a design, power cell and lens, and repair the ray together.
+**Ultimate Polish 2.0** refines the three-level vertical adventure with clearer progress, illustrated level cards, smoother teamwork, richer lighting and safer navigation. Platforming remains the main game. Bark accidentally presses the shrinking ray. Mark and Bark must climb three giant school and home environments, recover a design, power cell and lens, and repair the ray together.
 
 ## Play in Godot
 
@@ -10,6 +10,17 @@ The **Mega Vertical Adventure** update turns platforming into the main game. Bar
 4. Let the bundled textures and font import, then press **F5**.
 
 This is a ready-to-import, editable Godot project. Godot is required; the ZIP is not a standalone Windows/macOS executable. No paid plugins, .NET, build tools or additional asset downloads are needed.
+
+## New in 2.0
+
+- Quest pictograms, a height meter, shelf counts and readable feedback cards.
+- A staged title, How to Play, illustrated level selection and correct portrait/reward sizing.
+- Crisp Mark-on-Bark contact, room lighting, detailed furniture and pickup sparkles.
+- Completed checkpoint icons, a better secret-route hint and immediate best-score updates after the ending.
+- Safe fades between levels; reduced motion switches immediately.
+- Static background drawing with a separate lightweight dust layer.
+
+See [the polish review](docs/POLISH_2_0.md) for details. Existing campaign and original-chapter saves remain compatible.
 
 ## The three climbs
 
@@ -23,7 +34,7 @@ Every level has **eight optional leaf tokens**, a hidden Bark token on a side sh
 
 The story never requires optional collectibles. There are no enemies, damage penalties, countdowns or lost items. Explore after completion or replay from Level Select; replay resets that level's run while preserving its best score.
 
-![Mark springs from Bark’s leafy head](docs/previews/mega_bark_spring.png)
+![Polished 2.0 HUD and Mark-on-Bark teamwork](docs/previews/polish_2_0.png)
 
 ## Controls and the Bark spring
 
@@ -40,7 +51,7 @@ The story never requires optional collectibles. There are no enemies, damage pen
 
 **Jump once, then again as Mark rises near the top of his first jump.** Bark appears under his feet, braces his leafy head and springs Mark upward. Mark crouches on contact and releases into the supplied jump pose. Landing recharges both jumps. Walking off a ledge still leaves a rescue spring. You cannot perform a third airborne jump.
 
-Checkpoint bulbs mark every second main shelf. Landing there saves the highest checkpoint. **R / Checkpoint** returns you there with every item intact. Bark's hint explains the current objective and briefly marks the next shelf. Pause freezes movement, and losing window focus pauses the climb and releases held movement.
+Checkpoint bulbs mark every second main shelf. Landing there saves the highest checkpoint. **R / Checkpoint** returns you there with every item intact. The HUD shows your current shelf and climbing height. Completed checkpoint bulbs become check marks. Bark's hint explains the current objective and briefly marks the next shelf. Pause freezes movement, and losing window focus pauses the climb and releases held movement.
 
 Touch controls switch on after a touch event, on mobile platforms, or through **Always show touch controls** in Settings. They support holding movement with one finger while jumping with another. Use landscape orientation. Mouse-clicking the visible Jump/Use buttons also works.
 
@@ -73,5 +84,7 @@ godot --headless --path . --fixed-fps 60 res://tests/mega_playthrough.tscn
 ```
 
 For native rendered screenshots, omit `--headless` and append `-- --screenshots`. The test climbs every required shelf and secret branch with actual double-jump physics, exercises keyboard and multi-finger touch input, obtains and delivers each quest item, checks checkpoint recovery, saves/reloads progress and completes the final cinematic. Outputs go to the ignored `test_output/` folder.
+
+Run `tests/polish_review.tscn` for the additional 2.0 UI and recovery checks.
 
 The original chapter's regression suite remains at `tests/playthrough.tscn`. See `docs/MEGA_VERTICAL_ADVENTURE.md` for implementation and validation details. Cross-device testing on physical Android/iOS hardware and standalone platform exports are outside this source-project delivery.
