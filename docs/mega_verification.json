@@ -1,0 +1,61 @@
+{
+  "edition": "Mega Vertical Adventure",
+  "engine": "Godot 4.4.1 stable",
+  "base_commit": "02ef281de48ae9da587a9dc1746a4d71cf4064bc",
+  "campaign": {
+    "levels": 3,
+    "quest_items": 3,
+    "leaves": 24,
+    "hidden_bark_tokens": 3,
+    "main_shelves": [
+      8,
+      9,
+      11
+    ],
+    "max_rises_px": [
+      210,
+      220,
+      230
+    ],
+    "platform_widths_px": [
+      280,
+      244,
+      208
+    ]
+  },
+  "checks": {
+    "headless_campaign": {
+      "passed": 93,
+      "failed": 0
+    },
+    "native_OpenGL_campaign": {
+      "passed": 93,
+      "failed": 0
+    },
+    "fresh_zip_import": "passed without script or asset errors",
+    "fresh_zip_campaign": {
+      "passed": 93,
+      "failed": 0
+    },
+    "original_chapter_regression": {
+      "passed": 175,
+      "failed": 0
+    },
+    "native_fixtures": 27
+  },
+  "validated": [
+    "all required shelves and all secret branches with actual input and collision physics",
+    "keyboard and two-finger viewport touch input",
+    "Mark-on-Bark contact and release poses with original pivots",
+    "pause, hints, notebook and checkpoint recovery",
+    "24 leaves and 3 hidden tokens collected",
+    "quest pickup, delivery, unlocks and repaired-ray cinematic",
+    "save/reload and post-ending exploration",
+    "clean fresh-folder source import"
+  ],
+  "limitations": [
+    "No physical phone/tablet hardware test",
+    "No standalone operating-system executables; ready-to-import Godot source",
+    "Continued exploration uses miniature scale after the restored-size story ending"
+  ]
+}

@@ -2,14 +2,15 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="Definitive UI & Quality of Life"
-run/main_scene="res://scenes/main.tscn"
+config/version="Mega Vertical Adventure"
+run/main_scene="res://scenes/mega.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/description="Definitive UI and quality of life: clearer objectives, comfortable menus, reliable saves and playful leafy-lift platforming."
+config/description="Three giant vertical climbs through school, bedroom and invention attic, with Bark-assisted spring jumps, quest items, collectibles and forgiving checkpoints."
 
 [autoload]
 Progress="*res://scripts/progress.gd"
 Art="*res://scripts/art.gd"
+Mega="*res://scripts/mega_state.gd"
 
 [display]
 window/size/viewport_width=1280

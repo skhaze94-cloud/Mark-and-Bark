@@ -1,167 +1,77 @@
-# Mark & Bark: The Big Idea — Definitive UI & Quality of Life
+# Mark & Bark — The Tiny, Tall Adventure
 
-The **Definitive UI & Quality of Life** edition improves navigation, readable feedback, contextual objectives and save recovery. It includes the Leafy Lift update, which makes platforming essential to the invention quest with taller required routes and a more mischievous Bark. It preserves the Ultimate Polish presentation, which refines the Fundate with clearer interfaces, smoother key-pose animation, richer landing and pickup feedback, original music, and a more finished presentation: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+The **Mega Vertical Adventure** update turns platforming into the main game. Bark accidentally presses the shrinking ray. Mark and Bark must climb three giant school and home environments, recover a design, power cell and lens, and repair the ray together.
 
-## Open and play
+## Play in Godot
 
-1. Use Windows **Extract All** (or your normal archive utility) to extract the project ZIP into a fresh writable folder. Avoid extracting over an older running project.
-2. Open Godot **4.4.1 or a newer compatible Godot 4 release** (the standard editor; no .NET requirement).
-3. In the Project Manager, choose **Import**, select `project.godot`, and open it.
-4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
+1. Extract the ZIP into a fresh writable folder.
+2. Open the standard **Godot 4.4.1** editor (or a compatible newer Godot 4 version).
+3. Choose **Import** in the Project Manager and select `project.godot`.
+4. Let the bundled textures and font import, then press **F5**.
 
-No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
+This is a ready-to-import, editable Godot project. Godot is required; the ZIP is not a standalone Windows/macOS executable. No paid plugins, .NET, build tools or additional asset downloads are needed.
 
-## Definitive UI & Quality of Life
+## The three climbs
 
-- **Clear next steps:** objectives, icons and hints adapt when you carry the plant or have only one supply left. The notebook shows the current task, a four-item checklist and a direct hint action. Press **N** to open it.
-- **Comfortable menus:** sensible keyboard focus, consistent Escape/back behaviour, visible button states, safe new-adventure cancellation, and explicit selected workshop presets. Changing a preset keeps focus on it.
-- **Readable feedback:** long notices expand and last longer; notices pause while menus or dialogue are open. Sound volume displays a percentage. Touch and keyboard labels follow the active input.
-- **Safe interruptions:** losing window focus pauses exploration and releases movement. The notebook cannot interrupt a plane test or room transition. Escape from the ending returns to exploration and clears its celebration.
-- **Reliable saves:** malformed preference types, negative attempt counts, duplicate discoveries and unknown collectible IDs recover safely while preserving compatible version-1 saves.
+| Level | Theme and objective | Climbing difficulty |
+|---|---|---|
+| The Library Ladder | School library/classroom; recover Mark's missing design | Gentle: broad 280 px books; 140–210 px rises |
+| The Bedroom Beanstalk | Mark's home bedroom, bed, wardrobe and writing desk; retrieve the pocket-sized power cell | Adventurous: 244 px books and pencils; rises up to 220 px |
+| The Invention Attic | Home attic, timber beams, crates and invention supplies; collect the ray's golden lens | Daring: 208 px landings; rises up to 230 px |
 
-See the [comprehensive review and verification](docs/DEFINITIVE_REVIEW.md).
+Every level has **eight optional leaf tokens**, a hidden Bark token on a side shelf, numbered platforms, checkpoints and a delivery point at the summit. The quest item sits on the shelf just below the summit. Land beside it, use it, then climb to the delivery point and use that to complete the level. Completing a climb unlocks the next. The last delivery repairs the ray and plays the restored-size ending.
 
-![Updated task notebook](docs/previews/definitive_notebook.png)
+The story never requires optional collectibles. There are no enemies, damage penalties, countdowns or lost items. Explore after completion or replay from Level Select; replay resets that level's run while preserving its best score.
 
-## Leafy Lift
+![Mark springs from Bark’s leafy head](docs/previews/mega_bark_spring.png)
 
-- **Core platforming:** recover the design on the garden book tower, climb the right-hand leaf ledges for the book base, then climb the classroom Pencil Express for the pencil. Required 220–260 px rises exceed the first jump's approximately 154 px reach.
-- **Bark and Mark:** ear-flapping, plant parachutes, book sledding, and pencil pole-vaulting lead to brief, skippable exchanges. Mark turns Bark's terrible suggestions into useful plans. Rotating jump banter adds personality without interrupting movement.
-- **Guidance and recovery:** updated objectives, route labels and specific hints; land beside required pickups; safe floors, restored jumps, unchanged checkpoints and no lost supplies. Existing saves retain collected items.
-
-See [route and verification notes](docs/LEAFY_LIFT.md).
-
-![Bark's leafy lift reaches the design tower](docs/previews/leafy_lift.png)
-
-## Ultimate Polish
-
-- **Presentation:** a newly staged title with both friends, balanced world glow and vignette, detailed book bindings, pencil grain and leaf veins, and an ending framed by gentle paper-leaf confetti.
-- **Movement:** foot-aligned 65 ms pose crossfades, supplied run poses at full speed, small jump stretch, stable landing edges and a readable two-jump meter. Reduced motion keeps one fully opaque pose and disables extra movement effects.
-- **Clarity:** an objective pictogram, numbered quest/lesson progress, completed-step check marks, readable toast cards and dialogue page counts. Touch and keyboard prompts follow the last input used.
-- **Interaction:** transient pickup rewards, stable object brackets, assembly component cards, and a short golden plane trail. World props, pickups, collision tops and the live board stay anchored.
-- **Menus:** gameplay buttons no longer take keyboard jump focus; menus retain keyboard focus navigation. A dim backdrop isolates dialogue and workshop panels. Pause freezes Mark even in midair, then resumes the same jump. Settings have high-contrast navy text, clear On/Off labels and custom cream/navy toggle icons.
-- **Sound:** original seamless plucked music and gentle wind/bird ambience. Master volume controls all audio; music has its own saved toggle. Gameplay modals pause the loops, garden ambience fades between rooms, and audio drains cleanly when the window closes.
-
-The complete shrinking-ray introduction, double jump, three optional high routes, seven-step invention story, room transitions and version-1 save compatibility remain intact. No external downloads or paid plugins are required.
-
-See [Ultimate Polish notes](docs/ULTIMATE_POLISH.md) and `docs/polish_verification.json` for checks and limits. Audio is bundled; `docs/generate_soundscape.py` is an optional reproduction script, not a play-time dependency.
-
-![Polished campus interface](docs/previews/polish_campus.png)
-![Big Idea Complete](docs/previews/polish_ending.png)
-
-## The Fundate
-
-Bark's ray shrinks both friends in a **15-second, skippable opening**. Ordinary books become mountains and pencils become bridges. Their familiar Big Ideas Fair quest continues at miniature scale.
-
-Press **Space/W/Up again in midair**, or tap **Jump** again, for Bark's leafy lift. Mark gets one air jump, with no precise timing required; landing restores both jumps. Walking off a ledge still leaves an air rescue. Coyote time and landing input buffering are retained. A jump meter, soft wind ring, higher second-jump sound and Bark's cheer make the lift clear. The tutorial teaches it separately from the first jump; skipping unlocks it immediately.
-
-Climb the optional **Book-Spine Skyway** in the hallway and the required garden and **Pencil Express** routes. The design notebook, book base, and pencil guide now require climbing. Taller steps need Bark's leafy double jump; land beside supplies before using them. Six leaves, two doodles and a Bark token remain optional. The ground below provides forgiving recovery. The camera rises for high jumps, while room exits still preserve progress and play their named transitions.
-
-The title's **Start adventure**, **New adventure**, and ending's **Play again** use the ray introduction. **Watch the campus film** remains a separate optional tour. Reduced motion replaces the shrink animation with a static size reveal and disables wind rings; every essential action still works. Existing save paths and version-1 saves are preserved.
-
-See [Fundate notes and verification](docs/FUNDATE.md).
-
-![Tiny friends after the ray](docs/previews/fundate_intro.png)
-![The new leaf-top route](docs/previews/fundate_platforms.png)
-
-## Grounded interactions update
-
-Furniture, room paintings, canopies and pickups now stay anchored in world space; walking and camera tracking no longer slide props against their background. The edited workshop backdrop contains no large painted board. One mounted **live invention board** displays the three assembly steps, launch angle and power, and the fair's delivery target. It marks a successful delivery without changing the launcher solution.
-
-Small stable brackets and a bulb identify the nearby usable object. Interacting gives a gentle world-space pulse. Soft independent shadows ground props and Bark; Mark's shadow sits on the platform beneath him rather than always on the lower floor. Existing rooms, saves and the Godot loading fix are preserved.
-
-This update was runtime-tested in Godot **4.4.1**, with the previous release's Godot 4.7 loading fix retained. See [grounded interaction notes](docs/GROUNDED_INTERACTIONS.md) for checks and art provenance.
-
-## Cinematic edition
-
-A 28-second skippable campus film is available as an optional tour. Choose **Watch the campus film** on the title screen to replay it. E, Enter, Escape, or the large touch button skips it. Watching the film never changes quest progress.
-
-New high-resolution transparent art adds an oak invention blackboard, a reading-nook cabinet and leafy canopy framing. Rear lockers, furniture, plants and near leaves occupy separate anchored render layers with cast shadows. Warm dust-lit shafts, a restrained world-only highlight glow and colour finish, gentle character breathing, and soft landing squash/dust enrich the stages. UI stays crisp above the world shader. Reduced motion fixes the film camera and disables scenery drift, animated dust and landing effects. This remains a 2D game with layered depth and the original character identities and pivots.
-
-![Campus film](docs/previews/campus_film.png)
-
-See [cinematic edition notes](docs/CINEMATIC_EDITION.md). New art and the recorded generation prompts are included in this editable project.
-
-## Visual overhaul and room travel
-
-The school hallway, discovery garden and classroom workshop now behave as separate rooms. Follow the signed entrances at the left or right screen edge. The camera stops at each room boundary; stepping through an exit plays a short named transition, then places Mark and Bark safely inside the next room. Return trips preserve the quest, supplies and discoveries. The unlocked garden shortcut uses the same transition system. Existing save files remain compatible.
-
-The workshop has a new detailed storybook backdrop and the entrances use a new transparent oak doorway sprite. The original Mark and Bark identities are preserved. Anchored background planes, foreground foliage, warm light pools, sun shafts, contact shadows and perspective floor details add depth while retaining 2D gameplay. Mark and Bark use fuller supplied walk-pose sequences, subtle foot-anchored breathing, and more deliberate hint/cheer poses. Reduced motion disables parallax, ambient specks, butterflies, breathing and character lean, and shortens room transitions.
-
-![Updated classroom workshop](docs/previews/workshop.png)
-
-See [visual overhaul notes](docs/VISUAL_OVERHAUL.md) for implementation details, new-art provenance and generation prompts.
-
-## Controls
+## Controls and the Bark spring
 
 | Action | Keyboard | Touch |
 |---|---|---|
-| Move | A/D or left/right arrows | Hold left/right controls |
-| Jump / leafy double jump | Space, W, or up arrow; press again in midair | Tap Jump, then tap it again in midair |
-| Interact / next dialogue line | E or Enter | Use / Next |
-| Bark's hint | H | Hint button |
-| Notebook and task checklist | N | Notebook button |
-| Pause | Escape | Pause button |
+| Move | A / D or Left / Right | Hold an arrow |
+| Jump | Space, W or Up | Tap Jump |
+| Spring off Bark | Jump again near the first jump's apex | Tap Jump again |
+| Pick up / deliver | E or Enter | Use |
+| Ask for help | H | Bark's hint |
+| Notebook / progress | N | Notes |
+| Return to checkpoint | R | Checkpoint |
+| Pause | Escape | Pause |
 
-Enable **Always show touch controls** in Settings for touchscreen testing. Movement and jumping support separate fingers. Dragging out of a movement control releases it. Native screen-touch events are handled explicitly rather than relying only on first-finger mouse emulation.
+**Jump once, then again as Mark rises near the top of his first jump.** Bark appears under his feet, braces his leafy head and springs Mark upward. Mark crouches on contact and releases into the supplied jump pose. Landing recharges both jumps. Walking off a ledge still leaves a rescue spring. You cannot perform a third airborne jump.
 
-Settings include master sound volume, an independent background-music toggle, and reduced motion. Every sound has a visible counterpart. Story dialogue can be skipped, the tutorial can be skipped or replayed, and mistakes do not remove inventory or discoveries.
+Checkpoint bulbs mark every second main shelf. Landing there saves the highest checkpoint. **R / Checkpoint** returns you there with every item intact. Bark's hint explains the current objective and briefly marks the next shelf. Pause freezes movement, and losing window focus pauses the climb and releases held movement.
 
-## Adventure
+Touch controls switch on after a touch event, on mobile platforms, or through **Always show touch controls** in Settings. They support holding movement with one finger while jumping with another. Use landscape orientation. Mouse-clicking the visible Jump/Use buttons also works.
 
-Learn movement, jumping, a midair double jump, notebook interaction, leaf collection, hints, and plane launching in the quiet garden. Then explore a connected hallway, discovery garden, and classroom workshop.
+Settings include master sound volume, a separate music toggle, reduced motion and touch visibility. Reduced motion removes dust, pickup bobbing, camera smoothing and extra spring stretch while keeping a clear contact pose. Dialogue and ray cinematics can be skipped.
 
-Recover Mark's notebook, return Bark's misplaced plant, gather the books and pencil, assemble the machine, and deliver the invitation to the fair board. The garden includes an elevated route, six optional leaves, two comic notebook entries, a hidden Bark token, and a shortcut unlocked by helping the garden.
+## Saves and the original chapter
 
-The launcher has three angles and three power choices. Missed planes return automatically. A hint reveals a reliable combination and its trajectory. The ending celebrates discoveries and leaves the campus open for exploration.
+The campaign saves locally in Godot's user-data folder as `mark_bark_mega.json`. It stores the current level, unlocked levels, highest checkpoints, quest items, collected tokens, tutorial/story acknowledgement and best scores. Settings use the existing original save. **New adventure** asks before resetting this campaign.
 
-The main route is a compact introductory slice. The requested 15–20 minute experience is a design target for relaxed exploration; it is not a measured child playtest result. Experienced players can finish substantially faster. Dialogue and exploration can be expanded through the editable scripts.
+The original school adventure, tutorial and paper-plane workshop remain bundled. Open `scenes/main.tscn` and press **F6** to play that chapter. Its previous progress file is preserved. F5 launches the new three-level campaign.
 
-## Saves
+After the full-sized ending, **Explore this level** returns to the miniature attic climb so shelves and remaining collectibles stay playable. The ending does not permanently change gameplay scale.
 
-Quest progress, discoveries, completed tutorial, settings and safe ground checkpoints are stored in `user://big_idea_save.json`. Save writes use a temporary file followed by replacement. New Adventure and Play Again explicitly reset the quest; tutorial replay preserves the existing main quest. Restart Checkpoint preserves inventory and discoveries.
+## Editing and verification
 
-## Project structure
+- `scenes/mega.tscn`: new campaign entry point.
+- `scripts/mega_main.gd`: story, HUD, input, menus, hints and teamwork animation.
+- `scripts/mega_level.gd`: the three authored routes, collisions and pickups.
+- `scripts/mega_scenery.gd`: anchored school/home architecture, layered furniture and lighting.
+- `scripts/mega_ray.gd`: shrinking and restored-size cinematics.
+- `scripts/mega_state.gd`: separate campaign save and best scores.
+- `scripts/player.gd`: shared responsive movement, coyote time, jump buffering and supplied character poses.
 
-- `scenes/main.tscn`: main scene.
-- `scripts/main.gd`: story, tutorial gates, quest interactions, UI, touch input and launcher.
-- `scripts/player.gd`: CharacterBody2D movement, coyote time, jump buffering and aligned key poses.
-- `scripts/campus.gd`: room layout, props, platforms, pickups and collision geometry.
-- `scripts/scenery_planes.gd`: separate furniture and foliage depth planes.
-- `scripts/campus_film.gd`: four-shot skippable opening and safe tutorial handoff.
-- `shaders/storybook_finish.gdshader`: Compatibility world colour and highlight finish.
-- `scripts/depth_layer.gd`: perspective accents, sunbeams, foliage, butterflies and discovery effects.
-- `scripts/progress.gd`: persistent state and save validation.
-- `scripts/art.gd`: manifest-backed texture access and missing-image fallback.
-- `assets/index.json`: the subset of the supplied pack used by this introduction, including pivots.
-- `tests/playthrough.tscn`: deterministic runtime regression scene.
-- `docs/`: validation report, asset provenance and implementation notes.
-- `export_presets.cfg`: optional Web export preset. Export templates are required only if you choose to export.
+Artwork keeps Young Mark, Bark, the storybook palette and the supplied individual sprites. Characters keep the supplied **(256, 612)** foot anchor on **512 × 640** canvases. Collision geometry is independent of painted scenery; collectible positions and furniture stay in world space. The library has one classroom blackboard. Upper tiers use library alcoves. Home furniture and the ray are drawn with matching oak, navy, cream and moss materials.
 
-## Verification
-
-The Godot 4.7.2 startup fix renames the custom ellipse painter in `scripts/depth_layer.gd` to avoid shadowing the engine's built-in `draw_ellipse()` method. The [automated verification workflow](.github/workflows/verify-godot.yml) checks this issue and packages the **complete Godot project ZIP** (including assets), downloadable from the successful workflow run's Artifacts section. This is a Godot source project, not a Windows executable.
-
-This Definitive UI & Quality of Life release was verified with Godot **4.4.1** on Linux, headlessly and with native OpenGL Compatibility rendering. The previous Godot 4.7 loading fix is retained; this release has not been separately tested in Godot 4.7. Run the regression suite using:
+Run the campaign's full physical playthrough:
 
 ```sh
-godot --headless --fixed-fps 60 --path . res://tests/playthrough.tscn
+godot --headless --path . --fixed-fps 60 res://tests/mega_playthrough.tscn
 ```
 
-The updated suite contains 175 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
+For native rendered screenshots, omit `--headless` and append `-- --screenshots`. The test climbs every required shelf and secret branch with actual double-jump physics, exercises keyboard and multi-finger touch input, obtains and delivers each quest item, checks checkpoint recovery, saves/reloads progress and completes the final cinematic. Outputs go to the ignored `test_output/` folder.
 
-This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use timed key poses, short crossfades and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. The updated chapter has been reviewed using native OpenGL screenshots of the title, tutorial, hallway, garden, workshop, room transition and touch HUD. Automated touch events were verified; actual tablets and phones remain untested.
-
-To recreate the visual fixtures on a machine with a display:
-
-```sh
-godot --path . res://tests/visual_review.tscn
-```
-
-The fixture scene creates screenshots under `test_output/` and never writes a player save.
-
-## Art and sound
-
-Mark and Bark artwork comes from the supplied detailed asset pack. Original pack metadata and art notes are retained in `docs/source_asset_manifest.json` and `docs/ART_ASSETS.md`. Character foot anchors use (256, 612) on the supplied 512×640 canvases. Surface tiles use mirrored repeat; all walkways and collision shapes are separate from the flattened backdrops.
-
-Short audio cues and the new looped music/garden soundscape are original synthesized recordings. The bundled WAV files need no external service; `docs/generate_soundscape.py` documents the optional regeneration process. `assets/readable.ttf` is DejaVu Sans; its license notice is included. No rights to third-party logos, franchises, or unrelated assets are implied. The repository contains the supplied creative material and the implementation; no new license is imposed on the owner's game or artwork.
+The original chapter's regression suite remains at `tests/playthrough.tscn`. See `docs/MEGA_VERTICAL_ADVENTURE.md` for implementation and validation details. Cross-device testing on physical Android/iOS hardware and standalone platform exports are outside this source-project delivery.
