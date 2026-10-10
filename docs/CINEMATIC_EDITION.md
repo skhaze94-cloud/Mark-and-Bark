@@ -1,3 +1,5 @@
+> Updated by the Grounded Interactions edition: camera-driven scenery parallax was removed, and the painted workshop board was replaced by one live board. See GROUNDED_INTERACTIONS.md for current behaviour. The following records the earlier cinematic art pass.
+
 # Cinematic edition
 
 This graphical update keeps the existing tutorial, quest, three connected rooms, collision coordinates, launcher solution, discoveries and save format compatible. It uses detailed dimensional 2D art and code-driven planes, not new 3D meshes or skeletal rigs.

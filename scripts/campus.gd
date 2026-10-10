@@ -5,6 +5,8 @@ var width: float = 5600
 var tutorial: bool = false
 var clock: float = 0
 var reduced_motion: bool = false
+var board
+var feedback
 var scenery
 var bark: Sprite2D
 var platforms: Array[Rect2] = []
@@ -34,7 +36,7 @@ func build(is_tutorial: bool) -> void:
 	else:
 		background("school_hub",0,1700)
 		background("garden_hub",1700,2000)
-		background("workshop_hub_v2",3700,1900)
+		background("workshop_hub_v4",3700,1900)
 	depth = load("res://scripts/depth_layer.gd").new()
 	depth.tutorial = tutorial
 	depth.z_index = 0
@@ -47,6 +49,16 @@ func build(is_tutorial: bool) -> void:
 	scenery=load("res://scripts/scenery_planes.gd").new()
 	add_child(scenery)
 	scenery.build(tutorial)
+	feedback=load("res://scripts/interaction_feedback.gd").new()
+	feedback.campus=self
+	feedback.z_index=6
+	add_child(feedback)
+	board=null
+	if not tutorial:
+		board=load("res://scripts/invention_board.gd").new()
+		board.name="LiveInventionBoard"
+		board.position=Vector2(4920,385)
+		add_child(board)
 	add_lights()
 	var ground = StaticBody2D.new()
 	ground.collision_layer = 1
@@ -93,6 +105,13 @@ func build(is_tutorial: bool) -> void:
 		bark.position = Vector2(340,610)
 		add_child(bark)
 	bark.z_index = 3
+	var bark_shadow=load("res://scripts/prop_shadow.gd").new()
+	bark_shadow.source=bark
+	bark_shadow.follows=true
+	bark_shadow.half_width=18
+	bark_shadow.softness=5
+	bark_shadow.z_index=1
+	add_child(bark_shadow)
 	refresh()
 	queue_redraw()
 
@@ -100,8 +119,8 @@ func background(id: String, x: float, span: float) -> void:
 	var s = Sprite2D.new()
 	s.texture = Art.tex(id)
 	s.centered = false
-	s.position = Vector2(x-span*0.0225,0 if id=="workshop_hub_v2" else -305)
-	s.scale = Vector2(span*1.045/s.texture.get_width(),(720.0 if id=="workshop_hub_v2" else 915.0)/s.texture.get_height())
+	s.position = Vector2(x-span*0.0225,0 if id.begins_with("workshop_hub_") else -305)
+	s.scale = Vector2(span*1.045/s.texture.get_width(),(720.0 if id.begins_with("workshop_hub_") else 915.0)/s.texture.get_height())
 	s.z_index = -10
 	add_child(s)
 	backgrounds.append({"sprite":s,"base":s.position.x,"center":x+span/2})
@@ -110,17 +129,14 @@ func decorate(id: String, pos: Vector2, size: float) -> Sprite2D:
 	var sprite = Art.prop(id,size)
 	sprite.position = pos
 	sprite.z_index = 2
-	# A flattened silhouette creates a contact shadow without fake collision.
-	var shadow = Sprite2D.new()
-	shadow.texture = sprite.texture
-	shadow.centered = false
-	shadow.offset = sprite.offset
-	shadow.scale = Vector2(1.12,0.075)
-	shadow.position = Vector2(5,3)
-	shadow.modulate = Color(0.10,0.16,0.16,0.23)
-	shadow.show_behind_parent = true
-	sprite.add_child(shadow)
 	add_child(sprite)
+	var shadow=load("res://scripts/prop_shadow.gd").new()
+	shadow.source=sprite
+	shadow.anchor=Vector2(pos.x,610 if pos.y>=585 else pos.y)
+	shadow.half_width=size*0.38
+	shadow.softness=clampf(size*0.035,3,10)
+	shadow.z_index=1
+	add_child(shadow)
 	return sprite
 
 func add_object(id: String, asset: String, pos: Vector2, title: String, size: float) -> void:
@@ -187,7 +203,7 @@ func refresh() -> void:
 			elif id=="shortcut":
 				show = bool(Progress.data.plant_restored)
 		item.visible = show
-		item.sprite.visible = show
+		item.sprite.visible = show and id!="fair_target"
 		item.label.visible = false # Contextual HUD prompts keep the scenery uncluttered.
 	if not tutorial and bool(Progress.data.plant_restored):
 		if not has_node("RestoredPlant"):
@@ -228,10 +244,10 @@ func _process(delta: float) -> void:
 		foreground.reduced_motion = reduced_motion
 		scenery.reduced_motion = reduced_motion
 		for backdrop in backgrounds:
-			backdrop.sprite.position.x = backdrop.base if reduced_motion else backdrop.base+(depth.camera_x-backdrop.center)*0.08
+			backdrop.sprite.position.x = backdrop.base
 	for item in objects:
 		if item.id.begins_with("leaf_") or item.id in ["tutorial_leaf","bark_token"]:
-			item.sprite.position.y = item.pos.y if reduced_motion else item.pos.y+sin(clock*2+item.pos.x)*4
+			item.sprite.position.y = item.pos.y
 
 func _draw() -> void:
 	var tile = Art.tex("garden_soil" if tutorial else "oak_floor")
@@ -276,3 +292,10 @@ func add_lights() -> void:
 		lamp.color = Color("ffe4b4")
 		lamp.energy = 0.18
 		add_child(lamp)
+
+func support_y(x: float, feet_y: float) -> float:
+	var ground_y=610.0
+	for platform in platforms:
+		if x>=platform.position.x-6 and x<=platform.end.x+6 and platform.position.y>=feet_y-8:
+			ground_y=minf(ground_y,platform.position.y)
+	return ground_y

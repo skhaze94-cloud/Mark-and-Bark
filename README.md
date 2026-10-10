@@ -1,21 +1,29 @@
 # Mark & Bark: The Big Idea
 
-A playable Godot 4.7.2-verified project, updated with a cinematic 2.5D edition and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+A playable Godot 4 project, updated with a cinematic 2.5D edition and distinct room transitions: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
 1. Use Windows **Extract All** (or your normal archive utility) to extract the project ZIP into a fresh writable folder. Avoid extracting over an older running project.
-2. Open Godot **4.7.2** (the tested version) (the standard editor; no .NET requirement).
+2. Open Godot **4.4.1 or a newer compatible Godot 4 release** (the standard editor; no .NET requirement).
 3. In the Project Manager, choose **Import**, select `project.godot`, and open it.
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
 No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
 
+## Grounded interactions update
+
+Furniture, room paintings, canopies and pickups now stay anchored in world space; walking and camera tracking no longer slide props against their background. The edited workshop backdrop contains no large painted board. One mounted **live invention board** displays the three assembly steps, launch angle and power, and the fair's delivery target. It marks a successful delivery without changing the launcher solution.
+
+Small stable brackets and a bulb identify the nearby usable object. Interacting gives a gentle world-space pulse. Soft independent shadows ground props and Bark; Mark's shadow sits on the platform beneath him rather than always on the lower floor. Existing rooms, saves and the Godot loading fix are preserved.
+
+This update was runtime-tested in Godot **4.4.1**, with the previous release's Godot 4.7 loading fix retained. See [grounded interaction notes](docs/GROUNDED_INTERACTIONS.md) for checks and art provenance.
+
 ## Cinematic edition
 
 A 28-second skippable campus film opens a first adventure. Choose **Watch the campus film** on the title screen to replay it. E, Enter, Escape, or the large touch button skips it. Watching the film never changes quest progress.
 
-New high-resolution transparent art adds an oak invention blackboard, a reading-nook cabinet and leafy canopy framing. Rear lockers, furniture, plants and near leaves have separate parallax speeds and cast shadows. Warm dust-lit shafts, a restrained world-only highlight glow and colour finish, gentle character breathing, and soft landing squash/dust enrich the stages. UI stays crisp above the world shader. Reduced motion fixes the film camera and disables scenery drift, animated dust and landing effects. This remains a 2D game with layered depth and the original character identities and pivots.
+New high-resolution transparent art adds an oak invention blackboard, a reading-nook cabinet and leafy canopy framing. Rear lockers, furniture, plants and near leaves occupy separate anchored render layers with cast shadows. Warm dust-lit shafts, a restrained world-only highlight glow and colour finish, gentle character breathing, and soft landing squash/dust enrich the stages. UI stays crisp above the world shader. Reduced motion fixes the film camera and disables scenery drift, animated dust and landing effects. This remains a 2D game with layered depth and the original character identities and pivots.
 
 ![Campus film](docs/previews/campus_film.png)
 
@@ -25,7 +33,7 @@ See [cinematic edition notes](docs/CINEMATIC_EDITION.md). New art and the record
 
 The school hallway, discovery garden and classroom workshop now behave as separate rooms. Follow the signed entrances at the left or right screen edge. The camera stops at each room boundary; stepping through an exit plays a short named transition, then places Mark and Bark safely inside the next room. Return trips preserve the quest, supplies and discoveries. The unlocked garden shortcut uses the same transition system. Existing save files remain compatible.
 
-The workshop has a new detailed storybook backdrop and the entrances use a new transparent oak doorway sprite. The original Mark and Bark identities are preserved. Slow background parallax, foreground foliage, warm light pools, sun shafts, contact shadows and perspective floor details add depth while retaining 2D gameplay. Mark and Bark use fuller supplied walk-pose sequences, subtle foot-anchored breathing, and more deliberate hint/cheer poses. Reduced motion disables parallax, ambient specks, butterflies, breathing and character lean, and shortens room transitions.
+The workshop has a new detailed storybook backdrop and the entrances use a new transparent oak doorway sprite. The original Mark and Bark identities are preserved. Anchored background planes, foreground foliage, warm light pools, sun shafts, contact shadows and perspective floor details add depth while retaining 2D gameplay. Mark and Bark use fuller supplied walk-pose sequences, subtle foot-anchored breathing, and more deliberate hint/cheer poses. Reduced motion disables parallax, ambient specks, butterflies, breathing and character lean, and shortens room transitions.
 
 ![Updated classroom workshop](docs/previews/workshop.png)
 

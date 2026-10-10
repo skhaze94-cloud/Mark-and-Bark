@@ -83,6 +83,30 @@ func run() -> void:
 	await ticks(3)
 	check(game.mode=="cinematic" and not game.player.enabled,"Film disables adventure controls")
 	check(game.campus.scenery.planes.size()>=10,"Furniture and foliage have independent depth planes")
+	var anchored: Array[Vector2]=[]
+	game.campus.scenery.camera_x=4000
+	game.campus.scenery._process(0)
+	for piece in game.campus.scenery.planes:anchored.append(piece.sprite.position)
+	game.campus.scenery.camera_x=5000
+	game.campus.scenery._process(0)
+	var stable=true
+	for i in range(anchored.size()):stable=stable and anchored[i]==game.campus.scenery.planes[i].sprite.position
+	check(stable,"Furniture and canopy anchors do not follow camera movement")
+	game.campus.depth.camera_x=5000
+	game.campus._process(0)
+	var painted_stable=true
+	for backdrop in game.campus.backgrounds:painted_stable=painted_stable and backdrop.sprite.position.x==backdrop.base
+	check(painted_stable,"Flattened rooms stay aligned with fixed props")
+	check(is_instance_valid(game.campus.board) and game.campus.board.global_position+game.campus.board.TARGET==Vector2(5050,290),"One live board contains the original delivery target")
+	check(not game.campus.object("fair_target").sprite.visible,"Duplicate fair board sprite is removed")
+	check(game.campus.support_y(3290,490)==490 and game.campus.support_y(3290,460)==490 and game.campus.support_y(4430,605)==610,"Character shadows use the nearest supporting platform or floor")
+	var assembly_before=int(Progress.data.assembled)
+	Progress.data.assembled=2
+	game.campus.board.angle=2
+	game.campus.board.power=2
+	game.campus.board._process(0)
+	check("2 / 3" in game.campus.board.status.text and "55" in game.campus.board.status.text and "Strong" in game.campus.board.status.text,"Live board updates assembly and launch settings")
+	Progress.data.assembled=assembly_before
 	for time in [2.0,9.0,16.0,23.0]:
 		game.cinema.age=time
 		game.cinema.update_shot()
@@ -126,6 +150,7 @@ func run() -> void:
 	await press_key(KEY_SPACE)
 	await walk_to(680)
 	check(game.tutorial_step==2,"Real jump clears tutorial log")
+	check(game.campus.feedback.focus_id=="tutorial_notebook","Nearby interaction cue identifies the notebook")
 	await press_key(KEY_E)
 	await dismiss()
 	check(game.tutorial_step==3,"Keyboard interacts with notebook")

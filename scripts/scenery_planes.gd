@@ -1,5 +1,5 @@
 extends Node2D
-# Visual planes never alter interaction or collision coordinates.
+# All furniture and foliage stay anchored in world space. Depth comes from overlap and light.
 var planes: Array[Dictionary] = []
 var camera_x: float = 640.0
 var reduced_motion: bool = false
@@ -7,7 +7,7 @@ var tutorial: bool = false
 var time: float = 0.0
 var light_sources: Array = []
 
-func add_piece(id: String, at: Vector2, span: float, depth: float, center: float, layer: int, sway: float = 0.0) -> Sprite2D:
+func add_piece(id: String, at: Vector2, span: float, _depth: float, _center: float, layer: int, sway: float = 0.0) -> Sprite2D:
 	var sprite = Art.prop(id,span)
 	sprite.position=at
 	sprite.z_index=layer
@@ -20,7 +20,7 @@ func add_piece(id: String, at: Vector2, span: float, depth: float, center: float
 	cast.show_behind_parent=true
 	sprite.add_child(cast)
 	add_child(sprite)
-	planes.append({"sprite":sprite,"origin":at,"factor":depth,"center":center,"sway":sway})
+	planes.append({"sprite":sprite,"origin":at,"sway":sway})
 	return sprite
 
 func build(is_tutorial: bool) -> void:
@@ -29,7 +29,6 @@ func build(is_tutorial: bool) -> void:
 		add_piece("school_props_red_locker",Vector2(335,560),255,0.10,850,1)
 		add_piece("school_props_navy_locker",Vector2(515,560),255,0.10,850,1)
 		add_piece("reading_nook_v3",Vector2(1220,575),420,0.16,850,1)
-		add_piece("invention_board_v3",Vector2(4690,320),340,0.15,4650,1)
 		add_piece("school_props_bookcase",Vector2(5350,540),270,0.12,4650,1)
 		add_piece("school_props_plant",Vector2(4930,510),105,0.17,4650,1,0.012)
 		add_piece("school_props_plant",Vector2(960,408),83,0.18,850,1,0.014)
@@ -47,7 +46,6 @@ func _process(delta: float) -> void:
 		var sprite: Sprite2D=piece.sprite
 		sprite.position=piece.origin
 		if not reduced_motion:
-			sprite.position.x+=(camera_x-float(piece.center))*float(piece.factor)
 			sprite.rotation=sin(time*0.65+float(piece.origin.x))*float(piece.sway)
 		else:sprite.rotation=0
 	queue_redraw()

@@ -491,6 +491,9 @@ func _physics_process(delta: float) -> void:
 	campus.depth.camera_x = camera.position.x
 	campus.foreground.camera_x = camera.position.x
 	campus.scenery.camera_x = camera.position.x
+	if is_instance_valid(campus.board):
+		campus.board.angle=angle_choice
+		campus.board.power=power_choice
 	if not busy and flight.is_empty():
 		idle_time+=delta
 		if absf(player.velocity.x)>20:idle_time=0
@@ -567,10 +570,12 @@ func update_hud() -> void:
 	counter.text="Learn at your pace\nNo lost discoveries" if mode=="tutorial" else "Leaves  "+str(Progress.data.leaves.size())+" / 6\nNotes   "+str(Progress.data.discoveries.size())+" / 2\nBark token  "+("Found!" if Progress.data.bark_token else "Hidden")
 	hud.get_node("SkipTutorial").visible=mode=="tutorial"
 	touch_root.visible=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
+	campus.feedback.focus_id=""
 	if busy or not flight.is_empty():
 		prompt.text=""
 	else:
 		var item=campus.nearest(player.position)
+		campus.feedback.focus_id=String(item.id) if not item.is_empty() else ""
 		prompt.text=("Use: " if touch_root.visible else "[E] ")+String(item.title) if not item.is_empty() else ""
 
 	prompt_panel.visible=not prompt.text.is_empty()
@@ -583,6 +588,7 @@ func interact_pressed() -> void:
 	if item.is_empty():
 		toast("Walk a little closer to a notebook, sign or invention.")
 		return
+	campus.feedback.pulse(item.pos+Vector2(0,-20))
 	interact_object(item.id)
 
 func interact_object(id: String) -> void:
@@ -687,6 +693,9 @@ func show_notebook() -> void:
 	button(p,"Back to exploring",Rect2(240,335,300,55),close_modal,true)
 
 func show_workshop() -> void:
+	if is_instance_valid(campus.board):
+		campus.board.angle=angle_choice
+		campus.board.power=power_choice
 	var p=open_modal(Rect2(135,140,1010,520))
 	label_at(p,"THE BIG IDEA WORKSHOP",Rect2(28,20,920,45),30)
 	var built=int(Progress.data.assembled)

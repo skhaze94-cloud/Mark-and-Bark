@@ -20,17 +20,17 @@ func run() -> void:
 	DirAccess.make_dir_recursive_absolute("res://test_output")
 	game=load("res://scenes/main.tscn").instantiate()
 	get_tree().root.add_child(game)
-	await capture("v3_title")
+	await capture("v4_title")
 	game.start_tutorial()
 	game.dismiss_dialogue()
 	game.player.position=Vector2(670,605)
-	await capture("v3_tutorial")
+	await capture("v4_tutorial")
 	Progress.data.stage=1
 	game.start_campus()
 	game.player.position=Vector2(790,605)
 	game.sync_room()
 	game.toast_time=0
-	await capture("v3_hallway")
+	await capture("v4_hallway")
 	Progress.data.stage=3
 	Progress.data.notebook=true
 	Progress.data.plant=true
@@ -38,10 +38,10 @@ func run() -> void:
 	game.player.position=Vector2(2800,605)
 	game.sync_room()
 	game.campus.refresh()
-	await capture("v3_garden")
+	await capture("v4_garden")
 	game.begin_room_transition(2,4240,"Into the invention workshop")
 	game.room_transition.age=0.22
-	await capture("v3_transition")
+	await capture("v4_transition")
 	game.cancel_room_transition()
 	game.player.enabled=true
 	Progress.data.stage=6
@@ -51,18 +51,21 @@ func run() -> void:
 	game.player.position=Vector2(4490,605)
 	game.sync_room()
 	game.campus.refresh()
-	await capture("v3_workshop")
+	await capture("v4_workshop")
+	game.player.position=Vector2(4930,605)
+	game.sync_room()
+	await capture("v4_live_board")
 	game.show_workshop()
-	await capture("v3_workshop_ui")
+	await capture("v4_workshop_ui")
 	game.close_modal()
 	Progress.settings.touch=true
 	game.apply_settings()
-	await capture("v3_touch")
+	await capture("v4_touch")
 	game.cinema.begin(game.return_from_film)
 	for spec in [[2.0,"garden"],[9.0,"hallway"],[16.0,"workshop"],[23.0,"finale"]]:
 		game.cinema.age=spec[0]
 		game.cinema.update_shot()
-		await capture("v3_film_"+spec[1])
+		await capture("v4_film_"+spec[1])
 	game.cinema.finish()
 	print("Visual fixtures captured")
 	get_tree().quit()

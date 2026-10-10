@@ -91,7 +91,7 @@ func interior(start: float, span: float, workshop: bool) -> void:
 
 func garden(start: float, span: float) -> void:
 	# Distant oak silhouettes move more slowly than the foreground.
-	var offset = 0.0 if reduced_motion else (camera_x-start-span/2)*0.035
+	var offset = 0.0
 	for i in range(6):
 		var x = start + 90 + i * span/5 + offset
 		draw_line(Vector2(x,560),Vector2(x-18,235),Color(0.30,0.39,0.26,0.18),23)

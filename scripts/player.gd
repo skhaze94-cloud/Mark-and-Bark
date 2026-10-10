@@ -96,12 +96,15 @@ func _physics_process(delta: float) -> void:
 			sprite.scale.x*=1.0+settle*0.5
 
 func _draw() -> void:
-	var height = maxf(0.0,610.0-position.y)
+	var support: float=get_parent().campus.support_y(position.x,position.y)
+	var height = maxf(0.0,support-position.y)
 	var radius = 30.0 * clampf(1.0-height/450.0,0.45,1.0)
-	var points = PackedVector2Array()
-	for i in range(32):
-		points.append(Vector2(cos(i*TAU/32)*radius,610.0-position.y+sin(i*TAU/32)*7))
-	draw_colored_polygon(points,Color(0.09,0.14,0.13,0.23))
+	for layer in range(4):
+		var points = PackedVector2Array()
+		var spread=1.0-layer*0.12
+		for i in range(32):
+			points.append(Vector2(height*0.06+cos(i*TAU/32)*radius*spread,support-position.y+sin(i*TAU/32)*7*spread))
+		draw_colored_polygon(points,Color(0.09,0.14,0.13,0.065*clampf(1.0-height/500.0,0.45,1.0)))
 	if not reduced_motion:
 		for mote in dust:
 			var local: Vector2=mote.at-global_position
