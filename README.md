@@ -1,6 +1,6 @@
-# Mark & Bark: The Big Idea — Leafy Lift
+# Mark & Bark: The Big Idea — Definitive UI & Quality of Life
 
-The **Leafy Lift** edition makes platforming essential to the invention quest, with taller required routes and a more mischievous Bark. It preserves the Ultimate Polish presentation, which refines the Fundate with clearer interfaces, smoother key-pose animation, richer landing and pickup feedback, original music, and a more finished presentation: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
+The **Definitive UI & Quality of Life** edition improves navigation, readable feedback, contextual objectives and save recovery. It includes the Leafy Lift update, which makes platforming essential to the invention quest with taller required routes and a more mischievous Bark. It preserves the Ultimate Polish presentation, which refines the Fundate with clearer interfaces, smoother key-pose animation, richer landing and pickup feedback, original music, and a more finished presentation: a garden tutorial, one connected school campus, a seven-step story quest, optional discoveries, and a retryable paper-plane invention workshop.
 
 ## Open and play
 
@@ -10,6 +10,18 @@ The **Leafy Lift** edition makes platforming essential to the invention quest, w
 4. Wait for the supplied textures and font to import, then press **F6** with `scenes/main.tscn` open or **F5** to run the project.
 
 No paid plugins, external services, build tools, or asset downloads are needed. The used artwork is bundled in `assets/`. The project ZIP contains editable source, not a standalone operating-system executable. Godot is required to play it this way.
+
+## Definitive UI & Quality of Life
+
+- **Clear next steps:** objectives, icons and hints adapt when you carry the plant or have only one supply left. The notebook shows the current task, a four-item checklist and a direct hint action. Press **N** to open it.
+- **Comfortable menus:** sensible keyboard focus, consistent Escape/back behaviour, visible button states, safe new-adventure cancellation, and explicit selected workshop presets. Changing a preset keeps focus on it.
+- **Readable feedback:** long notices expand and last longer; notices pause while menus or dialogue are open. Sound volume displays a percentage. Touch and keyboard labels follow the active input.
+- **Safe interruptions:** losing window focus pauses exploration and releases movement. The notebook cannot interrupt a plane test or room transition. Escape from the ending returns to exploration and clears its celebration.
+- **Reliable saves:** malformed preference types, negative attempt counts, duplicate discoveries and unknown collectible IDs recover safely while preserving compatible version-1 saves.
+
+See the [comprehensive review and verification](docs/DEFINITIVE_REVIEW.md).
+
+![Updated task notebook](docs/previews/definitive_notebook.png)
 
 ## Leafy Lift
 
@@ -88,6 +100,7 @@ See [visual overhaul notes](docs/VISUAL_OVERHAUL.md) for implementation details,
 | Jump / leafy double jump | Space, W, or up arrow; press again in midair | Tap Jump, then tap it again in midair |
 | Interact / next dialogue line | E or Enter | Use / Next |
 | Bark's hint | H | Hint button |
+| Notebook and task checklist | N | Notebook button |
 | Pause | Escape | Pause button |
 
 Enable **Always show touch controls** in Settings for touchscreen testing. Movement and jumping support separate fingers. Dragging out of a movement control releases it. Native screen-touch events are handled explicitly rather than relying only on first-finger mouse emulation.
@@ -129,13 +142,13 @@ Quest progress, discoveries, completed tutorial, settings and safe ground checkp
 
 The Godot 4.7.2 startup fix renames the custom ellipse painter in `scripts/depth_layer.gd` to avoid shadowing the engine's built-in `draw_ellipse()` method. The [automated verification workflow](.github/workflows/verify-godot.yml) checks this issue and packages the **complete Godot project ZIP** (including assets), downloadable from the successful workflow run's Artifacts section. This is a Godot source project, not a Windows executable.
 
-This Ultimate Polish release was verified with Godot **4.4.1** on Linux, headlessly and with native OpenGL Compatibility rendering. The previous Godot 4.7 loading fix is retained; this release has not been separately tested in Godot 4.7. Run the regression suite using:
+This Definitive UI & Quality of Life release was verified with Godot **4.4.1** on Linux, headlessly and with native OpenGL Compatibility rendering. The previous Godot 4.7 loading fix is retained; this release has not been separately tested in Godot 4.7. Run the regression suite using:
 
 ```sh
 godot --headless --fixed-fps 60 --path . res://tests/playthrough.tscn
 ```
 
-The updated suite contains 153 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
+The updated suite contains 175 runtime checks, including room crossings in both directions, room camera isolation, shortcuts, transparent doorway art and simultaneous two-finger movement/jumping. It exercises a complete tutorial and campus playthrough with keyboard input and actual CharacterBody2D physics, GUI touch events, assembly, a missed launch and successful retry, ending, optional discoveries, checkpoints, save/load, reduced motion and missing-art fallback. Results are written to `test_output/playthrough.json`; the test restores any pre-existing save after completion.
 
 This is single-player. There is no combat, timer, punishment meter, online service, 3D content, or complete multi-age game. The character art is supplied animation key poses, so pose transitions use timed key poses, short crossfades and stable foot pivots. Future production animation can replace those frames without changing the quest systems. Actual tablets and phones have not been physically device-tested. The updated chapter has been reviewed using native OpenGL screenshots of the title, tutorial, hallway, garden, workshop, room transition and touch HUD. Automated touch events were verified; actual tablets and phones remain untested.
 

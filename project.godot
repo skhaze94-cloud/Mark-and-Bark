@@ -2,10 +2,10 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="Leafy Lift"
+config/version="Definitive UI & Quality of Life"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/description="Leafy Lift: essential double-jump platforming, high invention supplies and mischievous Bark banter."
+config/description="Definitive UI and quality of life: clearer objectives, comfortable menus, reliable saves and playful leafy-lift platforming."
 
 [autoload]
 Progress="*res://scripts/progress.gd"

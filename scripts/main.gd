@@ -68,7 +68,9 @@ var modal_veil: ColorRect
 var celebration
 var flight_trail: Line2D
 var quitting: bool = false
+var notebook_button: Button
 var hint_button: Button
+var modal_back: Callable
 var dialogue_count: Label
 
 func sync_room() -> void:
@@ -176,7 +178,7 @@ func _ready() -> void:
 	show_title()
 
 func configure_input() -> void:
-	var mapping={"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"interact":[KEY_E,KEY_ENTER],"hint":[KEY_H],"pause":[KEY_ESCAPE]}
+	var mapping={"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"interact":[KEY_E,KEY_ENTER],"hint":[KEY_H],"pause":[KEY_ESCAPE],"notebook":[KEY_N]}
 	for action in mapping:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
@@ -215,7 +217,8 @@ func button(parent: Node, text: String, rect: Rect2, callback: Callable, primary
 	b.size=rect.size
 	b.add_theme_font_override("font",Art.font)
 	b.add_theme_font_size_override("font_size",20)
-	b.add_theme_color_override("font_color",Color("fff3d5") if primary else Color("203849"))
+	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:
+		b.add_theme_color_override(state,Color("fff3d5") if primary else Color("203849"))
 	b.add_theme_stylebox_override("normal",panel_style("203849" if primary else "fff5dc"))
 	b.add_theme_stylebox_override("hover",panel_style("365c6d" if primary else "e7d198"))
 	b.add_theme_stylebox_override("pressed",panel_style("1a313f" if primary else "d8bb73"))
@@ -306,7 +309,7 @@ func build_ui() -> void:
 	toast_label.add_theme_color_override("font_shadow_color",Color("172e3c"))
 	toast_label.add_theme_constant_override("shadow_offset_y",2)
 	hint_button=button(hud,"Bark's hint  [H]",Rect2(985,624,265,68),request_hint)
-	button(hud,"Notebook",Rect2(1018,545,232,60),show_notebook)
+	notebook_button=button(hud,"Notebook  [N]",Rect2(1018,545,232,60),show_notebook)
 	button(hud,"Skip tutorial",Rect2(24,155,180,50),finish_tutorial).name="SkipTutorial"
 	touch_root=Control.new()
 	touch_root.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -342,7 +345,24 @@ func build_ui() -> void:
 	var subtitle = label_at(transition_panel,"A new place. The same big idea.",Rect2(260,391,760,48),20,"c6d7c1")
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
+func focus_action(prefix: String) -> void:
+	if not is_instance_valid(modal):return
+	for child in modal.get_children():
+		if child is Button and child.text.begins_with(prefix):
+			child.grab_focus()
+			return
+
+func current_goal() -> String:
+	if mode=="tutorial":return TUTORIAL_GOALS[mini(tutorial_step,7)]
+	var stage=int(Progress.data.stage)
+	if stage==2 and Progress.data.plant:return "Return the plant you are carrying to the garden stump display."
+	if stage==3:
+		if Progress.data.books:return "Book base ready! Climb the classroom Pencil Express for the pencil guide."
+		if Progress.data.pencil:return "Pencil ready! Climb the garden leaf ledges for the book base."
+	return GOALS[clampi(stage,0,7)]
+
 func close_modal() -> void:
+	modal_back=Callable()
 	if is_instance_valid(modal):
 		overlay.remove_child(modal)
 		modal.queue_free()
@@ -394,16 +414,18 @@ func show_title() -> void:
 	campus.add_child(decoration)
 	campus.world_label("Small friends. Big possibilities.",Vector2(795,236),19)
 	var p=open_modal(Rect2(48,42,602,638))
-	label_at(p,"ULTIMATE POLISH EDITION",Rect2(36,24,530,28),16,"977134")
+	label_at(p,"DEFINITIVE UI & QUALITY OF LIFE",Rect2(36,24,530,28),16,"977134")
 	label_at(p,"MARK & BARK",Rect2(34,63,535,64),43)
 	label_at(p,"THE BIG IDEA",Rect2(36,130,530,42),27,"977134")
 	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,188,535,68),21)
-	button(p,"Continue adventure" if Progress.tutorial_done else "Start adventure",Rect2(36,273,530,64),start_continue,true)
+	button(p,"Continue exploring" if Progress.data.completed else "Continue adventure" if Progress.tutorial_done else "Start adventure",Rect2(36,273,530,64),start_continue,true)
 	button(p,"New adventure",Rect2(36,354,253,57),confirm_new)
 	button(p,"Replay tutorial",Rect2(306,354,260,57),start_tutorial)
 	button(p,"Settings & controls",Rect2(36,428,530,57),func():show_settings(show_title))
 	button(p,"Watch the campus film",Rect2(36,500,530,53),func():cinema.begin(return_from_film))
-	label_at(p,"Move: A/D or arrows · Double jump: Space twice\nInteract: E · Hint: H · Pause: Esc",Rect2(36,578,530,46),15)
+	label_at(p,"Touch: hold arrows · tap Jump twice\nUse: interact · Hint: clue · Pause: menu" if input_touch or Progress.settings.touch else "Move: A/D or arrows · Double jump: Space twice\nInteract: E · Notebook: N · Hint: H · Pause: Esc",Rect2(36,578,530,46),15)
+	label_at(p,"Saved on this device · Fair complete" if Progress.data.completed else "Saved quest · Step "+str(int(Progress.data.stage)+1)+" / 7" if Progress.tutorial_done else "Start with a short, skippable tutorial",Rect2(36,247,530,22),15,"53715b")
+	focus_action("Continue" if Progress.tutorial_done else "Start adventure")
 	camera.position=Vector2(640,360)
 	camera.zoom=Vector2.ONE
 	ambient.color=Color("edece1")
@@ -411,10 +433,12 @@ func show_title() -> void:
 
 func confirm_new() -> void:
 	var p=open_modal(Rect2(330,190,620,330))
+	modal_back=show_title
 	label_at(p,"Start a new adventure?",Rect2(30,26,560,50),30)
 	label_at(p,"This resets your current quest and discoveries. Your accessibility settings stay the same.",Rect2(30,95,560,95),22)
 	button(p,"Keep my adventure",Rect2(30,220,260,65),show_title)
 	button(p,"Start fresh",Rect2(320,220,270,65),func():Progress.reset_game();shrinking_intro.begin(start_tutorial),true)
+	focus_action("Keep my adventure")
 
 func start_continue() -> void:
 	if Progress.tutorial_done:
@@ -491,12 +515,16 @@ func say(lines: Array, done: Callable = Callable()) -> void:
 	dialogue_count=label_at(p,"",Rect2(750,197,125,28),16,"977134")
 	dialogue_count.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
 	refresh_dialogue()
+	focus_action("Finish" if dialogue_lines.size()==1 else "Next")
 
 func refresh_dialogue() -> void:
 	var parts=String(dialogue_lines[dialogue_index]).split("|",true,1)
 	dialogue_speaker.text=parts[0]
 	dialogue_count.text=str(dialogue_index+1)+" / "+str(dialogue_lines.size())
 	dialogue_text.text=parts[1] if parts.size()>1 else parts[0]
+	for child in modal.get_children():
+		if child is Button and (child.text.begins_with("Next") or child.text.begins_with("Finish")):
+			child.text=("Finish" if dialogue_index==dialogue_lines.size()-1 else "Next")+("" if input_touch else "  [E]")
 	dialogue_portrait.texture=Art.tex("young_front" if parts[0]=="Mark" else "bark_actions_hint")
 
 func next_dialogue() -> void:
@@ -579,9 +607,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_pressed("pause"):
-		if busy and mode!="title":
+		if busy:
 			if is_instance_valid(dialogue_text):dismiss_dialogue()
-			else:close_modal()
+			elif modal_back.is_valid():modal_back.call()
+			elif mode!="title":close_modal()
 		elif mode!="title":show_pause()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("interact"):
@@ -593,6 +622,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		jump_pressed()
 	elif event.is_action_pressed("hint"):
 		request_hint()
+	elif event.is_action_pressed("notebook"):
+		show_notebook()
+		get_viewport().set_input_as_handled()
 
 func jump_pressed() -> void:
 	if not busy and mode in ["tutorial","campus"] and flight.is_empty():
@@ -660,10 +692,13 @@ func _physics_process(delta: float) -> void:
 			campus.bark.texture=Art.tex(frames[int(clock*6)%4] if walking else "bark_actions_idle")
 			campus.bark.scale.y=0.20 if Progress.settings.reduced_motion or walking else 0.20*(1+sin(clock*1.8)*0.009)
 	update_flight(delta)
-	toast_time-=delta
-	toast_age+=delta
-	toast_panel.visible=toast_time>0
-	toast_label.visible=toast_time>0
+	if not busy:
+		toast_time-=delta
+		toast_age+=delta
+	# Keep notices below the friends when high platforms bring them near the top HUD.
+	toast_panel.position.y=430 if flight.is_empty() and player.get_global_transform_with_canvas().origin.y<380 else 139
+	toast_panel.visible=toast_time>0 and not busy
+	toast_label.visible=toast_panel.visible
 	toast_panel.modulate.a=1.0 if Progress.settings.reduced_motion else minf(clampf(toast_age/0.12,0,1),clampf(toast_time/0.3,0,1))
 	update_hud()
 
@@ -714,7 +749,7 @@ func update_checkpoint(delta: float) -> void:
 
 func update_hud() -> void:
 	if mode=="title":return
-	objective.text=TUTORIAL_GOALS[mini(tutorial_step,7)] if mode=="tutorial" else GOALS[clampi(int(Progress.data.stage),0,7)]
+	objective.text=current_goal()
 	zone_label.text="TINY GARDEN TUTORIAL" if mode=="tutorial" else last_zone
 	jump_meter.text="2 jumps ready  ◆ ◆" if player.is_on_floor() or player.jumps_used==0 else "1 leafy lift left  ◆" if player.jumps_used==1 else "Land to recharge"
 	quest_ribbon.total=8 if mode=="tutorial" else 7
@@ -723,10 +758,12 @@ func update_hud() -> void:
 	var icons=["school_props_noticeboard","collectibles_notebook","school_props_plant","collectibles_books","school_props_desk","collectibles_pencil","collectibles_paper_plane","collectibles_science_rosette"]
 	if mode=="tutorial":icons=["bark_actions_point","young_actions_jump","bark_actions_cheer","collectibles_notebook","collectibles_leaf_token","ui_parts_hint_bulb","collectibles_paper_plane","ui_parts_reward_check"]
 	objective_icon.texture=Art.tex(icons[clampi(tutorial_step if mode=="tutorial" else int(Progress.data.stage),0,7)])
+	if mode=="campus" and int(Progress.data.stage)==3 and Progress.data.books:objective_icon.texture=Art.tex("collectibles_pencil")
 	counter.text="Learn at your pace\nNo lost discoveries" if mode=="tutorial" else "Leaves  "+str(Progress.data.leaves.size())+" / 6\nNotes   "+str(Progress.data.discoveries.size())+" / 2\nBark token  "+("Found!" if Progress.data.bark_token else "Hidden")
 	hud.get_node("SkipTutorial").visible=mode=="tutorial"
 	touch_root.visible=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
 	hint_button.text="Bark's hint" if input_touch else "Bark's hint  [H]"
+	notebook_button.text="Notebook" if input_touch else "Notebook  [N]"
 	campus.feedback.focus_id=""
 	if busy or not flight.is_empty():
 		prompt.text=""
@@ -734,6 +771,8 @@ func update_hud() -> void:
 		var item=campus.nearest(player.position)
 		campus.feedback.focus_id=String(item.id) if not item.is_empty() else ""
 		prompt.text=("Use: " if input_touch else "[E] ")+String(item.title) if not item.is_empty() else ""
+		if not item.is_empty() and item.id in ["notebook","books","pencil"] and not player.is_on_floor():
+			prompt.text="Land beside "+String(item.title)+", then "+("tap Use." if input_touch else "press E.")
 
 	prompt_panel.visible=not prompt.text.is_empty()
 	prompt_panel.position=Vector2(255,547 if touch_root.visible else 638)
@@ -846,19 +885,28 @@ func request_hint() -> void:
 		else:say(["Bark|"+TUTORIAL_GOALS[mini(tutorial_step,7)]+"\nThere is no hurry. We can try again."])
 	else:
 		var clues=["The hallway noticeboard is between the lockers and the reading nook.","Start on the low log at the garden entrance. Jump toward the book ledge above it, then press Jump again near the top of your first jump. Land on the books and use the notebook.","Pick up the plant farther right in the garden, then return it to the stump display on the left.","For books: climb the rightmost low garden log, double-jump left to the leaf ledge, then hop right to the high book shelf. For the pencil: enter the classroom, climb the low book ledge, double-jump to the pencil platform, then hop right. Land before using each item.","The invention desk is in the classroom on the far right. The garden shortcut can help.","At the desk, add the books, then the pencil, then load your plane.","Try the middle angle and medium power. I'll show you the flight path at the workshop.","Six leaves, two funny notebook pages, and one secret Bark token are waiting to be found!"]
+		var stage=int(Progress.data.stage)
+		if stage==2 and Progress.data.plant:clues[2]="You already have the plant! Return left to the stump display and use it."
+		if stage==3 and Progress.data.books:clues[3]="Books secured! Take the shortcut to the classroom. Climb the low book ledge, double-jump onto the pencil bridge, then hop right to the pencil guide."
+		if stage==3 and Progress.data.pencil:clues[3]="Pencil secured! Return to the garden. Climb the far-right low log, double-jump left onto the leaf ledge, then hop right to the high book shelf."
 		show_prediction=true
-		say(["Bark|"+clues[clampi(int(Progress.data.stage),0,7)]])
+		say(["Bark|"+clues[clampi(stage,0,7)]])
 
 func show_notebook() -> void:
-	if busy or mode=="title":return
-	var p=open_modal(Rect2(255,160,770,410))
+	if busy or mode=="title" or not flight.is_empty() or not room_transition.is_empty():return
+	var p=open_modal(Rect2(255,135,770,480))
 	label_at(p,"MARK'S NOTEBOOK",Rect2(30,25,710,42),30)
-	var items="Design notebook: "+("Recovered" if Progress.data.notebook else "In the garden")+"\nGarden display: "+("Restored" if Progress.data.plant_restored else "Needs its plant")+"\nBook base: "+("Collected" if Progress.data.books else "Not yet")+"\nPencil guide: "+("Collected" if Progress.data.pencil else "Not yet")
-	label_at(p,items,Rect2(32,90,710,175),23)
-	label_at(p,"Big ideas grow through little improvements.\nOptional discoveries never block the adventure.",Rect2(32,270,700,66),18)
-	button(p,"Back to exploring",Rect2(240,335,300,55),close_modal,true)
+	label_at(p,current_goal(),Rect2(32,80,710,68),21)
+	var checklist=["Design notebook","Garden display","Book base","Pencil guide"]
+	var ready=[Progress.data.notebook,Progress.data.plant_restored,Progress.data.books,Progress.data.pencil]
+	for i in range(4):
+		label_at(p,("✓ " if ready[i] else "○ ")+checklist[i]+(" · Ready" if ready[i] else " · To find"),Rect2(32,163+i*38,710,36),22,"53715b" if ready[i] else "203849")
+	label_at(p,"Optional discoveries never block your big idea.\nProgress stays with you between rooms and retries.",Rect2(32,324,710,60),18)
+	button(p,"Where next?",Rect2(32,405,260,55),func():close_modal();request_hint())
+	button(p,"Back to exploring",Rect2(332,405,400,55),close_modal,true)
+	focus_action("Back to exploring")
 
-func show_workshop() -> void:
+func show_workshop(focus_text: String = "") -> void:
 	if is_instance_valid(campus.board):
 		campus.board.angle=angle_choice
 		campus.board.power=power_choice
@@ -883,15 +931,18 @@ func show_workshop() -> void:
 	else:
 		label_at(p,"Choose your angle",Rect2(32,85,450,36),22)
 		for i in range(3):
-			var b=button(p,["Low 25°","Middle 40°","High 55°"][i],Rect2(32+i*315,128,295,66),func():angle_choice=i;show_workshop(),i==angle_choice)
+			var title=["Low 25°","Middle 40°","High 55°"][i]
+			var b=button(p,("✓ " if i==angle_choice else "")+title,Rect2(32+i*315,128,295,66),func():angle_choice=i;show_workshop("✓ "+title),i==angle_choice)
 			b.tooltip_text="Launch angle preset"
 		label_at(p,"Choose the strength of Bark's puff",Rect2(32,215,920,40),22)
 		for i in range(3):
-			button(p,["Gentle","Medium","Strong"][i],Rect2(32+i*315,265,295,66),func():power_choice=i;show_workshop(),i==power_choice)
-		label_at(p,"Every attempt is progress. Your plane always returns.",Rect2(32,354,915,40),20)
-		button(p,"Show flight hint",Rect2(32,407,280,66),func():show_prediction=true;angle_choice=1;power_choice=1;close_modal();draw_prediction();toast("Bark: Middle angle + medium puff. Follow the golden arc."))
+			var title=["Gentle","Medium","Strong"][i]
+			button(p,("✓ " if i==power_choice else "")+title,Rect2(32+i*315,265,295,66),func():power_choice=i;show_workshop("✓ "+title),i==power_choice)
+		label_at(p,"Selected: "+["Low 25°","Middle 40°","High 55°"][angle_choice]+" + "+["Gentle","Medium","Strong"][power_choice]+" puff. Unlimited retries.",Rect2(32,354,915,40),20)
+		button(p,"Apply flight hint",Rect2(32,407,280,66),func():show_prediction=true;angle_choice=1;power_choice=1;close_modal();draw_prediction();toast("Bark: Middle angle + medium puff. Follow the golden arc."))
 		button(p,"Test invention!",Rect2(646,407,310,66),launch_workshop,true)
 	button(p,"Explore",Rect2(720,22,235,48),close_modal)
+	focus_action(focus_text if not focus_text.is_empty() else ["Place books","Add pencil","Load plane","Test invention!"][mini(built,3)])
 
 func assemble_next() -> void:
 	Progress.data.assembled=mini(3,int(Progress.data.assembled)+1)
@@ -997,6 +1048,12 @@ func complete_invention() -> void:
 	play_sound("success")
 	say(["Mark|It worked!","Bark|Of course. We only had to discover twelve ways it didn't.","Mark|Three.","Bark|I was counting the ones before you arrived.","Mark|A first attempt, a better idea, and a friend. That's what we'll bring to the fair."],show_ending)
 
+func explore_after_ending() -> void:
+	player.pose_lock=0
+	celebration.hide()
+	celebration.active=false
+	close_modal()
+
 func show_ending() -> void:
 	celebration.begin()
 	var p=open_modal(Rect2(235,130,810,490))
@@ -1012,8 +1069,10 @@ func show_ending() -> void:
 	image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	p.add_child(image)
 	label_at(p,"Leaf discoveries: "+str(Progress.data.leaves.size())+" / 6\nFunny notebook pages: "+str(Progress.data.discoveries.size())+" / 2\nBark's secret token: "+("Found!" if Progress.data.bark_token else "Still waiting")+"\nInvention tests: "+str(Progress.data.attempts),Rect2(35,215,530,158),23)
-	button(p,"Explore the campus",Rect2(35,400,355,62),func():player.pose_lock=0;celebration.hide();celebration.active=false;close_modal(),true)
+	button(p,"Explore the campus",Rect2(35,400,355,62),explore_after_ending,true)
 	button(p,"Play again",Rect2(420,400,350,62),func():Progress.reset_game();shrinking_intro.begin(start_tutorial))
+	modal_back=explore_after_ending
+	focus_action("Explore the campus")
 	toast("A science rosette for curiosity, friendship, and your big idea!")
 
 func show_pause() -> void:
@@ -1024,6 +1083,8 @@ func show_pause() -> void:
 	button(p,"Restart checkpoint",Rect2(30,173,440,60),restart_checkpoint)
 	button(p,"Settings & controls",Rect2(30,250,440,60),func():show_settings(show_pause))
 	button(p,"Save & title screen",Rect2(30,329,440,60),func():Progress.save_game();show_title())
+	label_at(p,"Retries keep your quest and discoveries.",Rect2(30,409,440,28),17)
+	focus_action("Continue")
 
 func restart_checkpoint() -> void:
 	cancel_room_transition()
@@ -1040,17 +1101,20 @@ func restart_checkpoint() -> void:
 
 func show_settings(back: Callable) -> void:
 	var p=open_modal(Rect2(250,85,780,560))
+	modal_back=back
 	label_at(p,"SETTINGS & CONTROLS",Rect2(30,22,720,48),29)
 	label_at(p,"Sound volume",Rect2(30,98,245,34),22)
 	var volume=HSlider.new()
 	volume.position=Vector2(285,98)
-	volume.size=Vector2(425,40)
+	volume.size=Vector2(330,40)
 	volume.min_value=0
 	volume.max_value=1
 	volume.step=0.05
 	volume.value=Progress.settings.volume
 	p.add_child(volume)
-	volume.value_changed.connect(func(value):Progress.settings.volume=value;Progress.save_game();play_sound("collect"))
+	var percent=label_at(p,str(roundi(volume.value*100))+"%",Rect2(630,102,95,32),20)
+	volume.value_changed.connect(func(value):Progress.settings.volume=value;percent.text=str(roundi(value*100))+"%";Progress.save_game())
+	volume.grab_focus()
 	var reduced=CheckButton.new()
 	reduced.text="Reduced motion: "+("On" if Progress.settings.reduced_motion else "Off")
 	reduced.position=Vector2(28,167)
@@ -1090,7 +1154,7 @@ func show_settings(back: Callable) -> void:
 		music.add_theme_color_override(state,Color("203849"))
 	p.add_child(music)
 	music.toggled.connect(func(value):music.text="Gentle background music: "+("On" if value else "Off");Progress.settings.music=value;Progress.save_game())
-	label_at(p,"A/D or arrows: move · Space/W/Up: jump, then jump again\nE/Enter: interact or next line · H: hint · Esc: pause\nEvery sound event also has a visible cue.",Rect2(30,358,720,90),19)
+	label_at(p,"A/D or arrows: move · Space/W/Up: jump, then jump again\nE/Enter: use · N: notebook · H: hint · Esc: back/pause\nTouch: hold arrows · tap Jump twice · Use · Hint",Rect2(30,358,720,90),19)
 	button(p,"Back",Rect2(230,480,315,58),func():Progress.save_game();back.call(),true)
 
 func apply_settings() -> void:
@@ -1104,7 +1168,9 @@ func apply_settings() -> void:
 
 func toast(text: String) -> void:
 	toast_label.text=text
-	toast_time=5
+	toast_time=clampf(2.5+text.length()/28.0,4,9)
+	toast_panel.size.y=96 if Art.font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,18).x>1100 else 70
+	toast_label.size.y=toast_panel.size.y-24
 	toast_age=0
 	toast_panel.show()
 	toast_label.show()
@@ -1117,6 +1183,14 @@ func play_sound(id: String, pitch: float = 1.0) -> void:
 		sound_player.play()
 
 func _notification(what: int) -> void:
+	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT and is_instance_valid(player):
+		Input.action_release("left")
+		Input.action_release("right")
+		touch_fingers.clear()
+		touches.left=false
+		touches.right=false
+		player.axis=0
+		if mode in ["tutorial","campus"] and not busy and flight.is_empty() and room_transition.is_empty():show_pause()
 	if what==NOTIFICATION_WM_CLOSE_REQUEST:
 		request_quit()
 

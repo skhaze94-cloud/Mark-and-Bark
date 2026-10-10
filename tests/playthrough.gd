@@ -537,6 +537,92 @@ func run() -> void:
 	var fallback=Art.tex("deliberately_missing_test_asset")
 	check(fallback!=null,"Missing art has a safe fallback")
 	check(not game.sounds.is_empty(),"Procedural sound cues load")
+	# UI/QoL regressions use a temporary quest snapshot, then restore the adventure.
+	var saved_quest=Progress.data.duplicate(true)
+	var saved_settings=Progress.settings.duplicate(true)
+	var saved_tutorial=Progress.tutorial_done
+	var saved_position: Vector2=game.player.position
+	Progress.data.stage=2
+	Progress.data.plant=true
+	game.update_hud()
+	check("Return" in game.objective.text,"Carried plant objective gives the next action")
+	Progress.data.stage=3
+	Progress.data.books=true
+	Progress.data.pencil=false
+	game.update_hud()
+	check("classroom" in game.objective.text and game.objective_icon.texture==Art.tex("collectibles_pencil"),"Last missing supply has a matching objective and pictogram")
+	game.request_hint()
+	check("Books secured!" in game.dialogue_text.text,"Hint adapts to the remaining supply")
+	check(root.gui_get_focus_owner() is Button and root.gui_get_focus_owner().text.begins_with("Finish"),"Single-line dialogue focuses its Finish action")
+	await dismiss()
+	Progress.data.books=false
+	Progress.data.pencil=true
+	game.update_hud()
+	check("garden" in game.objective.text,"Alternate supply order points back to the garden")
+	await press_key(KEY_N)
+	check(game.busy and root.gui_get_focus_owner().text=="Back to exploring","Notebook opens with a safe keyboard return action")
+	await press_key(KEY_ESCAPE)
+	check(not game.busy and game.player.enabled,"Escape closes the notebook into gameplay")
+	game.show_pause()
+	game.show_settings(game.show_pause)
+	var volume_control: HSlider=null
+	for child in game.modal.get_children():
+		if child is HSlider:volume_control=child
+	volume_control.value=0.35
+	check(game.modal.get_children().any(func(c):return c is Label and c.text=="35%"),"Audio slider displays an exact percentage")
+	await press_key(KEY_ESCAPE)
+	check(game.busy and game.modal.get_children().any(func(c):return c is Label and c.text=="A LITTLE BREATHER"),"Escape from pause settings returns to pause")
+	await press_key(KEY_ESCAPE)
+	check(not game.busy,"A second Escape resumes gameplay")
+	game.show_title()
+	game.show_settings(game.show_title)
+	await press_key(KEY_ESCAPE)
+	check(game.mode=="title" and root.gui_get_focus_owner().text.begins_with("Continue"),"Escape from title settings restores the title and keyboard focus")
+	game.confirm_new()
+	check(root.gui_get_focus_owner().text=="Keep my adventure","New adventure confirmation defaults to preserving progress")
+	await press_key(KEY_ESCAPE)
+	check(Progress.data.stage==3 and game.mode=="title","Cancel new adventure preserves quest")
+	game.start_campus()
+	game.show_workshop()
+	check(game.modal.get_children().filter(func(c):return c is Button and c.text.begins_with("✓ ")).size()==2,"Workshop marks both selected presets without relying on colour")
+	var middle_button=game.modal.get_children().filter(func(c):return c is Button and "Middle 40°" in c.text)[0]
+	middle_button.pressed.emit()
+	check(root.gui_get_focus_owner().text=="✓ Middle 40°","Changing a preset retains keyboard focus on that selection")
+	game.close_modal()
+	game.flight={"kind":"workshop","t":0.0}
+	game.show_notebook()
+	check(not game.busy,"Notebook cannot interrupt a plane test")
+	game.flight.clear()
+	game.toast("A long helpful notice explains that you can jump again near the top of your first jump, land on the next platform, and try again safely whenever you need to.")
+	check(game.toast_panel.size.y==96 and game.toast_time>7,"Long notices receive more reading room and time")
+	game.show_pause()
+	var notice_time: float=game.toast_time
+	await ticks(10)
+	check(not game.toast_panel.visible and game.toast_time==notice_time,"Menus hide notices and preserve their reading time")
+	game.close_modal()
+	await ticks(2)
+	check(game.toast_panel.visible,"Notice resumes after closing a menu")
+	touches_cleanup_test()
+	check(game.busy and game.touch_fingers.is_empty() and not game.touches.right and not Input.is_action_pressed("right"),"Losing window focus pauses exploration and releases movement")
+	game.close_modal()
+	# Malformed and duplicate save entries must not break UI or inflate counters.
+	var corrupt=FileAccess.open(Progress.SAVE_PATH,FileAccess.WRITE)
+	corrupt.store_string(JSON.stringify({"version":1,"data":{"leaves":["leaf_1","leaf_1","leaf_999",9],"discoveries":["doodle_1","doodle_1","unknown"],"attempts":-8},"settings":{"volume":{"invalid":true},"music":"false"},"tutorial_done":"false"}))
+	corrupt.close()
+	Progress.reset_game(false)
+	Progress.settings.music=true
+	Progress.load_save()
+	check(Progress.data.leaves==["leaf_1"] and Progress.data.discoveries==["doodle_1"],"Save validation removes duplicate and unknown discoveries")
+	check(Progress.settings.volume==0.45 and Progress.settings.music and not Progress.tutorial_done and Progress.data.attempts==0,"Malformed saved preferences and negative attempts recover safely")
+	Progress.data=saved_quest
+	Progress.settings=saved_settings
+	Progress.tutorial_done=saved_tutorial
+	game.player.position=saved_position
+	game.player.velocity=Vector2.ZERO
+	game.player.reset_jumps()
+	game.sync_room()
+	game.campus.refresh()
+	game.apply_settings()
 	# The replay tutorial must not erase the completed campus state.
 	game.start_tutorial()
 	await dismiss()
@@ -587,3 +673,10 @@ func collect_textures(parent: Node, result: Array[TextureRect]) -> void:
 	for child in parent.get_children():
 		if child is TextureRect:result.append(child)
 		collect_textures(child,result)
+
+
+func touches_cleanup_test() -> void:
+	game.touch_fingers[0]="right"
+	game.touches.right=true
+	Input.action_press("right")
+	game._notification(NOTIFICATION_WM_WINDOW_FOCUS_OUT)

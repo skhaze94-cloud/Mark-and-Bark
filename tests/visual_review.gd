@@ -73,6 +73,20 @@ func run() -> void:
 	await capture("polish_transition")
 	game.cancel_room_transition()
 	game.player.enabled=true
+	await key_event(KEY_N)
+	if not game.busy:push_error("Native notebook shortcut failed")
+	else:print("PASS: Native N shortcut opens notebook")
+	await capture("definitive_notebook")
+	game.close_modal()
+	Progress.data.books=true
+	game.update_hud()
+	await capture("definitive_remaining_supply")
+	Progress.data.books=false
+	game.show_pause()
+	await capture("definitive_pause")
+	game.show_settings(game.show_pause)
+	await capture("definitive_settings")
+	game.close_modal()
 	game.player.position=Vector2(3290,190)
 	game.sync_room()
 	await capture("leafy_book_shelf")
@@ -116,9 +130,9 @@ func run() -> void:
 	Progress.data.stage=7
 	game.show_ending()
 	await capture("polish_ending")
-	game.celebration.active=false
-	game.celebration.hide()
-	game.close_modal()
+	await key_event(KEY_ESCAPE)
+	if game.busy or game.celebration.visible:push_error("Native ending Escape failed")
+	else:print("PASS: Native ending Escape clears celebration and resumes exploration")
 	Progress.settings.touch=true
 	game.apply_settings()
 	await capture("polish_touch")
@@ -133,3 +147,15 @@ func run() -> void:
 	game.queue_free()
 	for i in range(5):await get_tree().physics_frame
 	get_tree().quit()
+
+func key_event(code: int) -> void:
+	var e=InputEventKey.new()
+	e.physical_keycode=code
+	e.pressed=true
+	Input.parse_input_event(e)
+	for i in range(2):await get_tree().physics_frame
+	e=InputEventKey.new()
+	e.physical_keycode=code
+	e.pressed=false
+	Input.parse_input_event(e)
+	for i in range(2):await get_tree().physics_frame

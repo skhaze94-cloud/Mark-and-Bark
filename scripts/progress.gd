@@ -25,6 +25,16 @@ func save_game() -> void:
 	file.close()
 	DirAccess.rename_absolute(SAVE_PATH + ".tmp", SAVE_PATH)
 
+func finite_number(value: Variant, fallback: float) -> float:
+	if (value is int or value is float) and is_finite(float(value)):return float(value)
+	return fallback
+
+func unique_known(values: Array, allowed: Array) -> Array:
+	var result: Array=[]
+	for value in values:
+		if value is String and value in allowed and not value in result:result.append(value)
+	return result
+
 func load_save() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
@@ -39,19 +49,20 @@ func load_save() -> void:
 		# JSON numbers deserialize as floats. Validate integral fields explicitly.
 		for key in ["stage","assembled","attempts"]:
 			if stored.get(key) is float or stored.get(key) is int:
-				data[key] = int(stored[key])
+				data[key] = int(finite_number(stored[key],data[key]))
 	data.stage = clampi(int(data.stage),0,7)
 	data.assembled = clampi(int(data.assembled),0,3)
-	data.checkpoint = clampf(float(data.checkpoint),100.0,5400.0)
-	data.leaves = data.leaves.filter(func(v): return v is String and v.begins_with("leaf_"))
-	data.discoveries = data.discoveries.filter(func(v): return v is String and v in ["doodle_1","doodle_2"])
-	tutorial_done = bool(parsed.get("tutorial_done",false))
+	data.checkpoint = clampf(finite_number(data.checkpoint,220),100.0,5400.0)
+	data.attempts = clampi(int(data.attempts),0,999999)
+	data.leaves = unique_known(data.leaves,["leaf_1","leaf_2","leaf_3","leaf_4","leaf_5","leaf_6"])
+	data.discoveries = unique_known(data.discoveries,["doodle_1","doodle_2"])
+	tutorial_done = parsed.get("tutorial_done",false) if parsed.get("tutorial_done") is bool else false
 	var saved_settings = parsed.get("settings",{})
 	if saved_settings is Dictionary:
-		settings.volume = clampf(float(saved_settings.get("volume",0.45)),0.0,1.0)
-		settings.reduced_motion = bool(saved_settings.get("reduced_motion",false))
-		settings.touch = bool(saved_settings.get("touch",false))
-		settings.music = bool(saved_settings.get("music",true))
+		settings.volume = clampf(finite_number(saved_settings.get("volume"),0.45),0.0,1.0)
+		for key in ["reduced_motion","touch","music"]:
+			var value=saved_settings.get(key)
+			if value is bool:settings[key]=value
 
 func collect_leaf(id: String) -> bool:
 	if id in data.leaves:
