@@ -1,0 +1,70 @@
+{
+  "engine": "4.4.1.stable.official.49a5bc7b6",
+  "suites": {
+    "import": {
+      "passed": 0,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "playthrough": {
+      "passed": 175,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "jump_review": {
+      "passed": 21,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "polish_review": {
+      "passed": 61,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "variety_review": {
+      "passed": 85,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "mega_playthrough": {
+      "passed": 198,
+      "failed": 0,
+      "exit_code": 0
+    }
+  },
+  "total_passed": 540,
+  "release": "3.1 Mega Variety \u2014 The Complete Climb",
+  "base_commit": "57bc618b881702f467691f31af32cec7364656d5",
+  "main_platforms": [
+    24,
+    27,
+    33
+  ],
+  "ascent_pixels": [
+    4410,
+    5400,
+    7080
+  ],
+  "leaves_per_level": 24,
+  "nooks_per_level": 3,
+  "native_campaign": {
+    "passed": 198,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "native_visual_fixtures": {
+    "exit_code": 0,
+    "reviewed": [
+      "title",
+      "level selection",
+      "instructions",
+      "settings",
+      "notebook",
+      "school",
+      "bedroom",
+      "attic",
+      "higher route and pest",
+      "above summit"
+    ]
+  }
+}

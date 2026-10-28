@@ -1,105 +1,89 @@
-# Mark & Bark — Spring Polish 2.0.2
+# Mark & Bark — Mega Variety 3.1: The Complete Climb
 
-**Ultimate Polish 2.0** refines the three-level vertical adventure with clearer progress, illustrated level cards, smoother teamwork, richer lighting and safer navigation. Platforming remains the main game. Bark accidentally presses the shrinking ray. Mark and Bark must climb three giant school and home environments, recover a design, power cell and lens, and repair the ray together.
+A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
-## Play in Godot
+**This release rebuilds the unpublished Mega Variety expansion on the verified 2.0.2 source and adds a full gameplay, visual, interface and save-recovery pass.**
 
-1. Extract the ZIP into a fresh writable folder.
-2. Open the standard **Godot 4.4.1** editor (or a compatible newer Godot 4 version).
-3. Choose **Import** in the Project Manager and select `project.godot`.
-4. Let the bundled textures and font import, then press **F5**.
+## Play
 
-This is a ready-to-import, editable Godot project. Godot is required; the ZIP is not a standalone Windows/macOS executable. No paid plugins, .NET, build tools or additional asset downloads are needed.
+1. Extract the ZIP into a fresh, writable folder.
+2. Open **Godot 4.4.1**, choose **Import**, and select `project.godot`.
+3. Let the bundled art and font import. Press **F5**.
 
-## New in 2.0.2
+Everything needed to play is bundled. No paid plugins, .NET, Python or extra asset downloads are required for the game. This is an editable Godot project, not a standalone executable. Python is only needed for the optional verification tool.
 
-- Short landings restore Mark's standing pose immediately.
-- Bark stays on the same shelf near its edge and keeps a consistent release direction while Mark steers.
-- Direction changes on launch and checkpoint resets clear the right visual states.
-- Added checks for rapid taps, ceiling bumps and interrupted jumps.
+## Three much bigger adventures
 
-## New in 2.0.1
+| Climb | Setting | Main platforms | Ascent |
+|---|---|---:|---:|
+| The Library Ladder | School reading nook, pencil crossing and roof library | 24 | 4,410 px |
+| The Bedroom Beanstalk | Toy corner, wardrobe trail and window garden | 27 | 5,400 px |
+| The Invention Attic | Workshop floor, thread loft and ray observatory | 33 | 7,080 px |
 
-- Bark anticipates the first jump instead of teleporting at launch.
-- Foot-aligned contact, eased squash and release, and a smooth return beside Mark.
-- Immediate second-jump response and the same platform reach, with pause and reduced-motion support.
+Each ascent is **three times the height of 2.0.2**. Every level has 24 optional leaves spread through its full height, three reachable side nooks and one hidden Bark token. The quest item is on the platform just below the summit. Land beside it, collect it with **E / Use**, then deliver it at the summit.
 
-See [the jump review](docs/SMOOTH_SPRING.md).
+The route has six new painted platform materials: books, pencil bridges, rulers, erasers, thread spools and timber ledges. Cream landing seams, numbered shelves and checkpoint bulbs make the way readable. Broad bridges offer breathing room between higher jumps.
 
-## New in 2.0
+![Mark, Bark and a dodge encounter in the attic](docs/previews/complete_climb_3_1.png)
 
-- Quest pictograms, a height meter, shelf counts and readable feedback cards.
-- A staged title, How to Play, illustrated level selection and correct portrait/reward sizing.
-- Crisp Mark-on-Bark contact, room lighting, detailed furniture and pickup sparkles.
-- Completed checkpoint icons, a better secret-route hint and immediate best-score updates after the ending.
-- Safe fades between levels; reduced motion switches immediately.
-- Static background drawing with a separate lightweight dust layer.
+## Two jumps, one team
 
-See [the polish review](docs/POLISH_2_0.md) for details. Existing campaign and original-chapter saves remain compatible.
-
-## The three climbs
-
-| Level | Theme and objective | Climbing difficulty |
-|---|---|---|
-| The Library Ladder | School library/classroom; recover Mark's missing design | Gentle: broad 280 px books; 140–210 px rises |
-| The Bedroom Beanstalk | Mark's home bedroom, bed, wardrobe and writing desk; retrieve the pocket-sized power cell | Adventurous: 244 px books and pencils; rises up to 220 px |
-| The Invention Attic | Home attic, timber beams, crates and invention supplies; collect the ray's golden lens | Daring: 208 px landings; rises up to 230 px |
-
-Every level has **eight optional leaf tokens**, a hidden Bark token on a side shelf, numbered platforms, checkpoints and a delivery point at the summit. The quest item sits on the shelf just below the summit. Land beside it, use it, then climb to the delivery point and use that to complete the level. Completing a climb unlocks the next. The last delivery repairs the ray and plays the restored-size ending.
-
-The story never requires optional collectibles. There are no enemies, damage penalties, countdowns or lost items. Explore after completion or replay from Level Select; replay resets that level's run while preserving its best score.
-
-![Polished 2.0 HUD and Mark-on-Bark teamwork](docs/previews/polish_2_0.png)
-
-## Controls and the Bark spring
+Move with **A/D or arrows**. Press **Space** to jump, then press again near the first apex to spring off Bark. Bark anticipates the first jump, braces beneath Mark and eases back into position after release. Jump input responds immediately. Landing recharges both jumps; walking off a ledge still leaves a rescue spring. There is no third airborne jump.
 
 | Action | Keyboard | Touch |
 |---|---|---|
-| Move | A / D or Left / Right | Hold an arrow |
-| Jump | Space, W or Up | Tap Jump |
-| Spring off Bark | Jump again near the first jump's apex | Tap Jump again |
-| Pick up / deliver | E or Enter | Use |
-| Ask for help | H | Bark's hint |
-| Notebook / progress | N | Notes |
-| Return to checkpoint | R | Checkpoint |
+| Move | A/D or Left/Right | Hold an arrow |
+| Jump / Bark spring | Space, W or Up | Tap Jump, then Jump again |
+| Collect / deliver | E or Enter | Use |
+| Hint | H | Bark’s hint |
+| Notebook | N | Notes |
+| Highest checkpoint | R | Checkpoint |
 | Pause | Escape | Pause |
 
-**Jump once, then again as Mark rises near the top of his first jump.** Bark moves beneath Mark during the first jump, braces his leafy head and springs Mark upward. Mark crouches on contact and releases into the supplied jump pose. Landing recharges both jumps. Walking off a ledge still leaves a rescue spring. You cannot perform a third airborne jump.
+Touch controls appear after a touch event or through **Always show touch controls** in Settings. Hold movement with one finger and jump with another. Use landscape orientation.
 
-Checkpoint bulbs mark every second main shelf. Landing there saves the highest checkpoint. **R / Checkpoint** returns you there with every item intact. The HUD shows your current shelf and climbing height. Completed checkpoint bulbs become check marks. Bark's hint explains the current objective and briefly marks the next shelf. Pause freezes movement, and losing window focus pauses the climb and releases held movement.
+## Small pests, forgiving retries
 
-Touch controls switch on after a touch event, on mobile platforms, or through **Always show touch controls** in Settings. They support holding movement with one finger while jumping with another. Use landscape orientation. Mouse-clicking the visible Jump/Use buttons also works.
+Eraser beetles pace, dust bunnies bob and paper moths flutter. Mark gives a practical dodge tip when approaching. Enemies occupy the far side of a landing, leaving room to arrive safely. Jump or spring past them. Mark has **no attacks, weapons or powers**.
 
-Settings include master sound volume, a separate music toggle, reduced motion and touch visibility. Reduced motion removes dust, pickup bobbing, camera smoothing and extra spring stretch while keeping a clear contact pose. Dialogue and ray cinematics can be skipped.
+A bump returns Mark to his last safe shelf with every quest item and collectible intact. A recovery window prevents immediate repeated bumps. **R / Checkpoint** returns to the highest saved rest shelf. Both recovery paths place feet above the platform, then settle safely on it.
 
-## Saves and the original chapter
+**Calm climb** lets players pass pests harmlessly. It does not alter jumps, routes or collection rewards. This preference remains available across new adventures. Pause and dialogue freeze patrols and recovery timers.
 
-The campaign saves locally in Godot's user-data folder as `mark_bark_mega.json`. It stores the current level, unlocked levels, highest checkpoints, quest items, collected tokens, tutorial/story acknowledgement and best scores. Settings use the existing original save. **New adventure** asks before resetting this campaign.
+## The 3.1 quality pass
 
-The original school adventure, tutorial and paper-plane workshop remain bundled. Open `scenes/main.tscn` and press **F6** to play that chapter. Its previous progress file is preserved. F5 launches the new three-level campaign.
+- Clearer title, illustrated level selection and a redesigned notebook with objective, discoveries, nooks and checkpoint progress.
+- Practical return hints for all nine side routes; important tips remain readable when a leaf is collected.
+- Smooth Mark-on-Bark contact and release, quick double taps, direction changes, low-ceiling landings and clean checkpoint resets.
+- Bark leaves pests visible instead of standing over their silhouettes.
+- Correct desk, mug and lamp placement using supplied prop pivots; bracketed wall shelves support the attic lamps.
+- Layered timber, window lighting, soft grounding shadows and independently anchored scenery.
+- Backdrop coverage includes jumps above the summit. Nearby scenery bays draw at fixed world positions with generous overlap, bounding rendering cost.
+- Master volume, music, reduced motion and touch settings. Reduced motion removes extra bobbing, wing flutter, dust and camera easing while preserving readable gameplay.
+- Atomic saves, compatibility with earlier campaign saves, validation of malformed values and recovery from the previous valid backup.
 
-After the full-sized ending, **Explore this level** returns to the miniature attic climb so shelves and remaining collectibles stay playable. The ending does not permanently change gameplay scale.
+## Ending and replay
 
-## Editing and verification
+The final delivery repairs the ray and plays the restored-size story ending. Explore afterwards, revisit unlocked levels, or Replay a climb for a fresh collection run while keeping best scores. Optional discoveries never block the story.
 
-- `scenes/mega.tscn`: new campaign entry point.
-- `scripts/mega_main.gd`: story, HUD, input, menus, hints and teamwork animation.
-- `scripts/mega_level.gd`: the three authored routes, collisions and pickups.
-- `scripts/mega_scenery.gd`: anchored school/home architecture, layered furniture and lighting.
-- `scripts/mega_ray.gd`: shrinking and restored-size cinematics.
-- `scripts/mega_state.gd`: separate campaign save and best scores.
-- `scripts/player.gd`: shared responsive movement, coyote time, jump buffering and supplied character poses.
+The original school adventure, tutorial and paper-plane workshop are still included: open `scenes/main.tscn` and press **F6**. Its progress and sound settings remain separate from the campaign.
 
-Artwork keeps Young Mark, Bark, the storybook palette and the supplied individual sprites. Characters keep the supplied **(256, 612)** foot anchor on **512 × 640** canvases. Collision geometry is independent of painted scenery; collectible positions and furniture stay in world space. The library has one classroom blackboard. Upper tiers use library alcoves. Home furniture and the ray are drawn with matching oak, navy, cream and moss materials.
+## Saves
 
-Run the campaign's full physical playthrough:
+The campaign uses Godot’s standard user-data folder for **Mark & Bark: The Big Idea**. `mark_bark_mega.json` stores campaign progress and calm mode; `.bak` holds the previous valid save. Version 1 saves retain unlocked levels, earlier checkpoints, discoveries and best scores. Version 2 supports the extended upper checkpoints and all 24 leaves. Settings for sound, touch and reduced motion use the existing original save.
+
+The application name stays unchanged so previous save locations remain compatible. New adventure asks before resetting this campaign and its scores; accessibility preferences and original-chapter progress are preserved.
+
+## Verification and editing
+
+The complete, isolated check suite runs with:
 
 ```sh
-godot --headless --path . --fixed-fps 60 res://tests/mega_playthrough.tscn
+python3 tools/verify.py --godot /path/to/Godot
 ```
 
-For native rendered screenshots, omit `--headless` and append `-- --screenshots`. The test climbs every required shelf and secret branch with actual double-jump physics, exercises keyboard and multi-finger touch input, obtains and delivers each quest item, checks checkpoint recovery, saves/reloads progress and completes the final cinematic. Outputs go to the ignored `test_output/` folder.
+It imports a fresh project, uses temporary test saves, runs all five suites and writes logs to the ignored `test_output/` folder. **540 checks pass**: 198 campaign checks, 85 variety/recovery checks, 61 interface checks, 21 teamwork-jump checks and 175 original-chapter checks. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
-Run `tests/polish_review.tscn` for the additional 2.0 UI and recovery checks.
+Native Godot compatibility-renderer playthrough and visual fixtures were also reviewed. See [release notes and artwork provenance](docs/RELEASE_3_1.md) and [verification results](docs/release_3_1_verification.json).
 
-The original chapter's regression suite remains at `tests/playthrough.tscn`. See `docs/MEGA_VERTICAL_ADVENTURE.md` for implementation and validation details. Cross-device testing on physical Android/iOS hardware and standalone platform exports are outside this source-project delivery.
+Physical Android/iOS device testing and standalone platform exports are outside this source-project delivery. The tests cover keyboard, mouse and injected multi-touch events in Godot.

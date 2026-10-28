@@ -29,6 +29,7 @@ var dialogue_done: Callable
 var back: Callable
 var clock=0.0
 var notice_until=0.0
+var notice_priority=0
 var quitting=false
 var notice_back: Panel
 var context_back: Panel
@@ -50,8 +51,9 @@ func _ready():
 	for action in {"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"interact":[KEY_E,KEY_ENTER],"hint":[KEY_H],"pause":[KEY_ESCAPE],"notebook":[KEY_N],"retry":[KEY_R]}:
 		if not InputMap.has_action(action):InputMap.add_action(action)
 		for key in {"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"interact":[KEY_E,KEY_ENTER],"hint":[KEY_H],"pause":[KEY_ESCAPE],"notebook":[KEY_N],"retry":[KEY_R]}[action]:
-			var e=InputEventKey.new();e.physical_keycode=key;InputMap.action_add_event(action,e)
-	campus=load("res://scripts/mega_level.gd").new();add_child(campus);campus.build(0)
+			var e=InputEventKey.new();e.physical_keycode=key
+			if not InputMap.action_has_event(action,e):InputMap.action_add_event(action,e)
+	campus=load("res://scripts/mega_level.gd").new();add_child(campus)
 	player=load("res://scripts/player.gd").new();add_child(player);player.right_bound=1600;player.position=Vector2(510,645);player.jumped.connect(jumped);player.landed.connect(landed);player.movement_finished.connect(update_bark_jump)
 	camera=Camera2D.new();camera.position=Vector2(800,330);add_child(camera);camera.make_current()
 	var canvas=CanvasLayer.new();canvas.layer=10;add_child(canvas)
@@ -114,14 +116,18 @@ func close():
 func open(r):
 	close();busy=true;player.suspended=true;player.enabled=false;player.axis=0;veil.show();panel=card(overlay,r);return panel
 func title():
-	mode="title";hud.hide();campus.build(0);player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
+	mode="title";hud.hide();
+	if campus.platforms.is_empty() or campus.level!=0:campus.build(0)
+	else:campus.refresh()
+	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE TINY, TALL ADVENTURE · 2.0",Rect2(35,97,640,40),23,"8a713f")
-	text(p,"A shrinking ray. Three giant climbs.\nOne inventor and one spectacularly unhelpful tree.",Rect2(35,153,640,80),22)
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"MEGA VARIETY · THE COMPLETE CLIMB · 3.1",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)
 	button(p,"Settings",Rect2(365,337,310,60),func():settings(title))
 	button(p,"How to play",Rect2(35,417,310,60),func():how_to_play(title));button(p,"New adventure",Rect2(365,417,310,60),confirm_new)
+	if Mega.recovered_backup:text(p,"Recovered your previous saved adventure.",Rect2(35,575,640,20),15)
 	text(p,"Move: A/D or arrows · Jump: Space, then Space again\nUse: E · Hint: H · Notebook: N · Checkpoint: R · Pause: Esc",Rect2(35,505,640,70),17)
 func confirm_new():
 	var p=open(Rect2(320,200,640,310));back=title
@@ -132,11 +138,11 @@ func start():
 	if not Mega.intro_done:
 		intro_ray.begin(func():say(["Mark|The ray says 'make your ideas smaller'. Is that helpful?","Bark|Press it twice. That's how you get twice as helpful!","Mark|Bark! We're tiny. The bookcase is a mountain!","Bark|Excellent. Jump onto my leafy head for a second spring. Find your design at the top, then we'll borrow the power cell and lens from home.","Mark|Borrow, return, and improve. In that order."],func():Mega.intro_done=true;Mega.save()))
 func load_level(i):
-	pickup_effects.clear();notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
+	pickup_effects.clear();notice_priority=0;notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
 	Mega.current=i;Mega.save();mode="campus";close();campus.build(i);player.right_bound=1600;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;player.visual_scale=.24;player.sprite.scale=Vector2.ONE*.24;hud.show()
 	var cp=int(Mega.runs[i].checkpoint)
-	player.position=campus.platforms[cp].get_center()+Vector2(0,-12) if cp>=0 else Vector2(510,645)
-	campus.bark.position=player.position+Vector2(-80,0);camera.position=Vector2(clampf(player.position.x,640,960),player.position.y-150)
+	player.position=Vector2(campus.platforms[cp].get_center().x,campus.platforms[cp].position.y-3) if cp>=0 else Vector2(510,645)
+	campus.enemy_grace=1.8;campus.last_safe=player.position;campus.safe_shelf=last_shelf;campus.bark.position=player.position+Vector2(-80,0);camera.position=Vector2(clampf(player.position.x,640,960),player.position.y-150)
 	update_hud()
 func level_select():
 	var was_campus=mode=="campus"
@@ -148,7 +154,7 @@ func level_select():
 		var c=card(p,Rect2(30+i*345,94,320,305),"efe2bc")
 		var icon=TextureRect.new();icon.position=Vector2(108,18);icon.size=Vector2(104,80);icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;icon.size=Vector2(104,80);icon.texture=Art.tex(campus.ASSETS[i]);c.add_child(icon)
 		text(c,["THE LIBRARY LADDER","BEDROOM BEANSTALK","THE INVENTION ATTIC"][i],Rect2(15,110,290,42),20)
-		text(c,["School · Gentle","Home · Adventurous","Home · Daring"][i]+"\n"+("Best: "+str(score.leaves)+" / 8 leaves · "+("Bark found" if score.token else "Secret hiding") if score.complete else "8 leaves + 1 secret to discover"),Rect2(15,157,290,75),17)
+		text(c,["School · Gentle","Home · Adventurous","Home · Daring"][i]+"\n"+("Best: "+str(score.leaves)+" / 24 leaves · "+("Bark found" if score.token else "Secret hiding") if score.complete else "24 leaves + 3 nooks to discover"),Rect2(15,157,290,75),17)
 		var b=button(c,"Replay" if score.complete else "Continue" if i==Mega.current and Mega.intro_done else "Start climb",Rect2(15,242,290,48),func():choose(i),i==Mega.current)
 		b.disabled=i>=Mega.unlocked
 		if b.disabled:b.text="Locked · Finish level "+str(i)
@@ -181,8 +187,9 @@ func jumped(second):
 	if second:
 		spring_age=0;spring_anchor=campus.bark.position;spring_facing=player.facing;spring_release_velocity=player.velocity.x;spring_contacts+=1
 		campus.bark.texture=Art.tex("bark_actions_hop");player.spring_contact=true;player.show_pose("young_actions_crouch",.09)
-		if spring_contacts%4==1:toast(["Bark: Feet on my leaves! Mark: Spring, please—not sneeze.","Bark: Try three jumps! Mark: We get two. Make this one count.","Bark: Aim for next Tuesday! Mark: The shelf will do."][int(spring_contacts/4)%3])
+		if spring_contacts%4==1:toast(["Bark: Feet on my leaves! Mark: Spring, please—not sneeze.","Bark: Try three jumps! Mark: Two. Make this one count.","Bark: Aim for next Tuesday! Mark: The shelf will do.","Bark: Close your eyes! Mark: I like knowing where the floor is.","Bark: Land in the pencil pot! Mark: The bridge looks kinder.","Bark: We could ask a moth for a lift. Mark: Let us jump past it.","Bark: My leaves are ticklish! Mark: Then hold very, very still.","Bark: What about a flying sandwich? Mark: First, a safe landing."][int(spring_contacts/4)%8])
 func landed(at,strength):
+	campus.remember_landing(at)
 	if absf(at.y-650)<6:last_shelf=0
 	for n in range(campus.RISES[Mega.current].size()):
 		var r=campus.platforms[n]
@@ -193,7 +200,7 @@ func landed(at,strength):
 	for n in range(campus.RISES[Mega.current].size()):
 		var r=campus.platforms[n]
 		if n%2==1 and n>int(Mega.runs[Mega.current].checkpoint) and absf(at.y-r.position.y)<5 and at.x>=r.position.x-10 and at.x<=r.end.x+10:
-			Mega.runs[Mega.current].checkpoint=n;Mega.save();campus.refresh();toast("Checkpoint saved! Return here with R or the checkpoint button.")
+			Mega.runs[Mega.current].checkpoint=n;Mega.save();campus.refresh();toast("Checkpoint saved! Return here with R or the checkpoint button.",1)
 func interact():
 	if busy or mode!="campus":return
 	var run=Mega.runs[Mega.current]
@@ -215,7 +222,7 @@ func result():
 	var p=open(Rect2(270,100,740,540));back=close;result_open=true
 	text(p,"CLIMB COMPLETE!" if i<2 else "SMALL FRIENDS. BIG IDEAS.",Rect2(30,25,680,55),32)
 	text(p,["Design recovered. Next stop: Mark's bedroom!","Power cell collected. The last piece is in the attic!","The ray is repaired. Mark and Bark are full-sized again!\nMark: 'It worked!' Bark: 'My head deserves a holiday.'"][i],Rect2(30,105,680,100),23)
-	text(p,"Leaves: "+str(r.leaves.size())+" / 8  ·  Bark token: "+("Found!" if r.token else "Still hiding")+"\nAward: "+("Curious explorer" if r.leaves.size()<6 else "Leaf champion")+(" + Secret finder" if r.token else ""),Rect2(30,230,680,80),22)
+	text(p,"Leaves: "+str(r.leaves.size())+" / 24  ·  Bark token: "+("Found!" if r.token else "Still hiding")+" · Nooks: "+str(nooks_found(r))+" / 3\nAward: "+("Curious explorer" if r.leaves.size()<18 else "Leaf champion")+(" + Secret finder" if r.token else ""),Rect2(30,230,680,80),22)
 	var rosette=TextureRect.new();rosette.position=Vector2(305,315);rosette.size=Vector2(130,90);rosette.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;rosette.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;rosette.size=Vector2(130,90);rosette.texture=Art.tex("collectibles_science_rosette");p.add_child(rosette)
 	button(p,"Next climb" if i<2 else "Explore this level",Rect2(30,420,330,65),func():next_level(i+1) if i<2 else close(),true)
 	button(p,"Level select",Rect2(380,420,330,65),level_select)
@@ -223,20 +230,33 @@ func hint():
 	if busy or mode!="campus":return
 	var cp=int(Mega.runs[Mega.current].checkpoint)
 	var next=mini(last_shelf,campus.RISES[Mega.current].size()-1)
-	var in_secret=player.is_on_floor() and absf(player.position.y-campus.platforms[-1].position.y)<8
-	if in_secret:next=4
+	var in_secret=false
+	var direction="right"
+	for branch in campus.branches:
+		if player.is_on_floor() and absf(player.position.y-branch.rect.position.y)<8 and player.position.x>=branch.rect.position.x-15 and player.position.x<=branch.rect.end.x+15:
+			in_secret=true;next=branch.return_index;direction="right" if branch.rect.get_center().x<campus.platforms[next].get_center().x else "left";break
 	hint_target=campus.platforms[next].get_center();hint_until=clock+12;queue_redraw()
 	var message="Follow the numbered shelves upward. Jump once, then jump again near the first apex: I will spring you higher. Each lit shelf is a checkpoint."
-	if in_secret:message="Lovely side shelf! Return to shelf 5 on your right before climbing higher. Your secret token is safe."
+	if in_secret:message="Lovely side shelf! Return to shelf "+str(next+1)+" on your "+direction+" before climbing higher. Your discoveries are safe."
 	elif Mega.runs[Mega.current].quest:message="You have the quest item! Reach the delivery point on the top shelf and use it. Optional leaves can be collected later."
 	elif player.position.y<campus.quest.pos.y+300:message="The quest item is on the shelf just below the delivery point. Land beside it, then press E / tap Use."
 	say(["Bark|"+message,"Mark|And if we fall?","Bark|R, or the checkpoint button. Leaves and supplies stay with us!"])
+func nooks_found(run):
+	var count=0
+	for id in [4,12,20]:
+		if id in run.leaves:count+=1
+	return count
 func journal():
 	if busy or mode!="campus":return
-	var p=open(Rect2(265,155,750,455));var r=Mega.runs[Mega.current]
-	text(p,"MARK'S CLIMBING NOTEBOOK",Rect2(30,25,690,45),28)
-	text(p,campus.TITLES[Mega.current]+"\n\nQuest: "+campus.QUESTS[Mega.current]+(" · Secured" if r.quest else " · Find near the top")+"\nLeaves: "+str(r.leaves.size())+" / 8 · Bark token: "+("Found" if r.token else "Side shelf")+"\nCheckpoint: "+("Starting floor" if r.checkpoint<0 else "Shelf "+str(r.checkpoint+1))+"\n\nJump onto Bark for the second spring. Land to recharge.\nExplore lower shelves freely; R returns to the highest checkpoint.",Rect2(30,91,690,260),21)
-	button(p,"Where next?",Rect2(30,370,290,60),func():close();hint());button(p,"Back",Rect2(370,370,350,60),close,true)
+	var p=open(Rect2(245,105,790,510));var r=Mega.runs[Mega.current]
+	text(p,"MARK'S CLIMBING NOTEBOOK",Rect2(30,23,730,45),29)
+	var quest_card=card(p,Rect2(30,82,730,82),"203849")
+	text(quest_card,("DELIVER: " if r.quest else "FIND: ")+campus.QUESTS[Mega.current]+"\n"+("Reach the summit delivery point." if r.quest else "Look on the shelf just below the summit."),Rect2(18,10,694,64),21,"fff3d3")
+	text(p,"Leaves: "+str(r.leaves.size())+" / 24\nDiscovery nooks: "+str(nooks_found(r))+" / 3\nBark token: "+("Found!" if r.token else "First discovery nook"),Rect2(30,190,355,110),21)
+	text(p,"Current shelf: "+str(last_shelf)+" / "+str(campus.RISES[Mega.current].size())+"\nCheckpoint: "+("Starting floor" if r.checkpoint<0 else "Shelf "+str(r.checkpoint+1))+"\nCalm climb: "+("On" if Mega.prefs.calm else "Off"),Rect2(410,190,350,110),21)
+	text(p,"Two jumps, one team. Land to recharge. H marks the next shelf.\nR returns to your highest checkpoint. Every discovery stays safe.",Rect2(30,318,730,68),19)
+	if not Mega.last_save_ok:text(p,"Progress could not be saved. Keep this game open and try again.",Rect2(30,387,730,25),16)
+	button(p,"Where next?",Rect2(30,430,340,55),func():close();hint());button(p,"Back",Rect2(420,430,340,55),close,true)
 func next_level(i):
 	if travelling:return
 	if Progress.settings.reduced_motion:load_level(i);return
@@ -248,21 +268,29 @@ func next_level(i):
 func how_to_play(return_to):
 	var p=open(Rect2(245,120,790,500));back=return_to
 	text(p,"TWO FRIENDS. TWO JUMPS.",Rect2(30,24,730,50),31)
-	text(p,"1. Move with A/D, arrows or the touch arrows.\n2. Jump once, then again near the first apex.\n   Mark lands on Bark’s leaves for an extra spring.\n3. Land to recharge. Numbered shelves show the route.\n4. Land beside the quest item, then E / Use to collect.\n5. Deliver it at the summit to unlock the next climb.\n\nBulb shelves save checkpoints. R / Checkpoint brings\nyou back safely. Leaves and secrets stay collected.\nBark’s hint marks the next shelf. Hints are always free.",Rect2(30,100,730,290),22)
+	text(p,"1. Move with A/D, arrows or touch arrows.\n2. Jump, then jump again to spring off Bark.\n3. Land to recharge both jumps.\n4. Dodge tiny pests by jumping past them.\n5. E / Use collects and delivers the quest item.\n6. Find 24 optional leaves and three discovery nooks.\n\nBulb shelves save checkpoints. R brings you back\nwith every discovery intact. H marks the next shelf.\nSettings: Calm climb lets you pass pests safely.",Rect2(30,100,730,290),22)
 	button(p,"Got it",Rect2(225,420,340,55),return_to,true)
+func place_player(at):
+	player.position=at;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9
+	campus.enemy_grace=1.8;campus.bark.rotation=0;campus.bark.scale=Vector2(.2*player.facing,.2)
+	campus.bark.position=at+Vector2(-75*player.facing,0);campus.bark.texture=Art.tex("bark_actions_idle")
+	camera.position=Vector2(clampf(at.x,640,960),clampf(at.y-105,campus.top-400,450))
 func retry():
 	if mode!="campus" or (busy and is_instance_valid(dialogue_label)):return
 	close();var cp=int(Mega.runs[Mega.current].checkpoint);last_shelf=maxi(0,cp+1)
-	player.position=campus.platforms[cp].get_center()+Vector2(0,-12) if cp>=0 else Vector2(510,645)
-	player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;campus.bark.rotation=0;campus.bark.scale=Vector2(.2*player.facing,.2);campus.bark.position=player.position+Vector2(-80,0);camera.position=Vector2(clampf(player.position.x,640,960),player.position.y-150)
-	toast("Back at your checkpoint. Every discovery is safe.")
+	var at=Vector2(campus.platforms[cp].get_center().x,campus.platforms[cp].position.y-3) if cp>=0 else Vector2(510,647)
+	place_player(at);campus.last_safe=at;campus.safe_shelf=last_shelf
+	toast("Back at your checkpoint. Every discovery is safe.",3)
+func recover_encounter(tip):
+	last_shelf=campus.safe_shelf;place_player(campus.last_safe)
+	toast("A little bump! Back at your last safe shelf. "+tip,3)
 func pause_game():
 	if mode!="campus" or busy:return
 	var p=open(Rect2(390,145,500,460))
 	text(p,"A LITTLE BREATHER",Rect2(30,25,440,45),29)
 	button(p,"Continue",Rect2(30,95,440,60),close,true);button(p,"Return to checkpoint",Rect2(30,173,440,60),retry);button(p,"Settings",Rect2(30,251,440,60),func():settings(func():close();pause_game()));button(p,"Save & title",Rect2(30,329,440,60),func():Mega.save();title())
 func settings(return_to):
-	var p=open(Rect2(285,130,710,460));back=return_to
+	var p=open(Rect2(285,95,710,530));back=return_to
 	text(p,"SETTINGS & CONTROLS",Rect2(30,25,650,45),30)
 	var percent=text(p,str(roundi(Progress.settings.volume*100))+"%",Rect2(570,99,95,35),22)
 	text(p,"Sound",Rect2(30,99,150,35),22)
@@ -272,12 +300,17 @@ func settings(return_to):
 		var t=CheckButton.new();t.text=["Reduced motion","Background music","Always show touch controls"][n];t.position=Vector2(30,158+n*54);t.size=Vector2(650,46);t.button_pressed=Progress.settings[key];t.add_theme_font_override("font",Art.font);t.add_theme_font_size_override("font_size",22)
 		for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:t.add_theme_color_override(state,Color("203849"))
 		t.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));t.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"));p.add_child(t);t.toggled.connect(func(v):Progress.settings[key]=v;Progress.save_game())
-	text(p,"Space twice: jump + Bark spring · E: use · R: checkpoint\nTouch: hold arrows and tap Jump twice. Play in landscape.",Rect2(30,320,650,55),17)
-	button(p,"Back",Rect2(210,390,290,55),return_to,true)
+	var calm=CheckButton.new();calm.name="CalmClimb";calm.text="Calm climb · pass pests safely";calm.position=Vector2(30,320);calm.size=Vector2(650,46);calm.button_pressed=Mega.prefs.calm;calm.add_theme_font_override("font",Art.font);calm.add_theme_font_size_override("font_size",22)
+	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:calm.add_theme_color_override(state,Color("203849"))
+	calm.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));calm.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"));p.add_child(calm);calm.toggled.connect(func(v):Mega.prefs.calm=v;Mega.save())
+	text(p,"Space twice: jump + Bark spring · E: use · R: checkpoint\nTouch: hold an arrow and tap Jump twice. Use landscape.",Rect2(30,375,650,55),17)
+	button(p,"Back",Rect2(210,460,290,55),return_to,true)
 func play_sound(id,pitch=1.0):
 	if sound_bank.has(id) and Progress.settings.volume>0:
 		effects.stream=sound_bank[id];effects.pitch_scale=pitch;effects.volume_db=linear_to_db(Progress.settings.volume*.6);effects.play()
-func toast(value):
+func toast(value,priority=0):
+	if clock<notice_until and priority<notice_priority:return
+	notice_priority=priority
 	notice.text=value;notice_until=clock+maxf(5,float(String(value).length())/18.0);notice_back.size.y=74 if String(value).length()<95 else 96;notice.size.y=notice_back.size.y-16
 func update_hud():
 	var r=Mega.runs[Mega.current]
@@ -285,7 +318,7 @@ func update_hud():
 	height_meter.value=clampf((650-player.position.y)/(650-campus.top)*100,0,100)
 	route_label.text="Shelf "+str(last_shelf)+" / "+str(campus.RISES[Mega.current].size())+"\nClimb "+str(roundi(height_meter.value))+"%"
 	objective.text=str(Mega.current+1)+" / 3 · "+campus.TITLES[Mega.current]+"\n"+("Deliver: "+campus.QUESTS[Mega.current]+" at the top." if r.quest else "Recover: "+campus.QUESTS[Mega.current]+".")
-	counters.text="Leaves "+str(r.leaves.size())+" / 8\nBark "+("Found" if r.token else "Hidden")+"\n"+("2 jumps ready" if player.is_on_floor() else "Bark spring" if player.jumps_used<2 else "Land to reset")
+	counters.text="Leaves "+str(r.leaves.size())+" / 24\nBark "+("Found" if r.token else "Hidden")+"\n"+("2 jumps ready" if player.is_on_floor() else "Bark spring" if player.jumps_used<2 else "Land to reset")
 	var at_exit=player.position.distance_to(campus.exit)<125
 	var near=player.position.distance_to(campus.quest.pos)<125 or at_exit
 	context.text=("Use" if touch_mode else "[E]")+": "+("deliver quest item" if at_exit else "quest item secured" if r.quest else "pick up quest item") if near else ""
@@ -312,8 +345,8 @@ func _physics_process(delta):
 	camera.position=target if player.reduced_motion else camera.position.lerp(target,1-exp(-delta*9))
 	var r=Mega.runs[Mega.current]
 	for p in campus.pickups:
-		if p.sprite.visible and player.position.distance_to(p.pos+Vector2(0,35))<80:
-			if p.kind=="leaf":r.leaves.append(p.id);toast("Leaf found! "+str(r.leaves.size())+" / 8. Optional discoveries never block your climb.")
+		if p.sprite.visible and not (p.id in r.leaves if p.kind=="leaf" else r.token) and player.position.distance_to(p.pos+Vector2(0,35))<80:
+			if p.kind=="leaf":r.leaves.append(p.id);toast("Leaf found! "+str(r.leaves.size())+" / 24. Optional discoveries never block your climb.")
 			else:r.token=true;toast("Bark: My secret portrait! Mark: Your grin gave it away.")
 			Mega.save();campus.refresh();play_sound("collect",1.2)
 			if not player.reduced_motion:pickup_effects.append({"at":p.pos+Vector2(0,-22),"age":0.0})
@@ -361,6 +394,13 @@ func update_bark_jump(delta: float) -> void:
 				if absf(player.position.y-shelf.position.y)<6 and player.position.x>=shelf.position.x-15 and player.position.x<=shelf.end.x+15:
 					goal.x=clampf(goal.x,shelf.position.x+16,shelf.end.x-16)
 					break
+			# Leave the pest visible instead of hiding it beneath Bark's canopy.
+			for enemy in campus.enemies:
+				if absf(enemy.position.y-player.position.y)<70 and absf(enemy.position.x-goal.x)<52:
+					goal.x=player.position.x+75*player.facing
+					for shelf in campus.platforms:
+						if absf(player.position.y-shelf.position.y)<6 and player.position.x>=shelf.position.x-15 and player.position.x<=shelf.end.x+15:
+							goal.x=clampf(goal.x,shelf.position.x+16,shelf.end.x-16);break
 			goal.y=campus.support_y(goal.x,player.position.y)
 		response=22.0 if ready else 9.0
 		bark.texture=Art.tex("bark_actions_hop" if ready else ("bark_actions_walk_stride_a" if absf(player.velocity.x)>30 else "bark_actions_idle"))
@@ -374,6 +414,8 @@ func update_bark_jump(delta: float) -> void:
 		bark.scale=bark.scale.lerp(desired_scale,1-exp(-delta*20))
 		var lean=clampf(player.velocity.x/10000.0,-.026,.026) if spring_age<.45 else 0.0
 		bark.rotation=lerpf(bark.rotation,lean,1-exp(-delta*15))
+
+	campus.advance_hazards(delta,player)
 
 func _input(e):
 	if e is InputEventScreenTouch:

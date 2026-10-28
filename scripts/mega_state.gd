@@ -1,42 +1,50 @@
 extends Node
 const PATH="user://mark_bark_mega.json"
+const LIMITS=[23,26,32]
 var enabled=true
 var unlocked=1
 var current=0
 var intro_done=false
 var runs: Array=[]
 var best: Array=[]
+var prefs={"calm":false}
+var last_save_ok=true
+var recovered_backup=false
 func _ready():
-	reset(false)
-	if FileAccess.file_exists(PATH):
-		var d=JSON.parse_string(FileAccess.get_file_as_string(PATH))
-		if d is Dictionary and d.get("version")==1:
-			unlocked=clampi(number(d.get("unlocked"),1),1,3)
-			current=clampi(number(d.get("current"),0),0,unlocked-1)
-			intro_done=d.get("intro_done",false)==true
-			for i in range(3):
-				if d.get("runs") is Array and d.runs.size()>i and d.runs[i] is Dictionary:
-					var r=d.runs[i]
-					runs[i].checkpoint=clampi(number(r.get("checkpoint"),-1),-1,[7,8,10][i])
-					runs[i].quest=r.get("quest",false)==true
-					runs[i].token=r.get("token",false)==true
-					for id in r.get("leaves",[]) if r.get("leaves") is Array else []:
-						if id is int or id is float:
-							if int(id) in range(8) and not int(id) in runs[i].leaves:runs[i].leaves.append(int(id))
-				if d.get("best") is Array and d.best.size()>i and d.best[i] is Dictionary:
-					best[i].complete=d.best[i].get("complete",false)==true
-					best[i].leaves=clampi(number(d.best[i].get("leaves"),0),0,8)
-					best[i].token=d.best[i].get("token",false)==true
+	reset(false);prefs={"calm":false};recovered_backup=false
+	var data=read_valid(PATH)
+	if data.is_empty():
+		data=read_valid(PATH+".bak");recovered_backup=not data.is_empty()
+	if data.is_empty():return
+	unlocked=clampi(number(data.get("unlocked"),1),1,3)
+	current=clampi(number(data.get("current"),0),0,unlocked-1)
+	intro_done=truth(data.get("intro_done",false))
+	if data.get("prefs") is Dictionary:prefs.calm=truth(data.prefs.get("calm",false))
+	for i in range(3):
+		if data.get("runs") is Array and data.runs.size()>i and data.runs[i] is Dictionary:
+			var r=data.runs[i]
+			runs[i].checkpoint=clampi(number(r.get("checkpoint"),-1),-1,LIMITS[i])
+			runs[i].quest=truth(r.get("quest",false));runs[i].token=truth(r.get("token",false))
+			for id in r.get("leaves",[]) if r.get("leaves") is Array else []:
+				if (id is int or id is float) and is_finite(float(id)) and int(id) in range(24) and not int(id) in runs[i].leaves:runs[i].leaves.append(int(id))
+		if data.get("best") is Array and data.best.size()>i and data.best[i] is Dictionary:
+			best[i].complete=truth(data.best[i].get("complete",false))
+			best[i].leaves=clampi(number(data.best[i].get("leaves"),0),0,24)
+			best[i].token=truth(data.best[i].get("token",false))
+func read_valid(path):
+	if not FileAccess.file_exists(path):return {}
+	var json=JSON.new()
+	if json.parse(FileAccess.get_file_as_string(path))!=OK:return {}
+	var d=json.data
+	return d if d is Dictionary and number(d.get("version"),0) in [1,2] else {}
 func reset(write=true):
-	unlocked=1;current=0;intro_done=false
-	runs=[];best=[]
+	unlocked=1;current=0;intro_done=false;runs=[];best=[]
 	for i in range(3):
 		runs.append({"checkpoint":-1,"quest":false,"leaves":[],"token":false})
 		best.append({"complete":false,"leaves":0,"token":false})
 	if write:save()
 func replay(i):
-	runs[i]={"checkpoint":-1,"quest":false,"leaves":[],"token":false}
-	current=i;save()
+	runs[i]={"checkpoint":-1,"quest":false,"leaves":[],"token":false};current=i;save()
 func finish():
 	best[current].complete=true
 	best[current].leaves=maxi(best[current].leaves,runs[current].leaves.size())
@@ -49,12 +57,17 @@ func sync_best():
 			best[i].token=best[i].token or runs[i].token
 func save():
 	sync_best()
-	if not enabled:return
+	if not enabled:return true
 	var f=FileAccess.open(PATH+".tmp",FileAccess.WRITE)
-	if f:
-		f.store_string(JSON.stringify({"version":1,"unlocked":unlocked,"current":current,"intro_done":intro_done,"runs":runs,"best":best}));f.close()
-		DirAccess.rename_absolute(PATH+".tmp",PATH)
-
-func number(value, fallback):
+	if not f:last_save_ok=false;return false
+	f.store_string(JSON.stringify({"version":2,"unlocked":unlocked,"current":current,"intro_done":intro_done,"runs":runs,"best":best,"prefs":prefs}));f.close()
+	# Keep the last valid save; never replace it with a corrupt primary file.
+	if not read_valid(PATH).is_empty():DirAccess.copy_absolute(PATH,PATH+".bak")
+	last_save_ok=DirAccess.rename_absolute(PATH+".tmp",PATH)==OK
+	if last_save_ok:recovered_backup=false
+	return last_save_ok
+func number(value,fallback):
 	if (value is int or value is float) and is_finite(float(value)):return int(value)
 	return fallback
+
+func truth(value):return value is bool and value

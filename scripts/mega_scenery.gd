@@ -1,11 +1,17 @@
 extends Node2D
 var level=0
+var top=-8000.0
+var visible_bay=100000
 var reduced_motion=false
 var motes
 func _ready():
 	motes=load("res://scripts/mega_dust.gd").new();add_child(motes)
 func _process(_d):
-	motes.reduced_motion=reduced_motion
+	motes.reduced_motion=reduced_motion;motes.top=top
+	var game=get_parent().get_parent();motes.paused=game.get("busy")==true
+	if is_instance_valid(game.get("camera")):
+		var bay=int(floor((game.camera.position.y-260)/380))
+		if bay!=visible_bay:visible_bay=bay;queue_redraw()
 func box(r,c,rad=8):
 	if rad>0:
 		var shade=StyleBoxFlat.new();shade.bg_color=Color(.16,.13,.09,.11);shade.set_corner_radius_all(rad)
@@ -20,7 +26,9 @@ func box(r,c,rad=8):
 			if points.size()>1:draw_polyline(points,Color(.33,.23,.12,.11),1)
 		draw_line(r.position+Vector2(10,5),r.position+Vector2(r.size.x-10,5),Color(1,.92,.67,.25),2)
 func sprite(id,foot,width,alpha=1.0):
-	var t=Art.tex(id);var size=t.get_size()*width/maxf(t.get_width(),t.get_height());draw_texture_rect(t,Rect2(foot-Vector2(size.x/2,size.y),size),false,Color(1,1,1,alpha))
+	var t=Art.tex(id);var scale=width/maxf(t.get_width(),t.get_height());var size=t.get_size()*scale
+	var pivot=Art.index.get(id,{}).get("pivot",[t.get_width()/2,t.get_height()])
+	draw_texture_rect(t,Rect2(foot-Vector2(pivot[0],pivot[1])*scale,size),false,Color(1,1,1,alpha))
 func window_at(x,y):
 	box(Rect2(x,y,260,225),"b5935a",14);box(Rect2(x+14,y+14,232,197),"bfd3cb",8)
 	for j in range(6):
@@ -32,8 +40,12 @@ func window_at(x,y):
 func _draw():
 	texture_repeat=CanvasItem.TEXTURE_REPEAT_MIRROR
 	var wall=Color("e6d8b7") if level==0 else Color("c8d2c0") if level==1 else Color("ba9970")
-	draw_rect(Rect2(0,-2400,1600,3100),wall)
-	for y in range(-2400,700,380):
+	draw_rect(Rect2(0,top,1600,700-top),wall)
+	# Bays retain world coordinates. Two extra screens prevent visible pop-in.
+	var center=0 if visible_bay==100000 else visible_bay
+	for bay in range(center-3,center+4):
+		var y=260+bay*380
+		if y+380<top or y>650:continue
 		if level==2:
 			draw_texture_rect(Art.tex("oak_floor"),Rect2(0,y,1600,380),true,Color(.67,.55,.43))
 		else:
@@ -74,13 +86,19 @@ func _draw():
 			sprite("school_props_plant",Vector2(150,y+330),130)
 		else:
 			for x in [70,1460]:box(Rect2(x,y,50,380),"65503b",0)
-			draw_line(Vector2(110,y),Vector2(790,y+280),Color("71583c"),30);draw_line(Vector2(1490,y),Vector2(810,y+280),Color("71583c"),30)
+			for ends in [[Vector2(110,y),Vector2(790,y+280)],[Vector2(1490,y),Vector2(810,y+280)]]:
+				draw_line(ends[0]+Vector2(3,8),ends[1]+Vector2(3,8),Color(.13,.1,.07,.25),36,true)
+				draw_line(ends[0],ends[1],Color("66513a"),32,true)
+				draw_line(ends[0]+Vector2(0,-3),ends[1]+Vector2(0,-3),Color("98784c"),23,true)
+				draw_line(ends[0]+Vector2(0,-12),ends[1]+Vector2(0,-12),Color("c1a16d"),2,true)
 			for at in [Vector2(110,y),Vector2(790,y+280),Vector2(1490,y),Vector2(810,y+280)]:
 				draw_circle(at,6,Color("483c2c"));draw_circle(at+Vector2(-1,-2),2,Color("b8a17d"))
 			sprite("collectibles_books",Vector2(210,y+330),175)
-			sprite("school_props_lamp",Vector2(1390,y+270),150)
+			box(Rect2(1250,y+265,280,18),"a07a46",4)
+			for support_x in [1270,1480]:draw_line(Vector2(support_x,y+283),Vector2(support_x+20,y+314),Color("65503b"),6)
+			sprite("school_props_lamp",Vector2(1390,y+265),125)
 	# Anchored foreground furniture grounds the miniature scale.
-	draw_texture_rect(Art.tex("oak_floor"),Rect2(0,650,1600,150),true)
+	draw_texture_rect(Art.tex("oak_floor"),Rect2(0,650,1600,230),true)
 	if level==0:
 		sprite("school_props_desk",Vector2(180,650),350);sprite("school_props_bookcase",Vector2(1300,650),470)
 		sprite("school_props_noticeboard",Vector2(1030,630),200)
@@ -96,9 +114,12 @@ func _draw():
 		for y in range(460,590,30):draw_line(Vector2(230,y),Vector2(488,y),Color("849d95"),2)
 		for x in range(243,480,35):draw_circle(Vector2(x,449),1.5,Color("d9e0c3"))
 		box(Rect2(1140,465,355,185),"af824a",14);draw_line(Vector2(1150,518),Vector2(1485,518),Color("e0bd78"),8)
-		sprite("school_props_desk",Vector2(880,650),370);sprite("collectibles_mug",Vector2(920,485),55)
+		sprite("school_props_desk",Vector2(880,650),370);sprite("collectibles_mug",Vector2(920,396),55)
 	else:
 		for x in [130,1210]:
 			box(Rect2(x,455,260,195),"a07a46",10);draw_line(Vector2(x+20,475),Vector2(x+240,630),Color("dfbf86"),14)
-		sprite("school_props_desk",Vector2(820,650),420);sprite("school_props_science_volcano",Vector2(845,454),115)
+		sprite("school_props_desk",Vector2(820,650),420)
+		# Surface placement measured from native desk art: top front at y=391.
+		sprite("school_props_science_volcano",Vector2(800,377),100)
+		sprite("school_props_lamp",Vector2(700,350),140)
 		sprite("collectibles_pencil",Vector2(1070,650),340)

@@ -53,20 +53,20 @@ func run():
 	for level in range(3):
 		if level>0:game.load_level(level)
 		await ticks(8);await capture("mega_level_"+str(level+1)+"_floor")
-		check(game.campus.platforms.size()==[9,10,12][level],"Level "+str(level+1)+" has its own climb and secret shelf")
+		check(game.campus.platforms.size()==[27,30,36][level],"Level "+str(level+1)+" has its own climb and secret shelf")
 		for n in range(game.campus.RISES[level].size()):
 			if not await climb(game.campus.platforms[n],"Level "+str(level+1)+" shelf "+str(n+1)):break
 			if n%2==1:check(Mega.runs[level].checkpoint==n,"Checkpoint saved at shelf "+str(n+1))
-			if n==4:
+			if n in game.campus.branch_indices:
 				await capture("mega_level_"+str(level+1)+"_middle")
-				await climb(game.campus.platforms[-1],"Level "+str(level+1)+" secret branch")
+				await climb(game.campus.platforms[game.campus.RISES[level].size()+game.campus.branch_indices.find(n)],"Level "+str(level+1)+" discovery branch")
 				check(Mega.runs[level].token,"Secret Bark token collected by platforming")
 				await climb(game.campus.platforms[n],"Return from secret branch")
 			if n==game.campus.RISES[level].size()-2:
 				await key(KEY_E);check(Mega.runs[level].quest,"Quest item recovered using keyboard interaction")
 				if game.busy:game.end_dialogue()
 		await capture("mega_level_"+str(level+1)+"_top")
-		check(Mega.runs[level].leaves.size()==8,"All eight leaves collected on level "+str(level+1))
+		check(Mega.runs[level].leaves.size()==24,"All 24 leaves collected on level "+str(level+1))
 		check(game.spring_contacts>=5,"Bark-assisted spring is central to climbing")
 		await key(KEY_E)
 		if level==2:
@@ -76,7 +76,8 @@ func run():
 		check(Mega.unlocked==mini(3,level+2),"Next level unlock is persistent")
 		await capture("mega_level_"+str(level+1)+"_ending")
 		game.close();check(game.player.enabled,"Exploration remains available after ending")
-		var saved=JSON.stringify(Mega.runs[level]);await key(KEY_R);check(JSON.stringify(Mega.runs[level])==saved,"Checkpoint retry preserves discoveries")
+		var saved=JSON.stringify(Mega.runs[level]);await key(KEY_R);check(JSON.stringify(Mega.runs[level])==saved,"Checkpoint retry preserves discoveries");await ticks(8)
+		check(game.player.is_on_floor() and absf(game.player.position.y-game.campus.platforms[Mega.runs[level].checkpoint].position.y)<5,"Checkpoint retry settles safely on the saved platform")
 	game.load_level(0);await ticks(8)
 	var touch=InputEventScreenTouch.new();touch.index=3;touch.position=Vector2(150,650);touch.pressed=true;get_tree().root.push_input(touch,true);await ticks(8)
 	check(game.player.velocity.x>150 and game.touch_root.visible,"Touch hold moves Mark and switches prompts")
