@@ -1,10 +1,8 @@
-name: Godot 4.7.2 playable-project verification
+name: Godot 4.4.1 complete-project verification
 
 on:
   push:
-    branches:
-      - main
-      - fix/godot-4-7-startup
+    branches: [main, fix/restore-storybook-adventure]
   pull_request:
   workflow_dispatch:
 
@@ -14,51 +12,41 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Download exact Godot version
+      - name: Download the documented Godot version
         run: |
           set -euxo pipefail
-          curl -fL --retry 3 --output /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          curl -fL --retry 3 --output /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
           unzip -j /tmp/godot.zip -d /tmp/godot-bin
-          chmod +x /tmp/godot-bin/Godot_v4.7.2-stable_linux.x86_64
-          echo "/tmp/godot-bin" >> "$GITHUB_PATH"
-      - name: Import assets and check script parsing
+          chmod +x /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64
+      - name: Import and run all seven regression suites
+        run: python3 tools/verify.py --godot /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64
+      - name: Verify adventure navigation and capture native screenshots
         run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb
           set -o pipefail
-          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import --quit 2>&1 | tee /tmp/godot-import.log
-          if grep -E 'SCRIPT ERROR:|Parse Error:|Failed to load script|Parser Error:' /tmp/godot-import.log; then exit 1; fi
-      - name: Main-scene startup smoke test
+          xvfb-run -a /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --path . --fixed-fps 60 res://tests/restoration_review.tscn -- --screenshots 2>&1 | tee test_output/native_restoration.log
+          if grep -E 'SCRIPT ERROR:|^ERROR:|FAIL:' test_output/native_restoration.log; then exit 1; fi
+      - name: Package playable Godot source
         run: |
-          set -o pipefail
-          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 90 2>&1 | tee /tmp/godot-start.log
-          if grep -E 'SCRIPT ERROR:|Parse Error:|Failed to load script|Parser Error:' /tmp/godot-start.log; then exit 1; fi
-      - name: Full interactive playthrough regression
-        timeout-minutes: 8
-        run: |
-          set -o pipefail
-          Godot_v4.7.2-stable_linux.x86_64 --headless --fixed-fps 60 --path . res://tests/playthrough.tscn 2>&1 | tee /tmp/godot-playthrough.log
-          if grep -E 'SCRIPT ERROR:|Parse Error:|Failed to load script|Parser Error:' /tmp/godot-playthrough.log; then exit 1; fi
-      - name: Package playable Godot source project
-        if: success()
-        run: |
-          mkdir -p dist/Mark-and-Bark-Godot-4.7.2
-          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output ./ dist/Mark-and-Bark-Godot-4.7.2/
+          mkdir -p dist/Mark-and-Bark-3.2.1-Storybook-Restoration
+          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output ./ dist/Mark-and-Bark-3.2.1-Storybook-Restoration/
           cd dist
-          zip -qr Mark-and-Bark-Godot-4.7.2-Ready-To-Play.zip Mark-and-Bark-Godot-4.7.2
-      - name: Upload ready-to-play Godot ZIP
-        if: success()
+          zip -qr Mark-and-Bark-3.2.1-Storybook-Restoration.zip Mark-and-Bark-3.2.1-Storybook-Restoration
+      - name: Upload playable source
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-Godot-4.7.2-Ready-To-Play
-          path: dist/Mark-and-Bark-Godot-4.7.2-Ready-To-Play.zip
+          name: Mark-and-Bark-3.2.1-Storybook-Restoration
+          path: dist/Mark-and-Bark-3.2.1-Storybook-Restoration.zip
           if-no-files-found: error
-      - name: Upload diagnostic logs and playthrough results
+      - name: Upload logs and screenshots for review
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Godot-4.7.2-validation-logs
+          name: Godot-validation-and-visuals
           path: |
-            /tmp/godot-import.log
-            /tmp/godot-start.log
-            /tmp/godot-playthrough.log
-            test_output/playthrough.json
+            test_output/qa_*.log
+            test_output/qa_summary.json
+            test_output/native_restoration.log
+            test_output/restoration_*.png
           if-no-files-found: ignore

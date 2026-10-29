@@ -18,7 +18,7 @@ engine = str(Path(args.godot).resolve())
 root = Path(__file__).resolve().parents[1]
 output = root / 'test_output'
 output.mkdir(exist_ok=True)
-scenes = ['playthrough', 'jump_review', 'polish_review', 'variety_review', 'mega_playthrough', 'animation_review']
+scenes = ['playthrough', 'jump_review', 'polish_review', 'variety_review', 'mega_playthrough', 'animation_review', 'restoration_review']
 summary = {'engine': subprocess.check_output([engine, '--version'], text=True).strip(), 'suites': {}}
 with tempfile.TemporaryDirectory(prefix='qa-', dir=output) as state:
     env = dict(os.environ)
@@ -31,7 +31,8 @@ with tempfile.TemporaryDirectory(prefix='qa-', dir=output) as state:
         result = subprocess.run([engine, '--headless', '--path', str(root), *flags], env=env, capture_output=True, text=True, timeout=240)
         log = result.stdout + result.stderr
         (output / f'qa_{name}.log').write_text(log)
-        failed = result.returncode != 0 or 'SCRIPT ERROR:' in log or '\nERROR:' in log
+        failed = (result.returncode != 0 or 'SCRIPT ERROR:' in log or '\nERROR:' in log
+                  or 'fatal library error' in log.lower() or 'Parse Error:' in log)
         match = re.search(r'RESULT:\s*(\d+) passed;\s*(\d+) failed', log)
         if name != 'import' and (not match or int(match[2])):
             failed = True

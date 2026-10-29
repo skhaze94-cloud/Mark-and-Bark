@@ -79,7 +79,7 @@ func build(is_tutorial: bool) -> void:
 		add_object("tutorial_leaf","collectibles_leaf_token",Vector2(840,545),"A bright leaf",65)
 		add_object("tutorial_plane","collectibles_paper_plane",Vector2(1080,590),"Practice plane",110)
 		add_object("tutorial_target","ui_parts_reward_check",Vector2(1370,480),"Practice target",115)
-		bark = Art.character("bark_actions_idle")
+		bark = Art.game_actor("bark_actions_idle")
 		bark.position = Vector2(320,610)
 		bark.scale = Vector2.ONE*0.20
 		add_child(bark)
@@ -118,7 +118,7 @@ func build(is_tutorial: bool) -> void:
 		add_object("fair_target","school_props_noticeboard",Vector2(5050,360),"The Big Ideas Fair target",205)
 		add_object("volcano","school_props_science_volcano",Vector2(4020,610),"Bark's volcano inspection",185)
 		decorate("school_props_lamp",Vector2(4310,460),100)
-		bark = Art.character("bark_actions_idle")
+		bark = Art.game_actor("bark_actions_idle")
 		bark.scale = Vector2.ONE*0.20
 		bark.position = Vector2(340,610)
 		add_child(bark)

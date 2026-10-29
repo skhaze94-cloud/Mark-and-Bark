@@ -74,7 +74,7 @@ func build(i):
 	exit=platforms[RISES[i].size()-1].get_center();exit.y=top
 	prop("school_props_noticeboard" if i==0 else "school_props_desk",exit,155)
 	label("DELIVERY POINT",exit+Vector2(-100,-170),18)
-	bark=Art.character("bark_actions_idle");bark.scale=Vector2.ONE*.20;bark.position=Vector2(410,650);bark.z_index=4;add_child(bark)
+	bark=Art.game_actor("bark_actions_idle");bark.scale=Vector2.ONE*.20;bark.position=Vector2(410,650);bark.z_index=4;add_child(bark)
 	refresh()
 func route_x(i,n):
 	var section=int(n/BASE_CENTERS[i].size());return BASE_CENTERS[i][n%BASE_CENTERS[i].size()]+[0,35,-25][section]

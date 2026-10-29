@@ -2,7 +2,7 @@ extends TextureRect
 var actor: Sprite2D
 func _ready():
 	self_modulate.a=0;clip_contents=true;mouse_filter=Control.MOUSE_FILTER_IGNORE
-	actor=Art.character("young_actions_notebook");add_child(actor)
+	actor=Art.game_actor("young_actions_notebook");add_child(actor)
 func _process(_delta):
 	if not is_instance_valid(actor):return
 	actor.texture=texture

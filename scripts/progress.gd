@@ -2,7 +2,7 @@ extends Node
 
 const SAVE_PATH = "user://big_idea_save.json"
 var data: Dictionary = {}
-var settings: Dictionary = {"volume":0.45, "reduced_motion":false, "touch":false, "music":true}
+var settings: Dictionary = {"volume":0.45, "reduced_motion":false, "touch":false, "music":true, "painted_characters":true}
 var tutorial_done: bool = false
 var save_enabled: bool = true
 
@@ -60,7 +60,7 @@ func load_save() -> void:
 	var saved_settings = parsed.get("settings",{})
 	if saved_settings is Dictionary:
 		settings.volume = clampf(finite_number(saved_settings.get("volume"),0.45),0.0,1.0)
-		for key in ["reduced_motion","touch","music"]:
+		for key in ["reduced_motion","touch","music","painted_characters"]:
 			var value=saved_settings.get(key)
 			if value is bool:settings[key]=value
 

@@ -38,6 +38,7 @@ var frozen=false
 var playback_rate=1.0
 @export var manual_pose=false
 @export var show_points=false
+@export var gameplay_actor=false
 var reduced_motion=false
 var blink_value=0.0
 var applied_grounded=true
@@ -97,10 +98,14 @@ func make_grid():
 func sync_pose():
 	if texture==null:return
 	var id=texture.resource_path.get_file().get_basename()
-	if id==displayed_pose:return
+	if id==displayed_pose:
+		update_presentation()
+		return
 	displayed_pose=id
-	if not profiles.has(id):mesh.hide();self_modulate.a=1;return
-	self_modulate.a=0;mesh.show();mesh.texture=texture;face_material.set_shader_parameter("face_paint",texture);profile=profiles[id];role=profile.role
+	if not profiles.has(id):
+		profile={};mesh.hide();self_modulate.a=1;return
+	mesh.texture=texture;face_material.set_shader_parameter("face_paint",texture);profile=profiles[id];role=profile.role
+	update_presentation()
 	rest_points={"origin":Vector2.ZERO}
 	for key in profile.points:rest_points[key]=Vector2(profile.points[key][0],profile.points[key][1])-ANCHOR
 	rest_globals={}
@@ -114,6 +119,13 @@ func sync_pose():
 	face_material.set_shader_parameter("eye_near",Vector4(a[0]/512.0,a[1]/640.0,a[2]/512.0,a[3]/640.0))
 	face_material.set_shader_parameter("eye_far",Vector4(b[0]/512.0,b[1]/640.0,b[2]/512.0,b[3]/640.0))
 	face_material.set_shader_parameter("mouth",Vector4(mouth[0]/512.0,mouth[1]/640.0,mouth[2]/512.0,mouth[3]/640.0))
+
+func update_presentation():
+	# Keep the complete source painting available, independently of accessibility.
+	# The studio always exposes the articulated performance for inspection.
+	var painted=gameplay_actor and bool(Progress.settings.get("painted_characters",true))
+	mesh.visible=not painted and not profile.is_empty()
+	self_modulate.a=1.0 if painted or profile.is_empty() else 0.0
 
 func point(key):return rest_points[key]+ANCHOR
 func capsule(p,a,b,radius):
@@ -261,6 +273,7 @@ func update_face():
 	face_material.set_shader_parameter("brow_far",(bones.BrowFar.rest.origin.y-bones.BrowFar.position.y)/640.0)
 func joint_position(key):
 	if not rest_points.has(key):return Vector2.ZERO
+	if gameplay_actor and bool(Progress.settings.get("painted_characters",true)):return rest_points[key]
 	var original: Vector2=rest_points[key];var weights=weights_at(original+ANCHOR,grounded);var result=Vector2.ZERO
 	for bone in weights:
 		if global_poses.has(bone):result+=(global_poses[bone]*rest_globals[bone].affine_inverse()*original)*weights[bone]

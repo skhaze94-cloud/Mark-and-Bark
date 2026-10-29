@@ -1,14 +1,20 @@
-# Mark & Bark 3.2 — In Motion
+# Mark & Bark 3.2.1 — Storybook Restoration
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
-**The character update:** independently moving heads, shoulders, elbows, wrists, hips, knees, ankles and toes, plus expressive faces and a livelier leafy spring. The complete three-level Mega Variety campaign is included.
+**Both adventures are accessible again.** The illustrated opening menu offers the full original campus story, all three giant climbs, the campus film and the character studio. The school hallway, discovery garden, workshop puzzle, tutorial and discoveries were still bundled in 3.2, but its normal menu could not reach them.
+
+The original painted character presentation is enabled by default. Turn off **Original painted characters** on the opening menu for the extra face and limb articulation from 3.2. Walking, running, jumping, Bark's spring and the original PNGs remain available in both presentations. The studio retains the full articulated renderer. The original chapter's flat book/pencil platforms now use the existing painted atlas, and its leafy routes use the supplied mossy branch artwork. Physics and landing positions are unchanged.
+
+See the [regression audit and repairs](docs/RESTORATION_AUDIT_3_2_1.md). The climbing campaign's simpler, partly procedural scenery remains a distinct mode; this restoration does not replace it with a new world or claim to add 3D characters.
 
 ## Play
 
 1. Extract the ZIP into a fresh, writable folder.
 2. Open **Godot 4.4.1**, choose **Import**, and select `project.godot`.
 3. Let the bundled art and font import. Press **F5**.
+
+Choose **The Big Idea** for the complete painted school/garden/workshop story, or **The Giant Climbs** for the three extended vertical levels. Both keep their existing progress. **All adventures** in either title, or in the studio, returns to the opening selection.
 
 Everything needed to play is bundled. No paid plugins, .NET, Python or extra asset downloads are required for the game. This is an editable Godot project, not a standalone executable. Python is only needed for the optional verification tool.
 
@@ -20,7 +26,7 @@ Both friends now use native Godot 2D skeletons over the original painted exports
 
 The jump impulse, controls, collision bodies, routes and forgiving input timing are preserved. The animation never waits for a button press to finish playing before Mark moves. Small spring leaves stay at the launch point. Pause freezes the performance, checkpoints clear it, and Reduced motion removes the extra deformation and effects.
 
-Choose **Character animation studio** on the title screen, or open `scenes/animation_studio.tscn` and press **F6**. Select Idle, Walk, Run, Jump, Bark spring, Talk or Cheer; pause, advance one frame, choose half speed, or show the joint points. **1–7** selects a pose, **Space** pauses, **P** toggles points and **Esc** returns to the game. In the campaign, **F8** toggles the two actors’ joint overlays.
+Choose **Character studio** on the opening menu, or open `scenes/animation_studio.tscn` and press **F6**. Select Idle, Walk, Run, Jump, Bark spring, Talk or Cheer; pause, advance one frame, choose half speed, or show the joint points. **1–7** selects a pose, **Space** pauses, **P** toggles points and **Esc** returns to all adventures. In the climbing campaign, **F8** toggles the two actors’ joint overlays.
 
 See the [recorded character and gameplay showcase](docs/previews/in_motion_3_2.mp4) and [rigging/editing notes](docs/IN_MOTION_3_2.md). The studio is a separate preview room; its jump display is a pose study. The live gameplay segment in the recording uses the actual campaign player and double-jump physics.
 
@@ -78,7 +84,7 @@ A bump returns Mark to his last safe shelf with every quest item and collectible
 
 The final delivery repairs the ray and plays the restored-size story ending. Explore afterwards, revisit unlocked levels, or Replay a climb for a fresh collection run while keeping best scores. Optional discoveries never block the story.
 
-The original school adventure, tutorial and paper-plane workshop are still included: open `scenes/main.tscn` and press **F6**. Its progress and sound settings remain separate from the campaign.
+The original school adventure, tutorial and paper-plane workshop are available from **The Big Idea** on the opening menu. Its quest progress remains separate from climbing progress; audio, touch, reduced-motion and character presentation preferences are shared.
 
 ## Saves
 
@@ -94,7 +100,9 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh project, uses temporary test saves, runs all six suites and writes logs to the ignored `test_output/` folder. **629 checks pass**: 89 character-animation checks, 198 campaign checks, 85 variety/recovery checks, 61 interface checks, 21 teamwork-jump checks and 175 original-chapter checks. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports the project, uses temporary test saves, runs all seven suites and writes logs to the ignored `test_output/` folder. The earlier six suites contain 629 checks; 68 restoration checks also exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+
+The GitHub workflow now runs this complete suite on the documented Godot 4.4.1, then captures native screenshots of adventure selection, the restored garden and the workshop. The previous workflow ran only the older original-chapter suite on a different engine version.
 
 Native Godot compatibility-renderer playthrough and visual fixtures were also reviewed. See [3.2 character update and editing notes](docs/IN_MOTION_3_2.md), [3.2 verification results](docs/release_3_2_verification.json), and [the earlier campaign artwork provenance](docs/RELEASE_3_1.md).
 
