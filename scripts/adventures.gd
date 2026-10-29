@@ -12,6 +12,7 @@ var settings_overlay: Control
 var settings_button: Button
 var save_notice: Label
 var quit_prompt: CanvasLayer
+var whimsy
 
 func _ready() -> void:
 	get_tree().auto_accept_quit=false
@@ -21,8 +22,10 @@ func _ready() -> void:
 	add_child(background)
 	var shade=ColorRect.new();shade.size=Vector2(1280,720);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var material=ShaderMaterial.new();material.shader=load("res://shaders/adventure_menu.gdshader");shade.material=material;add_child(shade)
+	whimsy=load("res://scripts/whimsy_layer.gd").new();whimsy.name="WhimsyLayer";whimsy.context="menu";whimsy.controller=self;add_child(whimsy)
 	label(self,"MARK & BARK",Rect2(48,28,780,65),47,"fff3d3")
 	label(self,"Small friends. Big possibilities.",Rect2(52,101,760,35),23,"f0ce83")
+	label(self,"THE WHIMSY UPDATE · 3.5",Rect2(820,126,400,28),16,"f4d39a")
 	card(Rect2(48,166,680,213))
 	picture("school_hub",Rect2(65,184,202,177))
 	label(self,"THE BIG IDEA",Rect2(292,184,407,40),29)

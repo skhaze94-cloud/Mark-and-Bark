@@ -1,4 +1,4 @@
-# Mark & Bark 3.4.0 — Painted Depth
+# Mark & Bark 3.5.0 — The Whimsy Update
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
@@ -9,6 +9,14 @@ The original painted character presentation is enabled by default. Turn off **Or
 See the [regression audit and repairs](docs/RESTORATION_AUDIT_3_2_1.md). The climbing campaign's simpler, partly procedural scenery remains a distinct mode; this restoration does not replace it with a new world or claim to add 3D characters.
 
 The **3.2.2 finishing pass** makes the opening music loop reliably, shares one settings panel across both adventures and the opening menu, protects both save files with validated backups, and adds production Web and Windows export checks. See [the finishing notes](docs/FINISHING_3_2_2.md).
+
+## The Whimsy Update
+
+The library grows flowering arch garlands, pressed-botanical illustrations and folded paper birds. The bedroom gains cloud murals, moon-and-star mobiles and embroidered bedding. The attic opens onto crescent skies, constellation charts and miniature ringed planets. Woven rugs and soft pastel washes bring the rooms together with the original painted furniture.
+
+The original school, garden and workshop also gain paper-and-botanical ornaments, wisteria, flower borders and a brass celestial mobile. A sparse layer of paper moths, petals and tiny lights gives both adventures gentle movement. Decorations stay in world coordinates and keep routes and prompts clear; Reduced motion keeps a still version of the ornaments, and opening pause or Settings freezes their animation.
+
+The 3.4 contact shadows, bloom and lighting remain. Character artwork, routes, collision, collectibles, quests, controls and save formats are preserved. See [the Whimsy release notes](docs/WHIMSY_UPDATE_3_5.md).
 
 ## Graphics, shadows and depth across both adventures
 
@@ -120,7 +128,7 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh copy with a unique, verified test-save location, runs all ten suites and writes logs to the ignored `test_output/` folder. The full suite now contains **910 source checks** across ten suites, including 77 finishing checks for write failures, backup recovery, preference persistence, the first-visit music loop, all three settings panels and safe failed-save exits. The 68 restoration checks exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh copy with a unique, verified test-save location, runs all eleven suites and writes logs to the ignored `test_output/` folder. The full suite now contains **1,003 source checks** across eleven suites. These include 93 Whimsy checks for stable decoration, pause and immediate Reduced motion behavior, and 77 finishing checks for write failures, backup recovery, preference persistence, the first-visit music loop, all three settings panels and safe failed-save exits. The 68 restoration checks exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
 The GitHub workflow runs the complete suite on Godot **4.4.1**, captures native screenshots, builds the production Web and Windows releases with official checksum-verified templates, and tests the packed game in fresh processes. It plays the actual Web release in Chrome, checks settings after a page reload, and runs the exported Windows executable on Windows. Source, builds, screenshots and logs are downloadable workflow artifacts. See [export commands and verification boundaries](docs/FINISHING_3_2_2.md).
 

@@ -8,6 +8,7 @@ var reduced_motion: bool = false
 var board
 var feedback
 var scenery
+var whimsy
 var bark: Sprite2D
 var platforms: Array[Rect2] = []
 var fun_ledges: Array[Node2D] = []
@@ -51,6 +52,7 @@ func build(is_tutorial: bool) -> void:
 	scenery=load("res://scripts/scenery_planes.gd").new()
 	add_child(scenery)
 	scenery.build(tutorial)
+	whimsy=load("res://scripts/whimsy_layer.gd").new();whimsy.name="WhimsyLayer";whimsy.context="story";whimsy.tutorial=tutorial;whimsy.controller=get_parent();whimsy.z_index=0;add_child(whimsy)
 	feedback=load("res://scripts/interaction_feedback.gd").new()
 	feedback.campus=self
 	feedback.z_index=6
