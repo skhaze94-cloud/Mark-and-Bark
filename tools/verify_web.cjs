@@ -35,14 +35,25 @@ async function main() {
     args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
   const context = await browser.newContext({viewport:{width:1280,height:720}, deviceScaleFactor:1});
   const page = await context.newPage();
-  const errors = [], messages = [], checks = [];
+  const errors = [], messages = [], checks = [], wasmCancellations = [];
+  const wasmResponses = new Set();
   page.on('console', message => {
     messages.push(`${message.type()}: ${message.text()}`);
     if (message.type() === 'error' || /SCRIPT ERROR:|Parse Error:|^ERROR:/.test(message.text())) errors.push(message.text());
   });
   page.on('pageerror', error => errors.push(String(error)));
-  page.on('requestfailed', request => errors.push(`${request.url()}: ${request.failure()?.errorText}`));
-  page.on('response', response => {if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`);});
+  page.on('requestfailed', request => {
+    const failure=request.failure()?.errorText;
+    // Emscripten discards a duplicate WASM response after compilation. Chrome
+    // reports that discarded stream as aborted, although the game is running.
+    // Retain the evidence and require its successful HTTP response below.
+    if (failure === 'net::ERR_ABORTED' && new URL(request.url()).pathname.endsWith('.wasm')) wasmCancellations.push(request.url());
+    else errors.push(`${request.url()}: ${failure}`);
+  });
+  page.on('response', response => {
+    if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`);
+    if (response.status() === 200 && new URL(response.url()).pathname.endsWith('.wasm')) wasmResponses.add(response.url());
+  });
   function check(ok, description) {
     if (!ok) throw new Error(description);
     checks.push(description); console.log(`PASS: ${description}`);
@@ -130,8 +141,9 @@ async function main() {
     await waitForText('climb_pause',[400,165,880,230],'a little breather');
     await page.mouse.click(640,430);
     await capture('09_climb_settings',['35%','Background music: Off','Calm climb (climbing adventure): On']);
+    check(wasmCancellations.every(url => wasmResponses.has(url)), 'Discarded WebAssembly streams have a successful HTTP response and a running game');
     check(errors.length === 0, 'No browser, script, HTTP or missing-resource errors during the production Web playthrough');
-    fs.writeFileSync(path.join(output,'web_summary.json'),JSON.stringify({browser:await browser.version(),canvas:[1280,720],passed:checks.length,failed:0,checks,errors},null,2));
+    fs.writeFileSync(path.join(output,'web_summary.json'),JSON.stringify({browser:await browser.version(),canvas:[1280,720],passed:checks.length,failed:0,checks,errors,wasmCancellations},null,2));
     console.log(`WEB RESULT: ${checks.length} passed; 0 failed`);
   } finally {
     if (!fs.existsSync(path.join(output,'web_summary.json'))) {
