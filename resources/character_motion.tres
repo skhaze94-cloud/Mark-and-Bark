@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/character_motion_tuning.gd" id="1"]
+[resource]
+script = ExtResource("1")
+head = 1.0
+arms = 1.0
+legs = 1.0
+follow_through = 1.0
+face = 1.0
+tempo = 1.0
+blinks = true

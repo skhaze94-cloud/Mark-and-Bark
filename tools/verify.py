@@ -18,7 +18,7 @@ engine = str(Path(args.godot).resolve())
 root = Path(__file__).resolve().parents[1]
 output = root / 'test_output'
 output.mkdir(exist_ok=True)
-scenes = ['playthrough', 'jump_review', 'polish_review', 'variety_review', 'mega_playthrough']
+scenes = ['playthrough', 'jump_review', 'polish_review', 'variety_review', 'mega_playthrough', 'animation_review']
 summary = {'engine': subprocess.check_output([engine, '--version'], text=True).strip(), 'suites': {}}
 with tempfile.TemporaryDirectory(prefix='qa-', dir=output) as state:
     env = dict(os.environ)

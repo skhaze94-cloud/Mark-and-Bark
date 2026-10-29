@@ -11,6 +11,7 @@ func _ready() -> void:
 	font = load("res://assets/readable.ttf") if ResourceLoader.exists("res://assets/readable.ttf") else ThemeDB.fallback_font
 
 func tex(id: String) -> Texture2D:
+	if id=="young_actions_cheer":return tex("young_actions_jump")
 	if cache.has(id):
 		return cache[id]
 	var texture: Texture2D
@@ -23,8 +24,8 @@ func tex(id: String) -> Texture2D:
 	cache[id] = texture
 	return texture
 
-func character(id: String) -> Sprite2D:
-	var s = Sprite2D.new()
+func character(id: String, articulated: bool = true) -> Sprite2D:
+	var s: Sprite2D = load("res://scripts/character_rig.gd").new() if articulated and (id.begins_with("young_") or id.begins_with("bark_")) else Sprite2D.new()
 	s.texture = tex(id)
 	s.centered = false
 	s.offset = Vector2(-256,-612)

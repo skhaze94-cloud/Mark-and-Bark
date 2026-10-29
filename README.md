@@ -1,8 +1,8 @@
-# Mark & Bark — Mega Variety 3.1: The Complete Climb
+# Mark & Bark 3.2 — In Motion
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
-**This release rebuilds the unpublished Mega Variety expansion on the verified 2.0.2 source and adds a full gameplay, visual, interface and save-recovery pass.**
+**The character update:** independently moving heads, shoulders, elbows, wrists, hips, knees, ankles and toes, plus expressive faces and a livelier leafy spring. The complete three-level Mega Variety campaign is included.
 
 ## Play
 
@@ -11,6 +11,18 @@ A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mish
 3. Let the bundled art and font import. Press **F5**.
 
 Everything needed to play is bundled. No paid plugins, .NET, Python or extra asset downloads are required for the game. This is an editable Godot project, not a standalone executable. Python is only needed for the optional verification tool.
+
+## Meet the livelier Mark & Bark
+
+Both friends now use native Godot 2D skeletons over the original painted exports. Mark reaches into a jump, tucks his knees and settles into landings. Bark braces, springs, gestures, blinks and lets his leaves follow through. Their faces keep the supplied artwork, with gentle eyelids, gaze, eyebrow and mouth movement in calibrated expressive poses. Dialogue portraits show a larger animated face and upper body.
+
+![Mark and Bark in the character animation studio](docs/previews/in_motion_3_2.png)
+
+The jump impulse, controls, collision bodies, routes and forgiving input timing are preserved. The animation never waits for a button press to finish playing before Mark moves. Small spring leaves stay at the launch point. Pause freezes the performance, checkpoints clear it, and Reduced motion removes the extra deformation and effects.
+
+Choose **Character animation studio** on the title screen, or open `scenes/animation_studio.tscn` and press **F6**. Select Idle, Walk, Run, Jump, Bark spring, Talk or Cheer; pause, advance one frame, choose half speed, or show the joint points. **1–7** selects a pose, **Space** pauses, **P** toggles points and **Esc** returns to the game. In the campaign, **F8** toggles the two actors’ joint overlays.
+
+See the [recorded character and gameplay showcase](docs/previews/in_motion_3_2.mp4) and [rigging/editing notes](docs/IN_MOTION_3_2.md). The studio is a separate preview room; its jump display is a pose study. The live gameplay segment in the recording uses the actual campaign player and double-jump physics.
 
 ## Three much bigger adventures
 
@@ -82,8 +94,8 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh project, uses temporary test saves, runs all five suites and writes logs to the ignored `test_output/` folder. **540 checks pass**: 198 campaign checks, 85 variety/recovery checks, 61 interface checks, 21 teamwork-jump checks and 175 original-chapter checks. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh project, uses temporary test saves, runs all six suites and writes logs to the ignored `test_output/` folder. **629 checks pass**: 89 character-animation checks, 198 campaign checks, 85 variety/recovery checks, 61 interface checks, 21 teamwork-jump checks and 175 original-chapter checks. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
-Native Godot compatibility-renderer playthrough and visual fixtures were also reviewed. See [release notes and artwork provenance](docs/RELEASE_3_1.md) and [verification results](docs/release_3_1_verification.json).
+Native Godot compatibility-renderer playthrough and visual fixtures were also reviewed. See [3.2 character update and editing notes](docs/IN_MOTION_3_2.md), [3.2 verification results](docs/release_3_2_verification.json), and [the earlier campaign artwork provenance](docs/RELEASE_3_1.md).
 
 Physical Android/iOS device testing and standalone platform exports are outside this source-project delivery. The tests cover keyboard, mouse and injected multi-touch events in Godot.

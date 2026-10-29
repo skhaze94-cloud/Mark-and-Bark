@@ -1,0 +1,115 @@
+{
+  "engine": "4.4.1.stable.official.49a5bc7b6",
+  "suites": {
+    "import": {
+      "passed": 0,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "playthrough": {
+      "passed": 175,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "jump_review": {
+      "passed": 21,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "polish_review": {
+      "passed": 61,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "variety_review": {
+      "passed": 85,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "mega_playthrough": {
+      "passed": 198,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "animation_review": {
+      "passed": 89,
+      "failed": 0,
+      "exit_code": 0
+    }
+  },
+  "total_passed": 629,
+  "release": "3.2 In Motion \u2014 Character Update",
+  "base_commit": "f436f63752395f188cefa3d921250149eb7ccbc5",
+  "rig": {
+    "actors": 2,
+    "native_bones_per_actor": 26,
+    "painted_profiles": 40,
+    "action_poses": 24,
+    "calibrated_facial_poses": 8,
+    "mesh_vertices": 475,
+    "max_skin_influences": 4,
+    "original_foot_anchor": [
+      256,
+      612
+    ],
+    "original_character_pngs_changed": false
+  },
+  "native_campaign": {
+    "passed": 198,
+    "failed": 0,
+    "exit_code": 0,
+    "renderer": "Godot GL Compatibility, Mesa llvmpipe",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "native_animation": {
+    "passed": 89,
+    "failed": 0,
+    "exit_code": 0,
+    "renderer": "Godot GL Compatibility, Mesa llvmpipe",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "native_visual_fixtures": {
+    "reviewed": [
+      "24 painted action poses",
+      "idle and closed eyelids",
+      "both spring directions",
+      "animated dialogue portrait",
+      "studio celebration",
+      "named joint overlays",
+      "all three campus settings",
+      "title and ending",
+      "studio label widths and settled control bounds"
+    ]
+  },
+  "recording": {
+    "path": "docs/previews/in_motion_3_2.mp4",
+    "width": 1280,
+    "height": 720,
+    "fps": 60,
+    "duration_seconds": 31.25,
+    "bytes": 8740262,
+    "sha256": "43aeaf138cc293ffd8935415b26c544bb6be552ea1924518bcc16451df1fff87",
+    "live_campaign_shelves_reached": 3,
+    "native_capture_exit_codes": [
+      0,
+      0
+    ]
+  },
+  "limitations": [
+    "No physical Android/iOS hardware validation",
+    "Editable source project; standalone platform exports not included",
+    "Facial gestures are stylized, not phoneme lip sync"
+  ],
+  "native_pose_gallery": {
+    "profiles_reviewed": 40,
+    "action_poses": 24,
+    "turnaround_views": 16,
+    "exit_code": 0
+  }
+}

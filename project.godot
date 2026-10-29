@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="3.1 Mega Variety · Complete Climb"
+config/version="3.2 In Motion · Character Update"
 run/main_scene="res://scenes/mega.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/description="Three giant vertical climbs through school, bedroom and invention attic, with Bark-assisted spring jumps, quest items, collectibles and forgiving checkpoints."

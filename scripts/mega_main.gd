@@ -21,6 +21,7 @@ var spring_anchor=Vector2.ZERO
 var spring_contacts=0
 var spring_facing=1
 var spring_release_velocity=0.0
+var bark_stride=0.0
 var dialogue=[]
 var page=0
 var dialogue_portrait: TextureRect
@@ -121,14 +122,15 @@ func title():
 	else:campus.refresh()
 	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"MEGA VARIETY · THE COMPLETE CLIMB · 3.1",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"IN MOTION · CHARACTER UPDATE · 3.2",Rect2(35,97,640,40),23,"8a713f")
 	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)
 	button(p,"Settings",Rect2(365,337,310,60),func():settings(title))
 	button(p,"How to play",Rect2(35,417,310,60),func():how_to_play(title));button(p,"New adventure",Rect2(365,417,310,60),confirm_new)
-	if Mega.recovered_backup:text(p,"Recovered your previous saved adventure.",Rect2(35,575,640,20),15)
-	text(p,"Move: A/D or arrows · Jump: Space, then Space again\nUse: E · Hint: H · Notebook: N · Checkpoint: R · Pause: Esc",Rect2(35,505,640,70),17)
+	button(p,"Character animation studio",Rect2(35,489,640,42),func():get_tree().change_scene_to_file("res://scenes/animation_studio.tscn"))
+	if Mega.recovered_backup:text(p,"Recovered your previous saved adventure.",Rect2(35,230,640,20),15)
+	text(p,"Move: A/D or arrows · Jump: Space, then Space again\nUse: E · Hint: H · Notebook: N · Checkpoint: R · Pause: Esc",Rect2(35,545,640,45),15)
 func confirm_new():
 	var p=open(Rect2(320,200,640,310));back=title
 	text(p,"A fresh tiny adventure?",Rect2(30,25,580,45),29);text(p,"Reset this three-level campaign and its best scores? Your original Big Idea chapter and sound settings stay saved.",Rect2(30,90,580,85),22)
@@ -139,7 +141,7 @@ func start():
 		intro_ray.begin(func():say(["Mark|The ray says 'make your ideas smaller'. Is that helpful?","Bark|Press it twice. That's how you get twice as helpful!","Mark|Bark! We're tiny. The bookcase is a mountain!","Bark|Excellent. Jump onto my leafy head for a second spring. Find your design at the top, then we'll borrow the power cell and lens from home.","Mark|Borrow, return, and improve. In that order."],func():Mega.intro_done=true;Mega.save()))
 func load_level(i):
 	pickup_effects.clear();notice_priority=0;notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
-	Mega.current=i;Mega.save();mode="campus";close();campus.build(i);player.right_bound=1600;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;player.visual_scale=.24;player.sprite.scale=Vector2.ONE*.24;hud.show()
+	Mega.current=i;Mega.save();mode="campus";close();campus.build(i);player.right_bound=1600;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;bark_stride=0;player.visual_scale=.24;player.sprite.scale=Vector2.ONE*.24;hud.show()
 	var cp=int(Mega.runs[i].checkpoint)
 	player.position=Vector2(campus.platforms[cp].get_center().x,campus.platforms[cp].position.y-3) if cp>=0 else Vector2(510,645)
 	campus.enemy_grace=1.8;campus.last_safe=player.position;campus.safe_shelf=last_shelf;campus.bark.position=player.position+Vector2(-80,0);camera.position=Vector2(clampf(player.position.x,640,960),player.position.y-150)
@@ -168,7 +170,7 @@ func choose(i):
 func say(lines,done=Callable()):
 	dialogue=lines;page=0;dialogue_done=done
 	var p=open(Rect2(120,380,1040,300));dialogue_label=text(p,"",Rect2(165,28,835,175),24)
-	dialogue_portrait=TextureRect.new();var portrait=dialogue_portrait;portrait.position=Vector2(15,25);portrait.size=Vector2(135,180);portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;portrait.size=Vector2(135,180);portrait.texture=Art.tex("bark_actions_hint");p.add_child(portrait)
+	dialogue_portrait=load("res://scripts/character_portrait.gd").new();var portrait=dialogue_portrait;portrait.position=Vector2(15,25);portrait.size=Vector2(135,180);portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;portrait.size=Vector2(135,180);portrait.texture=Art.tex("bark_actions_hint");p.add_child(portrait)
 	button(p,"Skip story",Rect2(175,222,240,55),end_dialogue);button(p,"Next / Finish [E]",Rect2(640,222,365,55),next_line,true);line()
 func line():
 	dialogue_portrait.texture=Art.tex("young_actions_notebook" if String(dialogue[page]).begins_with("Mark|") else "bark_actions_hint")
@@ -186,9 +188,12 @@ func jumped(second):
 	play_sound("jump",1.15 if second else .95)
 	if second:
 		spring_age=0;spring_anchor=campus.bark.position;spring_facing=player.facing;spring_release_velocity=player.velocity.x;spring_contacts+=1
-		campus.bark.texture=Art.tex("bark_actions_hop");player.spring_contact=true;player.show_pose("young_actions_crouch",.09)
+		campus.bark.texture=Art.tex("bark_actions_hop");
+		if campus.bark.has_method("pulse"):campus.bark.pulse("spring_release",.45)
+		player.spring_contact=true;player.show_pose("young_actions_crouch",.09)
 		if spring_contacts%4==1:toast(["Bark: Feet on my leaves! Mark: Spring, please—not sneeze.","Bark: Try three jumps! Mark: Two. Make this one count.","Bark: Aim for next Tuesday! Mark: The shelf will do.","Bark: Close your eyes! Mark: I like knowing where the floor is.","Bark: Land in the pencil pot! Mark: The bridge looks kinder.","Bark: We could ask a moth for a lift. Mark: Let us jump past it.","Bark: My leaves are ticklish! Mark: Then hold very, very still.","Bark: What about a flying sandwich? Mark: First, a safe landing."][int(spring_contacts/4)%8])
 func landed(at,strength):
+	if campus.bark.has_method("land"):campus.bark.land(strength*.65)
 	campus.remember_landing(at)
 	if absf(at.y-650)<6:last_shelf=0
 	for n in range(campus.RISES[Mega.current].size()):
@@ -274,6 +279,7 @@ func place_player(at):
 	player.position=at;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9
 	campus.enemy_grace=1.8;campus.bark.rotation=0;campus.bark.scale=Vector2(.2*player.facing,.2)
 	campus.bark.position=at+Vector2(-75*player.facing,0);campus.bark.texture=Art.tex("bark_actions_idle")
+	if campus.bark.has_method("reset_motion"):campus.bark.reset_motion()
 	camera.position=Vector2(clampf(at.x,640,960),clampf(at.y-105,campus.top-400,450))
 func retry():
 	if mode!="campus" or (busy and is_instance_valid(dialogue_label)):return
@@ -335,6 +341,7 @@ func _physics_process(delta):
 		for sparkle in pickup_effects:sparkle.age+=delta
 		pickup_effects=pickup_effects.filter(func(p):return p.age<.6)
 	if is_instance_valid(effects):effects.volume_db=linear_to_db(maxf(.0001,Progress.settings.volume*.6))
+	if is_instance_valid(campus.bark) and campus.bark.has_method("drive"):campus.bark.frozen=busy and mode=="campus" and not result_open
 	if mode!="campus":return
 	player.reduced_motion=Progress.settings.reduced_motion;campus.reduced_motion=player.reduced_motion
 	player.axis=0 if busy else clampf(Input.get_axis("left","right")+float("right" in fingers.values())-float("left" in fingers.values()),-1,1)
@@ -349,6 +356,7 @@ func _physics_process(delta):
 			if p.kind=="leaf":r.leaves.append(p.id);toast("Leaf found! "+str(r.leaves.size())+" / 24. Optional discoveries never block your climb.")
 			else:r.token=true;toast("Bark: My secret portrait! Mark: Your grin gave it away.")
 			Mega.save();campus.refresh();play_sound("collect",1.2)
+			if campus.bark.has_method("pulse"):campus.bark.pulse("delight",.6)
 			if not player.reduced_motion:pickup_effects.append({"at":p.pos+Vector2(0,-22),"age":0.0})
 	if player.position.y>950:retry()
 	notice.visible=clock<notice_until;notice.position.y=438 if player.get_global_transform_with_canvas().origin.y<380 else 150
@@ -360,6 +368,7 @@ func _physics_process(delta):
 func update_bark_jump(delta: float) -> void:
 	if mode!="campus" or busy:return
 	var bark=campus.bark
+	var previous=bark.position
 	# Landings interrupt the airborne choreography, including low ceiling hops.
 	if player.is_on_floor() and spring_age<.45:
 		spring_age=9.0
@@ -415,6 +424,21 @@ func update_bark_jump(delta: float) -> void:
 		var lean=clampf(player.velocity.x/10000.0,-.026,.026) if spring_age<.45 else 0.0
 		bark.rotation=lerpf(bark.rotation,lean,1-exp(-delta*15))
 
+	if bark.has_method("drive"):
+		var speed=(bark.position-previous)/maxf(delta,.001);bark_stride+=bark.position.distance_to(previous)
+		var state="idle"
+		var on_shelf=player.is_on_floor() and spring_age>=.45
+		if spring_age<.10:state="spring_contact"
+		elif spring_age<.45:state="spring_release"
+		elif not player.is_on_floor() and player.jumps_used<2:state="anticipate"
+		elif not on_shelf:state="jump"
+		elif speed.length()>18:state="run" if speed.length()>170 else "walk"
+		if on_shelf:
+			var frames=["bark_actions_run_stride_a","bark_actions_run_passing","bark_actions_run_stride_b","bark_actions_run_passing"] if state=="run" else ["bark_actions_walk_stride_a","bark_actions_walk_passing","bark_actions_walk_stride_b","bark_actions_walk_passing"]
+			bark.texture=Art.tex(frames[int(bark_stride/34.0)%4] if state in ["walk","run"] else "bark_actions_idle")
+			var look=signf(speed.x) if absf(speed.x)>28 else signf(player.position.x-bark.position.x)
+			if look!=0:bark.scale.x=absf(bark.scale.x)*look
+		bark.drive(state,on_shelf,speed,bark_stride/136.0*TAU)
 	campus.advance_hazards(delta,player)
 
 func _input(e):
@@ -431,6 +455,10 @@ func _input(e):
 		if not rect.grow(20).has_point(e.position):fingers.erase(e.index)
 	elif e is InputEventKey and e.pressed:touch_mode=false
 func _unhandled_input(e):
+	if e is InputEventKey and e.pressed and not e.echo and e.physical_keycode==KEY_F8:
+		if player.sprite.has_method("drive"):
+			player.sprite.show_points=not player.sprite.show_points;campus.bark.show_points=player.sprite.show_points
+		get_viewport().set_input_as_handled();return
 	if travelling:return
 	if e is InputEventKey and e.echo:return
 	if e.is_action_pressed("pause"):

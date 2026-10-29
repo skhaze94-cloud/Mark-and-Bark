@@ -1,0 +1,5148 @@
+{
+  "canvas": [
+    512,
+    640
+  ],
+  "foot_anchor": [
+    256,
+    612
+  ],
+  "profiles": {
+    "young_actions_idle": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": true,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ]
+    },
+    "young_actions_walk_stride_a": {
+      "role": "mark",
+      "points": {
+        "head": [
+          306,
+          246
+        ],
+        "neck": [
+          283,
+          305
+        ],
+        "shoulder_near": [
+          248,
+          330
+        ],
+        "elbow_near": [
+          220,
+          391
+        ],
+        "wrist_near": [
+          148,
+          450
+        ],
+        "shoulder_far": [
+          319,
+          335
+        ],
+        "elbow_far": [
+          340,
+          389
+        ],
+        "wrist_far": [
+          359,
+          405
+        ],
+        "hips": [
+          280,
+          456
+        ],
+        "knee_near": [
+          193,
+          520
+        ],
+        "ankle_near": [
+          154,
+          570
+        ],
+        "toe_near": [
+          168,
+          604
+        ],
+        "knee_far": [
+          310,
+          523
+        ],
+        "ankle_far": [
+          337,
+          580
+        ],
+        "toe_far": [
+          385,
+          591
+        ],
+        "crown": [
+          277,
+          160
+        ],
+        "eye_near": [
+          299,
+          246
+        ],
+        "eye_far": [
+          330,
+          250
+        ],
+        "brow_near": [
+          299,
+          226.5
+        ],
+        "brow_far": [
+          330,
+          232.0
+        ],
+        "mouth": [
+          313,
+          274
+        ],
+        "leaf_near": [
+          206,
+          211
+        ],
+        "leaf_far": [
+          376,
+          201
+        ],
+        "coat": [
+          215,
+          436
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          299,
+          246,
+          11,
+          13
+        ],
+        [
+          330,
+          250,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        313,
+        274,
+        16,
+        10
+      ]
+    },
+    "young_actions_walk_passing": {
+      "role": "mark",
+      "points": {
+        "head": [
+          318,
+          248
+        ],
+        "neck": [
+          291,
+          305
+        ],
+        "shoulder_near": [
+          252,
+          332
+        ],
+        "elbow_near": [
+          228,
+          392
+        ],
+        "wrist_near": [
+          178,
+          450
+        ],
+        "shoulder_far": [
+          323,
+          335
+        ],
+        "elbow_far": [
+          346,
+          391
+        ],
+        "wrist_far": [
+          360,
+          437
+        ],
+        "hips": [
+          276,
+          454
+        ],
+        "knee_near": [
+          215,
+          517
+        ],
+        "ankle_near": [
+          151,
+          562
+        ],
+        "toe_near": [
+          145,
+          602
+        ],
+        "knee_far": [
+          300,
+          528
+        ],
+        "ankle_far": [
+          338,
+          581
+        ],
+        "toe_far": [
+          382,
+          597
+        ],
+        "crown": [
+          286,
+          160
+        ],
+        "eye_near": [
+          311,
+          248
+        ],
+        "eye_far": [
+          342,
+          252
+        ],
+        "brow_near": [
+          311,
+          228.5
+        ],
+        "brow_far": [
+          342,
+          234.0
+        ],
+        "mouth": [
+          325,
+          276
+        ],
+        "leaf_near": [
+          218,
+          213
+        ],
+        "leaf_far": [
+          388,
+          203
+        ],
+        "coat": [
+          211,
+          434
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          311,
+          248,
+          11,
+          13
+        ],
+        [
+          342,
+          252,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        325,
+        276,
+        16,
+        10
+      ]
+    },
+    "young_actions_walk_stride_b": {
+      "role": "mark",
+      "points": {
+        "head": [
+          299,
+          248
+        ],
+        "neck": [
+          275,
+          307
+        ],
+        "shoulder_near": [
+          231,
+          332
+        ],
+        "elbow_near": [
+          212,
+          389
+        ],
+        "wrist_near": [
+          172,
+          451
+        ],
+        "shoulder_far": [
+          305,
+          336
+        ],
+        "elbow_far": [
+          329,
+          391
+        ],
+        "wrist_far": [
+          354,
+          428
+        ],
+        "hips": [
+          258,
+          456
+        ],
+        "knee_near": [
+          203,
+          517
+        ],
+        "ankle_near": [
+          153,
+          574
+        ],
+        "toe_near": [
+          164,
+          603
+        ],
+        "knee_far": [
+          301,
+          526
+        ],
+        "ankle_far": [
+          340,
+          581
+        ],
+        "toe_far": [
+          384,
+          596
+        ],
+        "crown": [
+          270,
+          164
+        ],
+        "eye_near": [
+          292,
+          248
+        ],
+        "eye_far": [
+          323,
+          252
+        ],
+        "brow_near": [
+          292,
+          228.5
+        ],
+        "brow_far": [
+          323,
+          234.0
+        ],
+        "mouth": [
+          306,
+          276
+        ],
+        "leaf_near": [
+          199,
+          213
+        ],
+        "leaf_far": [
+          369,
+          203
+        ],
+        "coat": [
+          193,
+          436
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          292,
+          248,
+          11,
+          13
+        ],
+        [
+          323,
+          252,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        306,
+        276,
+        16,
+        10
+      ]
+    },
+    "young_actions_run_stride_a": {
+      "role": "mark",
+      "points": {
+        "head": [
+          354,
+          306
+        ],
+        "neck": [
+          324,
+          371
+        ],
+        "shoulder_near": [
+          257,
+          351
+        ],
+        "elbow_near": [
+          183,
+          356
+        ],
+        "wrist_near": [
+          132,
+          383
+        ],
+        "shoulder_far": [
+          349,
+          401
+        ],
+        "elbow_far": [
+          379,
+          422
+        ],
+        "wrist_far": [
+          417,
+          392
+        ],
+        "hips": [
+          278,
+          459
+        ],
+        "knee_near": [
+          199,
+          506
+        ],
+        "ankle_near": [
+          114,
+          544
+        ],
+        "toe_near": [
+          98,
+          582
+        ],
+        "knee_far": [
+          334,
+          497
+        ],
+        "ankle_far": [
+          368,
+          559
+        ],
+        "toe_far": [
+          412,
+          584
+        ],
+        "crown": [
+          312,
+          228
+        ],
+        "eye_near": [
+          347,
+          306
+        ],
+        "eye_far": [
+          378,
+          310
+        ],
+        "brow_near": [
+          347,
+          286.5
+        ],
+        "brow_far": [
+          378,
+          292.0
+        ],
+        "mouth": [
+          361,
+          334
+        ],
+        "leaf_near": [
+          254,
+          271
+        ],
+        "leaf_far": [
+          424,
+          261
+        ],
+        "coat": [
+          213,
+          439
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          347,
+          306,
+          11,
+          13
+        ],
+        [
+          378,
+          310,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        361,
+        334,
+        16,
+        10
+      ]
+    },
+    "young_actions_run_passing": {
+      "role": "mark",
+      "points": {
+        "head": [
+          346,
+          301
+        ],
+        "neck": [
+          318,
+          366
+        ],
+        "shoulder_near": [
+          249,
+          345
+        ],
+        "elbow_near": [
+          190,
+          353
+        ],
+        "wrist_near": [
+          145,
+          379
+        ],
+        "shoulder_far": [
+          341,
+          390
+        ],
+        "elbow_far": [
+          374,
+          407
+        ],
+        "wrist_far": [
+          405,
+          409
+        ],
+        "hips": [
+          282,
+          453
+        ],
+        "knee_near": [
+          232,
+          505
+        ],
+        "ankle_near": [
+          176,
+          525
+        ],
+        "toe_near": [
+          141,
+          555
+        ],
+        "knee_far": [
+          343,
+          490
+        ],
+        "ankle_far": [
+          364,
+          544
+        ],
+        "toe_far": [
+          408,
+          575
+        ],
+        "crown": [
+          304,
+          222
+        ],
+        "eye_near": [
+          339,
+          301
+        ],
+        "eye_far": [
+          370,
+          305
+        ],
+        "brow_near": [
+          339,
+          281.5
+        ],
+        "brow_far": [
+          370,
+          287.0
+        ],
+        "mouth": [
+          353,
+          329
+        ],
+        "leaf_near": [
+          246,
+          266
+        ],
+        "leaf_far": [
+          416,
+          256
+        ],
+        "coat": [
+          217,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          339,
+          301,
+          11,
+          13
+        ],
+        [
+          370,
+          305,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        353,
+        329,
+        16,
+        10
+      ]
+    },
+    "young_actions_run_stride_b": {
+      "role": "mark",
+      "points": {
+        "head": [
+          321,
+          314
+        ],
+        "neck": [
+          294,
+          373
+        ],
+        "shoulder_near": [
+          225,
+          363
+        ],
+        "elbow_near": [
+          167,
+          384
+        ],
+        "wrist_near": [
+          117,
+          417
+        ],
+        "shoulder_far": [
+          323,
+          402
+        ],
+        "elbow_far": [
+          350,
+          416
+        ],
+        "wrist_far": [
+          381,
+          405
+        ],
+        "hips": [
+          257,
+          455
+        ],
+        "knee_near": [
+          191,
+          504
+        ],
+        "ankle_near": [
+          137,
+          548
+        ],
+        "toe_near": [
+          100,
+          581
+        ],
+        "knee_far": [
+          316,
+          497
+        ],
+        "ankle_far": [
+          359,
+          550
+        ],
+        "toe_far": [
+          407,
+          574
+        ],
+        "crown": [
+          290,
+          239
+        ],
+        "eye_near": [
+          314,
+          314
+        ],
+        "eye_far": [
+          345,
+          318
+        ],
+        "brow_near": [
+          314,
+          294.5
+        ],
+        "brow_far": [
+          345,
+          300.0
+        ],
+        "mouth": [
+          328,
+          342
+        ],
+        "leaf_near": [
+          221,
+          279
+        ],
+        "leaf_far": [
+          391,
+          269
+        ],
+        "coat": [
+          192,
+          435
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          314,
+          314,
+          11,
+          13
+        ],
+        [
+          345,
+          318,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        328,
+        342,
+        16,
+        10
+      ]
+    },
+    "young_actions_run_flight": {
+      "role": "mark",
+      "points": {
+        "head": [
+          327,
+          316
+        ],
+        "neck": [
+          296,
+          376
+        ],
+        "shoulder_near": [
+          228,
+          371
+        ],
+        "elbow_near": [
+          173,
+          398
+        ],
+        "wrist_near": [
+          128,
+          426
+        ],
+        "shoulder_far": [
+          325,
+          406
+        ],
+        "elbow_far": [
+          362,
+          407
+        ],
+        "wrist_far": [
+          399,
+          383
+        ],
+        "hips": [
+          255,
+          458
+        ],
+        "knee_near": [
+          192,
+          505
+        ],
+        "ankle_near": [
+          133,
+          547
+        ],
+        "toe_near": [
+          94,
+          572
+        ],
+        "knee_far": [
+          318,
+          491
+        ],
+        "ankle_far": [
+          361,
+          536
+        ],
+        "toe_far": [
+          409,
+          553
+        ],
+        "crown": [
+          292,
+          240
+        ],
+        "eye_near": [
+          320,
+          316
+        ],
+        "eye_far": [
+          351,
+          320
+        ],
+        "brow_near": [
+          320,
+          296.5
+        ],
+        "brow_far": [
+          351,
+          302.0
+        ],
+        "mouth": [
+          334,
+          344
+        ],
+        "leaf_near": [
+          227,
+          281
+        ],
+        "leaf_far": [
+          397,
+          271
+        ],
+        "coat": [
+          190,
+          438
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          320,
+          316,
+          11,
+          13
+        ],
+        [
+          351,
+          320,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        334,
+        344,
+        16,
+        10
+      ]
+    },
+    "young_actions_jump": {
+      "role": "mark",
+      "points": {
+        "head": [
+          312,
+          356
+        ],
+        "neck": [
+          283,
+          409
+        ],
+        "shoulder_near": [
+          218,
+          405
+        ],
+        "elbow_near": [
+          159,
+          375
+        ],
+        "wrist_near": [
+          112,
+          349
+        ],
+        "shoulder_far": [
+          334,
+          437
+        ],
+        "elbow_far": [
+          370,
+          439
+        ],
+        "wrist_far": [
+          409,
+          416
+        ],
+        "hips": [
+          253,
+          512
+        ],
+        "knee_near": [
+          273,
+          468
+        ],
+        "ankle_near": [
+          254,
+          551
+        ],
+        "toe_near": [
+          276,
+          598
+        ],
+        "knee_far": [
+          330,
+          490
+        ],
+        "ankle_far": [
+          324,
+          548
+        ],
+        "toe_far": [
+          334,
+          579
+        ],
+        "crown": [
+          290,
+          273
+        ],
+        "eye_near": [
+          318,
+          355
+        ],
+        "eye_far": [
+          348,
+          362
+        ],
+        "brow_near": [
+          318,
+          332.5
+        ],
+        "brow_far": [
+          348,
+          342.5
+        ],
+        "mouth": [
+          326,
+          387
+        ],
+        "leaf_near": [
+          212,
+          321
+        ],
+        "leaf_far": [
+          382,
+          311
+        ],
+        "coat": [
+          188,
+          492
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": true,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          318,
+          355,
+          13,
+          15
+        ],
+        [
+          348,
+          362,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        326,
+        387,
+        23,
+        20
+      ]
+    },
+    "young_actions_crouch": {
+      "role": "mark",
+      "points": {
+        "head": [
+          352,
+          383
+        ],
+        "neck": [
+          314,
+          438
+        ],
+        "shoulder_near": [
+          231,
+          405
+        ],
+        "elbow_near": [
+          158,
+          422
+        ],
+        "wrist_near": [
+          109,
+          467
+        ],
+        "shoulder_far": [
+          312,
+          454
+        ],
+        "elbow_far": [
+          336,
+          518
+        ],
+        "wrist_far": [
+          372,
+          581
+        ],
+        "hips": [
+          246,
+          525
+        ],
+        "knee_near": [
+          241,
+          478
+        ],
+        "ankle_near": [
+          208,
+          573
+        ],
+        "toe_near": [
+          251,
+          603
+        ],
+        "knee_far": [
+          283,
+          542
+        ],
+        "ankle_far": [
+          158,
+          564
+        ],
+        "toe_far": [
+          148,
+          598
+        ],
+        "crown": [
+          322,
+          300
+        ],
+        "eye_near": [
+          360,
+          382
+        ],
+        "eye_far": [
+          385,
+          389
+        ],
+        "brow_near": [
+          360,
+          362.5
+        ],
+        "brow_far": [
+          385,
+          374.0
+        ],
+        "mouth": [
+          374,
+          415
+        ],
+        "leaf_near": [
+          252,
+          348
+        ],
+        "leaf_far": [
+          422,
+          338
+        ],
+        "coat": [
+          181,
+          505
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": true,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          360,
+          382,
+          11,
+          13
+        ],
+        [
+          385,
+          389,
+          6,
+          10
+        ]
+      ],
+      "mouth": [
+        374,
+        415,
+        15,
+        6
+      ]
+    },
+    "young_actions_notebook": {
+      "role": "mark",
+      "points": {
+        "head": [
+          252,
+          285
+        ],
+        "neck": [
+          224,
+          333
+        ],
+        "shoulder_near": [
+          171,
+          344
+        ],
+        "elbow_near": [
+          145,
+          401
+        ],
+        "wrist_near": [
+          200,
+          396
+        ],
+        "shoulder_far": [
+          270,
+          349
+        ],
+        "elbow_far": [
+          291,
+          405
+        ],
+        "wrist_far": [
+          319,
+          398
+        ],
+        "hips": [
+          224,
+          467
+        ],
+        "knee_near": [
+          180,
+          524
+        ],
+        "ankle_near": [
+          156,
+          589
+        ],
+        "toe_near": [
+          151,
+          610
+        ],
+        "knee_far": [
+          256,
+          524
+        ],
+        "ankle_far": [
+          272,
+          586
+        ],
+        "toe_far": [
+          311,
+          602
+        ],
+        "crown": [
+          234,
+          189
+        ],
+        "eye_near": [
+          238,
+          284
+        ],
+        "eye_far": [
+          274,
+          293
+        ],
+        "brow_near": [
+          238,
+          266.0
+        ],
+        "brow_far": [
+          274,
+          275.0
+        ],
+        "mouth": [
+          255,
+          313
+        ],
+        "leaf_near": [
+          152,
+          250
+        ],
+        "leaf_far": [
+          322,
+          240
+        ],
+        "coat": [
+          159,
+          447
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": true,
+      "closed_eyes": false,
+      "prop_locked": true,
+      "eyes": [
+        [
+          238,
+          284,
+          12,
+          12
+        ],
+        [
+          274,
+          293,
+          10,
+          12
+        ]
+      ],
+      "mouth": [
+        255,
+        313,
+        16,
+        6
+      ]
+    },
+    "young_actions_paper_plane": {
+      "role": "mark",
+      "points": {
+        "head": [
+          283,
+          300
+        ],
+        "neck": [
+          256,
+          358
+        ],
+        "shoulder_near": [
+          210,
+          367
+        ],
+        "elbow_near": [
+          160,
+          405
+        ],
+        "wrist_near": [
+          123,
+          426
+        ],
+        "shoulder_far": [
+          299,
+          373
+        ],
+        "elbow_far": [
+          365,
+          348
+        ],
+        "wrist_far": [
+          413,
+          322
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          519
+        ],
+        "ankle_near": [
+          156,
+          584
+        ],
+        "toe_near": [
+          145,
+          606
+        ],
+        "knee_far": [
+          309,
+          519
+        ],
+        "ankle_far": [
+          349,
+          583
+        ],
+        "toe_far": [
+          383,
+          603
+        ],
+        "crown": [
+          257,
+          212
+        ],
+        "eye_near": [
+          276,
+          300
+        ],
+        "eye_far": [
+          307,
+          304
+        ],
+        "brow_near": [
+          276,
+          280.5
+        ],
+        "brow_far": [
+          307,
+          286.0
+        ],
+        "mouth": [
+          290,
+          328
+        ],
+        "leaf_near": [
+          183,
+          265
+        ],
+        "leaf_far": [
+          353,
+          255
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          300,
+          11,
+          13
+        ],
+        [
+          307,
+          304,
+          8,
+          12
+        ]
+      ],
+      "mouth": [
+        290,
+        328,
+        16,
+        10
+      ]
+    },
+    "bark_actions_idle": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": true,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ]
+    },
+    "bark_actions_walk_stride_a": {
+      "role": "bark",
+      "points": {
+        "head": [
+          310,
+          401
+        ],
+        "neck": [
+          284,
+          481
+        ],
+        "shoulder_near": [
+          223,
+          456
+        ],
+        "elbow_near": [
+          198,
+          486
+        ],
+        "wrist_near": [
+          165,
+          516
+        ],
+        "shoulder_far": [
+          335,
+          458
+        ],
+        "elbow_far": [
+          359,
+          491
+        ],
+        "wrist_far": [
+          365,
+          490
+        ],
+        "hips": [
+          274,
+          528
+        ],
+        "knee_near": [
+          223,
+          568
+        ],
+        "ankle_near": [
+          198,
+          597
+        ],
+        "toe_near": [
+          182,
+          611
+        ],
+        "knee_far": [
+          318,
+          565
+        ],
+        "ankle_far": [
+          349,
+          589
+        ],
+        "toe_far": [
+          379,
+          603
+        ],
+        "crown": [
+          280,
+          288
+        ],
+        "eye_near": [
+          303,
+          401
+        ],
+        "eye_far": [
+          334,
+          405
+        ],
+        "brow_near": [
+          303,
+          368.0
+        ],
+        "brow_far": [
+          334,
+          375.0
+        ],
+        "mouth": [
+          317,
+          429
+        ],
+        "leaf_near": [
+          210,
+          366
+        ],
+        "leaf_far": [
+          380,
+          356
+        ],
+        "coat": [
+          209,
+          508
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          303,
+          401,
+          19,
+          22
+        ],
+        [
+          334,
+          405,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        317,
+        429,
+        28,
+        22
+      ]
+    },
+    "bark_actions_walk_passing": {
+      "role": "bark",
+      "points": {
+        "head": [
+          326,
+          406
+        ],
+        "neck": [
+          296,
+          485
+        ],
+        "shoulder_near": [
+          238,
+          461
+        ],
+        "elbow_near": [
+          206,
+          492
+        ],
+        "wrist_near": [
+          183,
+          514
+        ],
+        "shoulder_far": [
+          348,
+          466
+        ],
+        "elbow_far": [
+          367,
+          487
+        ],
+        "wrist_far": [
+          382,
+          483
+        ],
+        "hips": [
+          282,
+          530
+        ],
+        "knee_near": [
+          263,
+          575
+        ],
+        "ankle_near": [
+          237,
+          601
+        ],
+        "toe_near": [
+          220,
+          610
+        ],
+        "knee_far": [
+          326,
+          575
+        ],
+        "ankle_far": [
+          354,
+          594
+        ],
+        "toe_far": [
+          383,
+          606
+        ],
+        "crown": [
+          292,
+          293
+        ],
+        "eye_near": [
+          319,
+          406
+        ],
+        "eye_far": [
+          350,
+          410
+        ],
+        "brow_near": [
+          319,
+          373.0
+        ],
+        "brow_far": [
+          350,
+          380.0
+        ],
+        "mouth": [
+          333,
+          434
+        ],
+        "leaf_near": [
+          226,
+          371
+        ],
+        "leaf_far": [
+          396,
+          361
+        ],
+        "coat": [
+          217,
+          510
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          319,
+          406,
+          19,
+          22
+        ],
+        [
+          350,
+          410,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        333,
+        434,
+        28,
+        22
+      ]
+    },
+    "bark_actions_walk_stride_b": {
+      "role": "bark",
+      "points": {
+        "head": [
+          307,
+          405
+        ],
+        "neck": [
+          282,
+          486
+        ],
+        "shoulder_near": [
+          224,
+          460
+        ],
+        "elbow_near": [
+          191,
+          499
+        ],
+        "wrist_near": [
+          162,
+          530
+        ],
+        "shoulder_far": [
+          332,
+          465
+        ],
+        "elbow_far": [
+          346,
+          486
+        ],
+        "wrist_far": [
+          355,
+          487
+        ],
+        "hips": [
+          268,
+          533
+        ],
+        "knee_near": [
+          224,
+          571
+        ],
+        "ankle_near": [
+          198,
+          599
+        ],
+        "toe_near": [
+          180,
+          610
+        ],
+        "knee_far": [
+          314,
+          574
+        ],
+        "ankle_far": [
+          341,
+          592
+        ],
+        "toe_far": [
+          370,
+          604
+        ],
+        "crown": [
+          278,
+          293
+        ],
+        "eye_near": [
+          300,
+          405
+        ],
+        "eye_far": [
+          331,
+          409
+        ],
+        "brow_near": [
+          300,
+          372.0
+        ],
+        "brow_far": [
+          331,
+          379.0
+        ],
+        "mouth": [
+          314,
+          433
+        ],
+        "leaf_near": [
+          207,
+          370
+        ],
+        "leaf_far": [
+          377,
+          360
+        ],
+        "coat": [
+          203,
+          513
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          300,
+          405,
+          19,
+          22
+        ],
+        [
+          331,
+          409,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        314,
+        433,
+        28,
+        22
+      ]
+    },
+    "bark_actions_run_stride_a": {
+      "role": "bark",
+      "points": {
+        "head": [
+          327,
+          426
+        ],
+        "neck": [
+          303,
+          508
+        ],
+        "shoulder_near": [
+          239,
+          455
+        ],
+        "elbow_near": [
+          172,
+          449
+        ],
+        "wrist_near": [
+          133,
+          478
+        ],
+        "shoulder_far": [
+          346,
+          474
+        ],
+        "elbow_far": [
+          359,
+          500
+        ],
+        "wrist_far": [
+          368,
+          474
+        ],
+        "hips": [
+          256,
+          542
+        ],
+        "knee_near": [
+          215,
+          565
+        ],
+        "ankle_near": [
+          164,
+          589
+        ],
+        "toe_near": [
+          144,
+          609
+        ],
+        "knee_far": [
+          329,
+          575
+        ],
+        "ankle_far": [
+          350,
+          594
+        ],
+        "toe_far": [
+          381,
+          605
+        ],
+        "crown": [
+          291,
+          336
+        ],
+        "eye_near": [
+          320,
+          426
+        ],
+        "eye_far": [
+          351,
+          430
+        ],
+        "brow_near": [
+          320,
+          393.0
+        ],
+        "brow_far": [
+          351,
+          400.0
+        ],
+        "mouth": [
+          334,
+          454
+        ],
+        "leaf_near": [
+          227,
+          391
+        ],
+        "leaf_far": [
+          397,
+          381
+        ],
+        "coat": [
+          191,
+          522
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          320,
+          426,
+          19,
+          22
+        ],
+        [
+          351,
+          430,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        334,
+        454,
+        28,
+        22
+      ]
+    },
+    "bark_actions_run_passing": {
+      "role": "bark",
+      "points": {
+        "head": [
+          318,
+          424
+        ],
+        "neck": [
+          296,
+          505
+        ],
+        "shoulder_near": [
+          232,
+          460
+        ],
+        "elbow_near": [
+          185,
+          471
+        ],
+        "wrist_near": [
+          162,
+          496
+        ],
+        "shoulder_far": [
+          340,
+          478
+        ],
+        "elbow_far": [
+          359,
+          499
+        ],
+        "wrist_far": [
+          365,
+          479
+        ],
+        "hips": [
+          256,
+          542
+        ],
+        "knee_near": [
+          232,
+          569
+        ],
+        "ankle_near": [
+          195,
+          586
+        ],
+        "toe_near": [
+          169,
+          605
+        ],
+        "knee_far": [
+          321,
+          571
+        ],
+        "ankle_far": [
+          344,
+          590
+        ],
+        "toe_far": [
+          377,
+          606
+        ],
+        "crown": [
+          284,
+          334
+        ],
+        "eye_near": [
+          311,
+          424
+        ],
+        "eye_far": [
+          342,
+          428
+        ],
+        "brow_near": [
+          311,
+          391.0
+        ],
+        "brow_far": [
+          342,
+          398.0
+        ],
+        "mouth": [
+          325,
+          452
+        ],
+        "leaf_near": [
+          218,
+          389
+        ],
+        "leaf_far": [
+          388,
+          379
+        ],
+        "coat": [
+          191,
+          522
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          311,
+          424,
+          19,
+          22
+        ],
+        [
+          342,
+          428,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        325,
+        452,
+        28,
+        22
+      ]
+    },
+    "bark_actions_run_stride_b": {
+      "role": "bark",
+      "points": {
+        "head": [
+          307,
+          427
+        ],
+        "neck": [
+          282,
+          507
+        ],
+        "shoulder_near": [
+          223,
+          471
+        ],
+        "elbow_near": [
+          184,
+          503
+        ],
+        "wrist_near": [
+          158,
+          520
+        ],
+        "shoulder_far": [
+          328,
+          480
+        ],
+        "elbow_far": [
+          349,
+          503
+        ],
+        "wrist_far": [
+          356,
+          484
+        ],
+        "hips": [
+          249,
+          541
+        ],
+        "knee_near": [
+          210,
+          574
+        ],
+        "ankle_near": [
+          164,
+          595
+        ],
+        "toe_near": [
+          142,
+          608
+        ],
+        "knee_far": [
+          307,
+          571
+        ],
+        "ankle_far": [
+          336,
+          592
+        ],
+        "toe_far": [
+          365,
+          605
+        ],
+        "crown": [
+          276,
+          338
+        ],
+        "eye_near": [
+          300,
+          427
+        ],
+        "eye_far": [
+          331,
+          431
+        ],
+        "brow_near": [
+          300,
+          394.0
+        ],
+        "brow_far": [
+          331,
+          401.0
+        ],
+        "mouth": [
+          314,
+          455
+        ],
+        "leaf_near": [
+          207,
+          392
+        ],
+        "leaf_far": [
+          377,
+          382
+        ],
+        "coat": [
+          184,
+          521
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          300,
+          427,
+          19,
+          22
+        ],
+        [
+          331,
+          431,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        314,
+        455,
+        28,
+        22
+      ]
+    },
+    "bark_actions_hop": {
+      "role": "bark",
+      "points": {
+        "head": [
+          289,
+          425
+        ],
+        "neck": [
+          272,
+          507
+        ],
+        "shoulder_near": [
+          201,
+          477
+        ],
+        "elbow_near": [
+          155,
+          446
+        ],
+        "wrist_near": [
+          124,
+          436
+        ],
+        "shoulder_far": [
+          339,
+          477
+        ],
+        "elbow_far": [
+          373,
+          450
+        ],
+        "wrist_far": [
+          396,
+          426
+        ],
+        "hips": [
+          267,
+          548
+        ],
+        "knee_near": [
+          242,
+          576
+        ],
+        "ankle_near": [
+          228,
+          601
+        ],
+        "toe_near": [
+          219,
+          611
+        ],
+        "knee_far": [
+          316,
+          568
+        ],
+        "ankle_far": [
+          339,
+          583
+        ],
+        "toe_far": [
+          353,
+          582
+        ],
+        "crown": [
+          268,
+          338
+        ],
+        "eye_near": [
+          273,
+          425
+        ],
+        "eye_far": [
+          315,
+          424
+        ],
+        "brow_near": [
+          273,
+          392.0
+        ],
+        "brow_far": [
+          315,
+          391.0
+        ],
+        "mouth": [
+          288,
+          474
+        ],
+        "leaf_near": [
+          189,
+          390
+        ],
+        "leaf_far": [
+          359,
+          380
+        ],
+        "coat": [
+          202,
+          528
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": true,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          273,
+          425,
+          21,
+          22
+        ],
+        [
+          315,
+          424,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        288,
+        474,
+        33,
+        27
+      ]
+    },
+    "bark_actions_hint": {
+      "role": "bark",
+      "points": {
+        "head": [
+          302,
+          425
+        ],
+        "neck": [
+          276,
+          502
+        ],
+        "shoulder_near": [
+          209,
+          473
+        ],
+        "elbow_near": [
+          159,
+          517
+        ],
+        "wrist_near": [
+          145,
+          554
+        ],
+        "shoulder_far": [
+          313,
+          492
+        ],
+        "elbow_far": [
+          313,
+          513
+        ],
+        "wrist_far": [
+          334,
+          467
+        ],
+        "hips": [
+          266,
+          550
+        ],
+        "knee_near": [
+          222,
+          578
+        ],
+        "ankle_near": [
+          198,
+          604
+        ],
+        "toe_near": [
+          172,
+          611
+        ],
+        "knee_far": [
+          298,
+          580
+        ],
+        "ankle_far": [
+          321,
+          604
+        ],
+        "toe_far": [
+          347,
+          610
+        ],
+        "crown": [
+          276,
+          315
+        ],
+        "eye_near": [
+          285,
+          420
+        ],
+        "eye_far": [
+          327,
+          431
+        ],
+        "brow_near": [
+          285,
+          385.5
+        ],
+        "brow_far": [
+          327,
+          399.5
+        ],
+        "mouth": [
+          297,
+          461
+        ],
+        "leaf_near": [
+          202,
+          390
+        ],
+        "leaf_far": [
+          372,
+          380
+        ],
+        "coat": [
+          201,
+          530
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": true,
+      "closed_eyes": false,
+      "prop_locked": true,
+      "eyes": [
+        [
+          285,
+          420,
+          21,
+          23
+        ],
+        [
+          327,
+          431,
+          14,
+          21
+        ]
+      ],
+      "mouth": [
+        297,
+        461,
+        22,
+        10
+      ]
+    },
+    "bark_actions_point": {
+      "role": "bark",
+      "points": {
+        "head": [
+          271,
+          430
+        ],
+        "neck": [
+          259,
+          504
+        ],
+        "shoulder_near": [
+          202,
+          482
+        ],
+        "elbow_near": [
+          164,
+          525
+        ],
+        "wrist_near": [
+          145,
+          558
+        ],
+        "shoulder_far": [
+          319,
+          479
+        ],
+        "elbow_far": [
+          364,
+          445
+        ],
+        "wrist_far": [
+          415,
+          430
+        ],
+        "hips": [
+          258,
+          552
+        ],
+        "knee_near": [
+          215,
+          582
+        ],
+        "ankle_near": [
+          193,
+          604
+        ],
+        "toe_near": [
+          166,
+          610
+        ],
+        "knee_far": [
+          295,
+          581
+        ],
+        "ankle_far": [
+          317,
+          605
+        ],
+        "toe_far": [
+          348,
+          610
+        ],
+        "crown": [
+          254,
+          327
+        ],
+        "eye_near": [
+          264,
+          430
+        ],
+        "eye_far": [
+          295,
+          434
+        ],
+        "brow_near": [
+          264,
+          397.0
+        ],
+        "brow_far": [
+          295,
+          404.0
+        ],
+        "mouth": [
+          278,
+          458
+        ],
+        "leaf_near": [
+          171,
+          395
+        ],
+        "leaf_far": [
+          341,
+          385
+        ],
+        "coat": [
+          193,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          264,
+          430,
+          19,
+          22
+        ],
+        [
+          295,
+          434,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        278,
+        458,
+        28,
+        22
+      ]
+    },
+    "bark_actions_cheer": {
+      "role": "bark",
+      "points": {
+        "head": [
+          268,
+          394
+        ],
+        "neck": [
+          264,
+          481
+        ],
+        "shoulder_near": [
+          204,
+          448
+        ],
+        "elbow_near": [
+          169,
+          389
+        ],
+        "wrist_near": [
+          139,
+          340
+        ],
+        "shoulder_far": [
+          323,
+          444
+        ],
+        "elbow_far": [
+          351,
+          396
+        ],
+        "wrist_far": [
+          379,
+          347
+        ],
+        "hips": [
+          267,
+          544
+        ],
+        "knee_near": [
+          220,
+          578
+        ],
+        "ankle_near": [
+          191,
+          606
+        ],
+        "toe_near": [
+          157,
+          611
+        ],
+        "knee_far": [
+          307,
+          582
+        ],
+        "ankle_far": [
+          336,
+          606
+        ],
+        "toe_far": [
+          373,
+          610
+        ],
+        "crown": [
+          269,
+          314
+        ],
+        "eye_near": [
+          243,
+          384
+        ],
+        "eye_far": [
+          297,
+          391
+        ],
+        "brow_near": [
+          243,
+          369.0
+        ],
+        "brow_far": [
+          297,
+          376.0
+        ],
+        "mouth": [
+          267,
+          424
+        ],
+        "leaf_near": [
+          168,
+          359
+        ],
+        "leaf_far": [
+          338,
+          349
+        ],
+        "coat": [
+          202,
+          524
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": true,
+      "closed_eyes": true,
+      "prop_locked": false,
+      "eyes": [
+        [
+          243,
+          384,
+          18,
+          10
+        ],
+        [
+          297,
+          391,
+          17,
+          10
+        ]
+      ],
+      "mouth": [
+        267,
+        424,
+        41,
+        32
+      ]
+    },
+    "bark_actions_carry": {
+      "role": "bark",
+      "points": {
+        "head": [
+          299,
+          428
+        ],
+        "neck": [
+          281,
+          503
+        ],
+        "shoulder_near": [
+          225,
+          479
+        ],
+        "elbow_near": [
+          259,
+          517
+        ],
+        "wrist_near": [
+          305,
+          487
+        ],
+        "shoulder_far": [
+          333,
+          481
+        ],
+        "elbow_far": [
+          341,
+          503
+        ],
+        "wrist_far": [
+          337,
+          478
+        ],
+        "hips": [
+          269,
+          545
+        ],
+        "knee_near": [
+          234,
+          575
+        ],
+        "ankle_near": [
+          200,
+          598
+        ],
+        "toe_near": [
+          181,
+          609
+        ],
+        "knee_far": [
+          315,
+          579
+        ],
+        "ankle_far": [
+          342,
+          594
+        ],
+        "toe_far": [
+          374,
+          605
+        ],
+        "crown": [
+          278,
+          328
+        ],
+        "eye_near": [
+          292,
+          428
+        ],
+        "eye_far": [
+          323,
+          432
+        ],
+        "brow_near": [
+          292,
+          395.0
+        ],
+        "brow_far": [
+          323,
+          402.0
+        ],
+        "mouth": [
+          306,
+          456
+        ],
+        "leaf_near": [
+          199,
+          393
+        ],
+        "leaf_far": [
+          369,
+          383
+        ],
+        "coat": [
+          204,
+          525
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": true,
+      "eyes": [
+        [
+          292,
+          428,
+          19,
+          22
+        ],
+        [
+          323,
+          432,
+          14,
+          20
+        ]
+      ],
+      "mouth": [
+        306,
+        456,
+        28,
+        22
+      ]
+    },
+    "young_front": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "young_front_right": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "young_right": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "young_back_right": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "young_back": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "young_back_left": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "young_left": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "young_front_left": {
+      "role": "mark",
+      "points": {
+        "head": [
+          281,
+          246
+        ],
+        "neck": [
+          255,
+          304
+        ],
+        "shoulder_near": [
+          215,
+          332
+        ],
+        "elbow_near": [
+          190,
+          386
+        ],
+        "wrist_near": [
+          220,
+          419
+        ],
+        "shoulder_far": [
+          297,
+          330
+        ],
+        "elbow_far": [
+          320,
+          378
+        ],
+        "wrist_far": [
+          324,
+          416
+        ],
+        "hips": [
+          251,
+          453
+        ],
+        "knee_near": [
+          211,
+          517
+        ],
+        "ankle_near": [
+          187,
+          588
+        ],
+        "toe_near": [
+          176,
+          607
+        ],
+        "knee_far": [
+          280,
+          518
+        ],
+        "ankle_far": [
+          295,
+          588
+        ],
+        "toe_far": [
+          326,
+          605
+        ],
+        "crown": [
+          250,
+          160
+        ],
+        "eye_near": [
+          276,
+          247
+        ],
+        "eye_far": [
+          314,
+          247
+        ],
+        "brow_near": [
+          276,
+          226.0
+        ],
+        "brow_far": [
+          314,
+          227.5
+        ],
+        "mouth": [
+          299,
+          278
+        ],
+        "leaf_near": [
+          181,
+          211
+        ],
+        "leaf_far": [
+          351,
+          201
+        ],
+        "coat": [
+          186,
+          433
+        ]
+      },
+      "head_radius": [
+        110,
+        112
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          276,
+          247,
+          12,
+          14
+        ],
+        [
+          314,
+          247,
+          9,
+          13
+        ]
+      ],
+      "mouth": [
+        299,
+        278,
+        17,
+        7
+      ],
+      "turnaround": true
+    },
+    "bark_front": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    },
+    "bark_front_right": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    },
+    "bark_right": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    },
+    "bark_back_right": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    },
+    "bark_back": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    },
+    "bark_back_left": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    },
+    "bark_left": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    },
+    "bark_front_left": {
+      "role": "bark",
+      "points": {
+        "head": [
+          281,
+          409
+        ],
+        "neck": [
+          270,
+          489
+        ],
+        "shoulder_near": [
+          203,
+          478
+        ],
+        "elbow_near": [
+          172,
+          517
+        ],
+        "wrist_near": [
+          164,
+          552
+        ],
+        "shoulder_far": [
+          328,
+          478
+        ],
+        "elbow_far": [
+          349,
+          517
+        ],
+        "wrist_far": [
+          355,
+          552
+        ],
+        "hips": [
+          268,
+          552
+        ],
+        "knee_near": [
+          228,
+          578
+        ],
+        "ankle_near": [
+          210,
+          604
+        ],
+        "toe_near": [
+          179,
+          610
+        ],
+        "knee_far": [
+          298,
+          578
+        ],
+        "ankle_far": [
+          320,
+          606
+        ],
+        "toe_far": [
+          351,
+          610
+        ],
+        "crown": [
+          268,
+          298
+        ],
+        "eye_near": [
+          260,
+          407
+        ],
+        "eye_far": [
+          308,
+          410
+        ],
+        "brow_near": [
+          260,
+          372.5
+        ],
+        "brow_far": [
+          308,
+          377.0
+        ],
+        "mouth": [
+          282,
+          446
+        ],
+        "leaf_near": [
+          181,
+          374
+        ],
+        "leaf_far": [
+          351,
+          364
+        ],
+        "coat": [
+          203,
+          532
+        ]
+      },
+      "head_radius": [
+        112,
+        145
+      ],
+      "face_enabled": false,
+      "closed_eyes": false,
+      "prop_locked": false,
+      "eyes": [
+        [
+          260,
+          407,
+          21,
+          23
+        ],
+        [
+          308,
+          410,
+          16,
+          22
+        ]
+      ],
+      "mouth": [
+        282,
+        446,
+        28,
+        11
+      ],
+      "turnaround": true
+    }
+  }
+}
