@@ -329,10 +329,15 @@ func climb_captures(level):
 		game.last_shelf = fixture[1] + 1
 		game.player.sprite.frozen = true
 		game.campus.bark.frozen = true
-		game.campus.bark.position.y = game.campus.support_y(game.campus.bark.position.x, at.y)
+		var bark_x = game.player.position.x - 75.0
+		game.campus.bark.position = Vector2(bark_x, game.campus.support_y(bark_x, game.player.position.y))
 		game.notice.hide()
 		game.notice_back.hide()
 		game.update_hud()
+		if fixture[1] >= 0:
+			game.context.text = ""
+			game.context.hide()
+			game.context_back.hide()
 		print("GRAPHICS FIXTURE: ", LEVEL_NAMES[level], "/", fixture[0], " feet=", at, " camera=", game.camera.position)
 		await capture(LEVEL_NAMES[level] + "_" + fixture[0])
 		check(game.campus.scenery.get_child_count() == child_count, LEVEL_NAMES[level] + " scenery stays bounded at " + fixture[0])
@@ -342,6 +347,9 @@ func climb_captures(level):
 			game.player.position = at
 	Progress.settings.touch = true
 	game.update_hud()
+	game.context.text = ""
+	game.context.hide()
+	game.context_back.hide()
 	await capture(LEVEL_NAMES[level] + "_touch")
 	Progress.settings.touch = false
 	check(Mega.runs == before, LEVEL_NAMES[level] + " screenshots preserve every leaf, quest and checkpoint")
@@ -419,7 +427,8 @@ func review_story():
 			story.player.position = fixture[1]
 			story.player.velocity = Vector2.ZERO
 			story.sync_room()
-			story.campus.bark.position.y = story.campus.support_y(story.campus.bark.position.x, fixture[1].y)
+			var bark_x = story.player.position.x - 75.0
+			story.campus.bark.position = Vector2(bark_x, story.campus.support_y(bark_x, story.player.position.y))
 			story.camera.position = story.campus.camera_target(fixture[1].x, fixture[1].y)
 			story.toast_panel.hide()
 			story.update_hud()
@@ -457,6 +466,15 @@ func run():
 		assets_present = assets_present and ResourceLoader.exists(path) and load(path) != null
 	check(assets_present and Art.missing_assets.is_empty(), "All registered paintings and native finish shaders resolve")
 	await transformed_shadow_fixture()
+	var home=load(Adventures.HOME).instantiate()
+	add_child(home)
+	await ticks(4)
+	for pair in [[home.mark,"Mark"],[home.bark,"Bark"]]:
+		var contact=home.get_node_or_null("HomeContactShadow"+pair[1])
+		check(is_instance_valid(contact) and contact.source==pair[0] and not contact.follows and contact.anchor==pair[0].position,"Opening menu "+pair[1]+" retains a world-anchored contact shadow")
+	await home.drain_audio()
+	home.queue_free()
+	await ticks(3)
 	var retained_story = Progress.data.duplicate(true)
 	game = load(Adventures.CLIMBS).instantiate()
 	add_child(game)

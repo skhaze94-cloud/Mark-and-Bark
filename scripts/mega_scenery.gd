@@ -147,6 +147,22 @@ func _wall_bay(y: float, bay: int, zone: int) -> void:
 	_glow(Vector2(1320 - drift, y - 440), Vector2(300, 290), Color(0.60, 0.77, 0.82, 0.065))
 	for x in [42, 1540]:
 		draw_line(Vector2(x, y - BAY_HEIGHT), Vector2(x, y), Color(0.35, 0.39, 0.34, 0.12), 3)
+	# The back wall retains a quiet painted surface all the way to the summit.
+	# Native oak grain is used as a faint pigment texture rather than a flat fill.
+	var grain_alpha: float = 0.085 if level == 2 else 0.065
+	draw_texture_rect(Art.tex("oak_floor"), Rect2(50, y - BAY_HEIGHT, 1500, BAY_HEIGHT), true, Color(0.72, 0.74, 0.62, grain_alpha))
+	if level == 0:
+		_recess(Rect2(355, y - 710, 890, 625), "c4c4ab" if zone < 2 else "c3ccbc", true)
+	elif level == 1:
+		_recess(Rect2(390, y - 700, 820, 590), "b4c5b8" if zone < 2 else "b8ccc0")
+	else:
+		_recess(Rect2(355, y - 700, 890, 600), "aaa995" if zone < 2 else "a4b1a5")
+	# A second, lighter grain pass keeps recesses textured as well.
+	draw_texture_rect(Art.tex("oak_floor"), Rect2(385, y - 675, 830, 550), true, Color(0.74, 0.77, 0.66, 0.048))
+	for n in range(8):
+		var mark_y: float = y - 55 - n * 89
+		var mark_x: float = 160.0 + float(posmod(bay * 43 + n * 109, 1160))
+		draw_line(Vector2(mark_x, mark_y), Vector2(mark_x + 92 + n * 7, mark_y - 2), Color(0.37, 0.46, 0.41, 0.035), 2, true)
 	# Small side mouldings never imply a new walkable shelf across the route.
 	for x in [45, 1175]:
 		box(Rect2(x, y - 9, 380, 17), "aa9976" if level != 2 else "90764f", 3)
@@ -164,7 +180,121 @@ func _bookcase(foot: Vector2, size: float, alpha: float = 0.78) -> void:
 	sprite("school_props_bookcase", foot, size, alpha)
 	draw_line(foot + Vector2(-width * 0.49, -size - 9), foot + Vector2(width * 0.49, -size - 9), Color(0.99, 0.92, 0.71, 0.40), 3)
 
+func _recess(rect: Rect2, color: String, arched: bool = false) -> void:
+	var key: String = "recess:" + color + ":" + str(arched)
+	if not _styles.has(key):
+		var style: StyleBoxFlat = StyleBoxFlat.new()
+		style.bg_color = Color(color)
+		style.border_color = Color(color).darkened(0.085)
+		style.set_border_width_all(3)
+		style.corner_radius_top_left = 130 if arched else 18
+		style.corner_radius_top_right = 130 if arched else 18
+		style.corner_radius_bottom_left = 12
+		style.corner_radius_bottom_right = 12
+		style.shadow_color = Color(0.20, 0.28, 0.27, 0.085)
+		style.shadow_size = 18
+		style.shadow_offset = Vector2(9, 12)
+		_styles[key] = style
+	draw_style_box(_styles[key], rect)
+	draw_line(rect.position + Vector2(24, rect.size.y - 14), rect.end - Vector2(24, 14), Color(0.97, 0.94, 0.79, 0.26), 3, true)
+
+func _drawer_stack(rect: Rect2) -> void:
+	# A painted linen chest anchors the bedroom's smaller illustrated objects.
+	box(rect, "a6a284", 12)
+	var drawer_height: float = (rect.size.y - 26.0) / 3.0
+	for n in range(3):
+		var drawer: Rect2 = Rect2(rect.position + Vector2(12, 12 + n * drawer_height), Vector2(rect.size.x - 24, drawer_height - 7))
+		box(drawer, "b9b69a" if n % 2 == 0 else "afb296", 6, false)
+		for side in [0.30, 0.70]:
+			var knob: Vector2 = drawer.position + Vector2(drawer.size.x * side, drawer.size.y * 0.5)
+			draw_circle(knob + Vector2(1, 2), 5, Color(0.29, 0.34, 0.29, 0.17))
+			draw_circle(knob, 4, Color("dfce9b"))
+	draw_line(rect.position + Vector2(10, 5), rect.position + Vector2(rect.size.x - 10, 5), Color("d3ceb0"), 4, true)
+	draw_rect(rect.grow(9), Color(0.76, 0.81, 0.73, 0.14))
+
+func _library_backdrop(y: float, bay: int, zone: int) -> void:
+	var motif: int = posmod(bay + zone, 4)
+	var alpha: float = 0.49 if bay == 0 else 0.58
+	var tint: Color = Color(0.93, 0.96, 0.87)
+	if motif == 0 or motif == 2:
+		var offset: float = -35.0 if motif == 0 else 45.0
+		sprite("reading_nook_v3", Vector2(800 + offset, y - 135), 795 if zone == 0 else 750, alpha, true, tint)
+		sprite("collectibles_books", Vector2(1120 + offset, y - 140), 145, alpha + 0.06, true, tint)
+		if motif == 2:
+			sprite("school_props_plant", Vector2(470, y - 142), 150, alpha, true, tint)
+	else:
+		var case_x: float = 705.0 if motif == 1 else 875.0
+		sprite("school_props_bookcase", Vector2(case_x, y - 125), 565, alpha, true, tint)
+		var desk_x: float = 1080.0 if motif == 1 else 485.0
+		sprite("school_props_desk", Vector2(desk_x, y - 125), 305, alpha - 0.05, true, tint)
+		sprite("school_props_lamp", Vector2(desk_x - 55, y - 323), 125, alpha + 0.05, true, tint)
+		sprite("collectibles_books", Vector2(desk_x + 42, y - 323), 100, alpha, true, tint)
+		sprite("school_props_chair", Vector2(desk_x + 110, y - 120), 190, alpha - 0.08, true, tint)
+		_glow(Vector2(desk_x - 60, y - 408), Vector2(150, 135), Color(1.0, 0.91, 0.65, 0.10))
+	# Tall panel joints and a tiny framed plate read as built architecture,
+	# breaking the plain wall above the furniture without covering a route edge.
+	for x in [375, 1225]:
+		draw_line(Vector2(x, y - 650), Vector2(x, y - 115), Color(0.45, 0.49, 0.39, 0.14), 5, true)
+		draw_line(Vector2(x + 5, y - 644), Vector2(x + 5, y - 120), Color(0.98, 0.94, 0.77, 0.27), 2, true)
+
+func _bedroom_backdrop(y: float, bay: int, zone: int) -> void:
+	var motif: int = posmod(bay + zone, 3)
+	var tint: Color = Color(0.87, 0.95, 0.88)
+	var alpha: float = 0.43 if bay == 0 else 0.55
+	if motif == 0:
+		sprite("reading_nook_v3", Vector2(790, y - 145), 775, alpha, true, tint)
+		sprite("school_props_plant", Vector2(1110, y - 140), 180, alpha + 0.07, true, tint)
+		sprite("collectibles_books", Vector2(485, y - 140), 135, alpha + 0.02, true, tint)
+	elif motif == 1:
+		_drawer_stack(Rect2(445, y - 430, 475, 280))
+		sprite("school_props_plant", Vector2(820, y - 432), 175, alpha + 0.05, true, tint)
+		sprite("collectibles_books", Vector2(575, y - 432), 150, alpha + 0.08, true, tint)
+		sprite("school_props_bookcase", Vector2(1115, y - 145), 330, alpha, true, tint)
+		_picture(Vector2(560, y - 650), 0, 0.39)
+	else:
+		_wardrobe(Rect2(430, y - 655, 305, 510), 0.55)
+		sprite("school_props_desk", Vector2(1005, y - 145), 380, alpha, true, tint)
+		sprite("school_props_lamp", Vector2(925, y - 392), 145, alpha + 0.05, true, tint)
+		sprite("collectibles_books", Vector2(1050, y - 392), 135, alpha + 0.07, true, tint)
+		sprite("school_props_chair", Vector2(1140, y - 140), 220, alpha - 0.04, true, tint)
+		_glow(Vector2(915, y - 480), Vector2(145, 150), Color(1.0, 0.92, 0.69, 0.095))
+	# Short, low-contrast linen panels connect the clusters into one room.
+	for n in range(4):
+		var x: float = 415 + n * 195
+		draw_line(Vector2(x, y - 130), Vector2(x, y - 25), Color(0.39, 0.52, 0.46, 0.12), 3, true)
+	draw_line(Vector2(420, y - 25), Vector2(1180, y - 25), Color(0.95, 0.96, 0.84, 0.24), 3, true)
+
+func _attic_backdrop(y: float, bay: int, zone: int) -> void:
+	var motif: int = posmod(bay + zone, 4)
+	var tint: Color = Color(0.92, 0.92, 0.79)
+	var alpha: float = 0.44 if bay == 0 else 0.57
+	if motif == 2:
+		sprite("school_props_bookcase", Vector2(875, y - 125), 545, alpha - 0.02, true, tint)
+		sprite("school_props_desk", Vector2(485, y - 118), 350, alpha - 0.07, true, tint)
+		sprite("school_props_lamp", Vector2(425, y - 345), 130, alpha, true, tint)
+		sprite("collectibles_books", Vector2(540, y - 345), 105, alpha, true, tint)
+	else:
+		var desk_x: float = 815.0 + (55 if motif == 1 else -45 if motif == 3 else 0)
+		sprite("school_props_desk", Vector2(desk_x, y - 115), 595, alpha, true, tint)
+		# Native desktop artwork is 65% of the displayed width above its foot.
+		sprite("school_props_lamp", Vector2(desk_x - 155, y - 502), 165, alpha + 0.07, true, tint)
+		sprite("collectibles_books", Vector2(desk_x + 65, y - 502), 175, alpha + 0.05, true, tint)
+		sprite("collectibles_envelope", Vector2(desk_x + 190, y - 502), 115, alpha, true, tint)
+		sprite("school_props_chair", Vector2(desk_x + 260, y - 110), 265, alpha - 0.06, true, tint)
+		_glow(Vector2(desk_x - 165, y - 600), Vector2(170, 150), Color(1.0, 0.88, 0.59, 0.12))
+		if motif == 1:
+			sprite("school_props_bookcase", Vector2(455, y - 120), 290, alpha - 0.07, true, tint)
+	# Dusty crossbeams and their pale worn edges give the full-height back wall
+	# the same timber language as the nearer side rafters.
+	draw_line(Vector2(325, y - 715), Vector2(1275, y - 715), Color(0.39, 0.39, 0.30, 0.15), 19, true)
+	draw_line(Vector2(325, y - 721), Vector2(1275, y - 721), Color(0.89, 0.82, 0.62, 0.30), 3, true)
+	for x in [405, 1195]:
+		draw_line(Vector2(x + 5, y - 704), Vector2(x + 5, y - 20), Color(0.28, 0.33, 0.29, 0.08), 20, true)
+		draw_line(Vector2(x, y - 704), Vector2(x, y - 20), Color(0.54, 0.52, 0.39, 0.18), 14, true)
+		draw_line(Vector2(x - 4, y - 700), Vector2(x - 4, y - 25), Color(0.92, 0.85, 0.65, 0.25), 2, true)
+
 func _library_bay(y: float, bay: int, zone: int) -> void:
+	_library_backdrop(y, bay, zone)
 	var motif: int = posmod(bay, 4)
 	if zone == 0:
 		_bookcase(Vector2(224, y - 40), 360)
@@ -177,8 +307,6 @@ func _library_bay(y: float, bay: int, zone: int) -> void:
 		else:
 			_bookcase(Vector2(1375, y - 35), 390, 0.77)
 			_picture(Vector2(1150, y - 655), 0)
-		if motif == 2:
-			_picture(Vector2(695, y - 625), 1, 0.35)
 	elif zone == 1:
 		# Tall, quiet stacks give the middle archive a different silhouette.
 		_bookcase(Vector2(180, y - 40), 405, 0.72)
@@ -187,10 +315,6 @@ func _library_bay(y: float, bay: int, zone: int) -> void:
 		sprite("collectibles_books", Vector2(1280, y - 490), 155, 0.73)
 		sprite("school_props_lamp", Vector2(1450, y - 490), 115, 0.87)
 		_glow(Vector2(1435, y - 550), Vector2(170, 140), Color(1.0, 0.87, 0.56, 0.17))
-		if motif == 1:
-			sprite("school_props_bookcase", Vector2(805, y - 240), 390, 0.25, false, Color("a8b3a5"))
-		elif motif == 3:
-			sprite("school_props_noticeboard", Vector2(780, y - 330), 235, 0.39, false)
 	else:
 		# The roof library opens into pale windows and lower, lighter stacks.
 		var window_x: float = 100.0 if motif % 2 == 0 else 1220.0
@@ -217,6 +341,7 @@ func _wardrobe(rect: Rect2, alpha: float = 1.0) -> void:
 		draw_rect(rect.grow(10), Color(0.72, 0.78, 0.71, (1.0 - alpha) * 0.58))
 
 func _bedroom_bay(y: float, bay: int, zone: int) -> void:
+	_bedroom_backdrop(y, bay, zone)
 	var motif: int = posmod(bay, 4)
 	if zone == 0:
 		_picture(Vector2(140, y - 660), 2)
@@ -301,6 +426,7 @@ func _porthole(at: Vector2) -> void:
 		draw_circle(at + Vector2(cos(angle), sin(angle)) * 106, 3, Color("6e654f"))
 
 func _attic_bay(y: float, bay: int, zone: int) -> void:
+	_attic_backdrop(y, bay, zone)
 	var motif: int = posmod(bay, 4)
 	# Weathered boards stay in the sides; the climbing lane is a calm plaster wall.
 	for x in [55, 1260]:

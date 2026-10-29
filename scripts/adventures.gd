@@ -46,6 +46,11 @@ func _ready() -> void:
 	label(self,"Off: extra facial and limb movement",Rect2(470,660,350,28),15,"e3d9b9")
 	mark=Art.game_actor("young_actions_notebook");mark.position=Vector2(940,610);mark.scale=Vector2.ONE*.66;add_child(mark)
 	bark=Art.game_actor("bark_actions_cheer");bark.position=Vector2(1150,610);bark.scale=Vector2.ONE*.63;add_child(bark)
+	for actor in [mark,bark]:
+		var shadow=preload("res://scripts/prop_shadow.gd").new()
+		shadow.name="HomeContactShadow"+("Mark" if actor==mark else "Bark")
+		shadow.source=actor;shadow.anchor=actor.position;shadow.half_width=45 if actor==mark else 52
+		shadow.softness=8;shadow.opacity=.19;add_child(shadow);move_child(shadow,actor.get_index())
 	label(self,"Two adventures.\nOne very opinionated friend.",Rect2(815,178,405,100),27,"fff3d3")
 	music_player=AudioStreamPlayer.new();music_player.stream=preload("res://scripts/audio_loops.gd").stream("campus_music");music_player.volume_db=-80;add_child(music_player)
 	if music_player.stream:music_player.play()

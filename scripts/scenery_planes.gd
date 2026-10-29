@@ -49,9 +49,7 @@ func build(is_tutorial: bool) -> void:
 
 func _process(delta: float) -> void:
 	var game=get_parent().get_parent()
-	if game.get("busy")==true:
-		queue_redraw();return
-	time+=delta
+	if game.get("busy")!=true:time+=delta
 	for piece in planes:
 		var sprite: Sprite2D=piece.sprite
 		sprite.position=piece.origin
