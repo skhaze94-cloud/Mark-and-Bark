@@ -44,6 +44,7 @@ var travel_veil: ColorRect
 var result_open=false
 var pickup_effects=[]
 var ambient: CanvasModulate
+var finish_material: ShaderMaterial
 var effects: AudioStreamPlayer
 var sound_bank={}
 var intro_ray
@@ -59,7 +60,7 @@ func _ready():
 			var e=InputEventKey.new();e.physical_keycode=key
 			if not InputMap.action_has_event(action,e):InputMap.action_add_event(action,e)
 	campus=load("res://scripts/mega_level.gd").new();add_child(campus)
-	player=load("res://scripts/player.gd").new();add_child(player);player.right_bound=1600;player.position=Vector2(510,645);player.jumped.connect(jumped);player.landed.connect(landed);player.movement_finished.connect(update_bark_jump)
+	player=load("res://scripts/player.gd").new();player.contact_shadow_enabled=false;add_child(player);player.right_bound=1600;player.position=Vector2(510,645);player.jumped.connect(jumped);player.landed.connect(landed);player.movement_finished.connect(update_bark_jump)
 	camera=Camera2D.new();camera.position=Vector2(800,330);add_child(camera);camera.make_current()
 	var canvas=CanvasLayer.new();canvas.layer=10;add_child(canvas)
 	hud=Control.new();hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud.mouse_filter=Control.MOUSE_FILTER_IGNORE;canvas.add_child(hud)
@@ -90,7 +91,7 @@ func _ready():
 	ambient=CanvasModulate.new();ambient.color=Color("fff7e5");add_child(ambient)
 	var grade=CanvasLayer.new();grade.layer=8;add_child(grade)
 	var shade=ColorRect.new();shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var material=ShaderMaterial.new();material.shader=load("res://shaders/mega_finish.gdshader");shade.material=material;grade.add_child(shade)
+	var material=ShaderMaterial.new();material.shader=load("res://shaders/mega_finish.gdshader");shade.material=material;finish_material=material;grade.add_child(shade)
 	soundscape=load("res://scripts/soundscape.gd").new();soundscape.game=self;add_child(soundscape)
 	effects=AudioStreamPlayer.new();add_child(effects)
 	for id in ["jump","collect","success"]:
@@ -131,7 +132,7 @@ func title():
 	else:campus.refresh()
 	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.3.0",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.4.0",Rect2(35,97,640,40),23,"8a713f")
 	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)
@@ -150,6 +151,8 @@ func start():
 	if not Mega.intro_done:
 		intro_ray.begin(func():say(["Mark|The ray says 'make your ideas smaller'. Is that helpful?","Bark|Press it twice. That's how you get twice as helpful!","Mark|Bark! We're tiny. The bookcase is a mountain!","Bark|Excellent. Jump onto my leafy head for a second spring. Find your design at the top, then we'll borrow the power cell and lens from home.","Mark|Borrow, return, and improve. In that order."],func():Mega.intro_done=true;Mega.save()))
 func load_level(i):
+	if is_instance_valid(finish_material):
+		finish_material.set_shader_parameter("warmth",[Vector3(1.018,1.008,.983),Vector3(.990,1.012,1.025),Vector3(1.030,1.005,.968)][i])
 	library_pulses.clear();pickup_effects.clear();notice_priority=0;notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
 	Mega.current=i;Mega.save();mode="campus";close();campus.build(i);player.right_bound=1600;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;bark_stride=0;player.visual_scale=.24;player.sprite.scale=Vector2.ONE*.24;hud.show()
 	var cp=int(Mega.runs[i].checkpoint)

@@ -8,6 +8,7 @@ signal jumped(is_second: bool)
 # Companions update after movement, keeping contact aligned with the feet.
 signal movement_finished(delta: float)
 signal landed(at: Vector2, strength: float)
+var contact_shadow_enabled: bool = true
 var spring_contact: bool = false
 var suspended: bool = false
 var ghost: Sprite2D
@@ -194,15 +195,16 @@ func _physics_process(delta: float) -> void:
 	movement_finished.emit(delta)
 
 func _draw() -> void:
-	var support: float=get_parent().campus.support_y(position.x,position.y)
-	var height = maxf(0.0,support-position.y)
-	var radius = 30.0 * clampf(1.0-height/450.0,0.45,1.0)
-	for layer in range(4):
-		var points = PackedVector2Array()
-		var spread=1.0-layer*0.12
-		for i in range(32):
-			points.append(Vector2(height*0.06+cos(i*TAU/32)*radius*spread,support-position.y+sin(i*TAU/32)*7*spread))
-		draw_colored_polygon(points,Color(0.09,0.14,0.13,0.065*clampf(1.0-height/500.0,0.45,1.0)))
+	if contact_shadow_enabled:
+		var support: float=get_parent().campus.support_y(position.x,position.y)
+		var height = maxf(0.0,support-position.y)
+		var radius = 30.0 * clampf(1.0-height/450.0,0.45,1.0)
+		for layer in range(4):
+			var points = PackedVector2Array()
+			var spread=1.0-layer*0.12
+			for i in range(32):
+				points.append(Vector2(height*0.06+cos(i*TAU/32)*radius*spread,support-position.y+sin(i*TAU/32)*7*spread))
+			draw_colored_polygon(points,Color(0.09,0.14,0.13,0.065*clampf(1.0-height/500.0,0.45,1.0)))
 	if not reduced_motion:
 		for ring in air_rings:
 			if ring.age<0:continue

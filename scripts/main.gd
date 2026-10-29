@@ -136,6 +136,7 @@ func _ready() -> void:
 	add_child(campus)
 	campus.build(true)
 	player = PlayerScript.new()
+	player.contact_shadow_enabled=false
 	add_child(player)
 	player.jumped.connect(on_player_jump)
 	player.landed.connect(on_player_landed)
@@ -417,7 +418,7 @@ func show_title() -> void:
 	campus.add_child(decoration)
 	campus.world_label("Small friends. Big possibilities.",Vector2(795,236),19)
 	var p=open_modal(Rect2(48,42,602,638))
-	label_at(p,"THE COMPLETE CAMPUS STORY · 3.3.0",Rect2(36,24,530,28),16,"977134")
+	label_at(p,"THE COMPLETE CAMPUS STORY · 3.4.0",Rect2(36,24,530,28),16,"977134")
 	label_at(p,"MARK & BARK",Rect2(34,63,535,64),43)
 	label_at(p,"THE BIG IDEA",Rect2(36,130,530,42),27,"977134")
 	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,188,535,68),21)

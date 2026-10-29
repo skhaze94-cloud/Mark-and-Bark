@@ -75,11 +75,11 @@ func build(i):
 	prop("school_props_noticeboard" if i==0 else "school_props_desk",exit,155)
 	label("DELIVERY POINT",exit+Vector2(-100,-170),18)
 	bark=Art.game_actor("bark_actions_idle");bark.scale=Vector2.ONE*.20;bark.position=Vector2(410,650);bark.z_index=4;add_child(bark)
-	if i==0:
-		for actor in [get_parent().player,bark]:
-			var shadow=load("res://scripts/prop_shadow.gd").new()
-			shadow.name="LibraryContactShadow"+("Bark" if actor==bark else "Mark");shadow.source=actor;shadow.follows=true
-			shadow.half_width=24 if actor==bark else 20;shadow.softness=4;shadow.opacity=.22;shadow.z_index=0;add_child(shadow)
+	for actor in [get_parent().player,bark]:
+		var shadow=load("res://scripts/prop_shadow.gd").new()
+		shadow.name=("LibraryContactShadow" if i==0 else "WorldContactShadow")+("Bark" if actor==bark else "Mark")
+		shadow.source=actor;shadow.follows=true
+		shadow.half_width=24 if actor==bark else 20;shadow.softness=4;shadow.opacity=.22;shadow.z_index=0;add_child(shadow)
 	refresh()
 func route_x(i,n):
 	var section=int(n/BASE_CENTERS[i].size());return BASE_CENTERS[i][n%BASE_CENTERS[i].size()]+[0,35,-25][section]
