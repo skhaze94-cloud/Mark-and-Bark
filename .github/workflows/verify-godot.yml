@@ -14,28 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  previous_web_diagnostics:
-    runs-on: ubuntu-24.04
-    continue-on-error: true
-    permissions:
-      actions: read
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: Godot-validation-and-visuals
-          run-id: 40933439495
-          github-token: ${{ github.token }}
-          path: previous-failure
-      - name: Read previous browser error evidence
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          for name in ['errors.json','browser.log']:
-              for path in Path('previous-failure').rglob(name):
-                  print('PREVIOUS BROWSER FILE:',path)
-                  print(path.read_text(errors='replace'))
-          PY
-
   godot:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
