@@ -32,6 +32,7 @@ var clock=0.0
 var notice_until=0.0
 var notice_priority=0
 var quitting=false
+var quit_prompt: CanvasLayer
 var notice_back: Panel
 var context_back: Panel
 var objective_icon: TextureRect
@@ -48,6 +49,9 @@ var sound_bank={}
 var intro_ray
 var hint_target=Vector2.ZERO
 var hint_until=0.0
+var library_pulses=[]
+var library_header: Panel
+var library_pause: Button
 func _ready():
 	for action in {"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"interact":[KEY_E,KEY_ENTER],"hint":[KEY_H],"pause":[KEY_ESCAPE],"notebook":[KEY_N],"retry":[KEY_R]}:
 		if not InputMap.has_action(action):InputMap.add_action(action)
@@ -59,14 +63,14 @@ func _ready():
 	camera=Camera2D.new();camera.position=Vector2(800,330);add_child(camera);camera.make_current()
 	var canvas=CanvasLayer.new();canvas.layer=10;add_child(canvas)
 	hud=Control.new();hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud.mouse_filter=Control.MOUSE_FILTER_IGNORE;canvas.add_child(hud)
-	var head=card(hud,Rect2(20,16,1240,112),"203849")
+	var head=card(hud,Rect2(20,16,1240,112),"203849");library_header=head
 	objective_icon=TextureRect.new();objective_icon.position=Vector2(18,14);objective_icon.size=Vector2(76,76);objective_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;objective_icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;head.add_child(objective_icon)
 	objective=text(head,"",Rect2(108,11,782,74),22,"fff3d3")
 	height_meter=load("res://scripts/mega_meter.gd").new();height_meter.position=Vector2(108,91);height_meter.size=Vector2(777,8);height_meter.mouse_filter=Control.MOUSE_FILTER_IGNORE;head.add_child(height_meter)
 	var route=card(hud,Rect2(20,141,205,73),"203849");route.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	route_label=text(route,"",Rect2(15,8,175,59),18,"fff3d3")
 	counters=text(head,"",Rect2(920,15,165,85),17,"fff3d3")
-	button(head,"Pause",Rect2(1098,27,120,55),pause_game)
+	library_pause=button(head,"Pause",Rect2(1098,27,120,55),pause_game)
 	context_back=card(hud,Rect2(250,568,780,44),"203849");context_back.mouse_filter=Control.MOUSE_FILTER_IGNORE;context_back.hide()
 	context=text(hud,"",Rect2(260,575,760,40),20,"fff3d3");context.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;context.add_theme_color_override("font_shadow_color",Color("203849"));context.add_theme_constant_override("shadow_offset_y",2)
 	notice_back=card(hud,Rect2(270,140,740,74),"203849");notice_back.mouse_filter=Control.MOUSE_FILTER_IGNORE;notice_back.hide()
@@ -94,7 +98,12 @@ func _ready():
 		if ResourceLoader.exists(path):sound_bank[id]=load(path)
 	intro_ray=load("res://scripts/mega_ray.gd").new();intro_ray.game=self;add_child(intro_ray)
 	get_tree().auto_accept_quit=false
+	Progress.save_status_changed.connect(on_save_status_changed)
+	Mega.save_status_changed.connect(on_save_status_changed)
 	title()
+
+func on_save_status_changed(ok):
+	if not ok and mode=="campus":toast("Progress could not be saved. Your adventure is still open. Try again in Settings.",3)
 func style(color):
 	var s=StyleBoxFlat.new();s.bg_color=Color(color);s.border_color=Color("d7b164");s.set_border_width_all(2);s.set_corner_radius_all(18);s.shadow_color=Color(0,0,0,.24);s.shadow_size=8;return s
 func card(parent,r,color="f5ecd6"):
@@ -122,13 +131,14 @@ func title():
 	else:campus.refresh()
 	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"IN MOTION · CHARACTER UPDATE · 3.2",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.3.0",Rect2(35,97,640,40),23,"8a713f")
 	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)
 	button(p,"Settings",Rect2(365,337,310,60),func():settings(title))
 	button(p,"How to play",Rect2(35,417,310,60),func():how_to_play(title));button(p,"New adventure",Rect2(365,417,310,60),confirm_new)
-	button(p,"Character animation studio",Rect2(35,489,640,42),func():get_tree().change_scene_to_file("res://scenes/animation_studio.tscn"))
+	button(p,"Character studio",Rect2(35,489,310,42),func():Adventures.go(Adventures.STUDIO))
+	button(p,"All adventures",Rect2(365,489,310,42),func():Adventures.go(Adventures.HOME))
 	if Mega.recovered_backup:text(p,"Recovered your previous saved adventure.",Rect2(35,230,640,20),15)
 	text(p,"Move: A/D or arrows · Jump: Space, then Space again\nUse: E · Hint: H · Notebook: N · Checkpoint: R · Pause: Esc",Rect2(35,545,640,45),15)
 func confirm_new():
@@ -140,7 +150,7 @@ func start():
 	if not Mega.intro_done:
 		intro_ray.begin(func():say(["Mark|The ray says 'make your ideas smaller'. Is that helpful?","Bark|Press it twice. That's how you get twice as helpful!","Mark|Bark! We're tiny. The bookcase is a mountain!","Bark|Excellent. Jump onto my leafy head for a second spring. Find your design at the top, then we'll borrow the power cell and lens from home.","Mark|Borrow, return, and improve. In that order."],func():Mega.intro_done=true;Mega.save()))
 func load_level(i):
-	pickup_effects.clear();notice_priority=0;notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
+	library_pulses.clear();pickup_effects.clear();notice_priority=0;notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
 	Mega.current=i;Mega.save();mode="campus";close();campus.build(i);player.right_bound=1600;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;bark_stride=0;player.visual_scale=.24;player.sprite.scale=Vector2.ONE*.24;hud.show()
 	var cp=int(Mega.runs[i].checkpoint)
 	player.position=Vector2(campus.platforms[cp].get_center().x,campus.platforms[cp].position.y-3) if cp>=0 else Vector2(510,645)
@@ -187,12 +197,14 @@ func jump():
 func jumped(second):
 	play_sound("jump",1.15 if second else .95)
 	if second:
+		library_pulse(player.position+Vector2(0,54),"spring")
 		spring_age=0;spring_anchor=campus.bark.position;spring_facing=player.facing;spring_release_velocity=player.velocity.x;spring_contacts+=1
 		campus.bark.texture=Art.tex("bark_actions_hop");
 		if campus.bark.has_method("pulse"):campus.bark.pulse("spring_release",.45)
 		player.spring_contact=true;player.show_pose("young_actions_crouch",.09)
 		if spring_contacts%4==1:toast(["Bark: Feet on my leaves! Mark: Spring, please—not sneeze.","Bark: Try three jumps! Mark: Two. Make this one count.","Bark: Aim for next Tuesday! Mark: The shelf will do.","Bark: Close your eyes! Mark: I like knowing where the floor is.","Bark: Land in the pencil pot! Mark: The bridge looks kinder.","Bark: We could ask a moth for a lift. Mark: Let us jump past it.","Bark: My leaves are ticklish! Mark: Then hold very, very still.","Bark: What about a flying sandwich? Mark: First, a safe landing."][int(spring_contacts/4)%8])
 func landed(at,strength):
+	if strength>.25:library_pulse(at,"landing")
 	if campus.bark.has_method("land"):campus.bark.land(strength*.65)
 	campus.remember_landing(at)
 	if absf(at.y-650)<6:last_shelf=0
@@ -205,7 +217,7 @@ func landed(at,strength):
 	for n in range(campus.RISES[Mega.current].size()):
 		var r=campus.platforms[n]
 		if n%2==1 and n>int(Mega.runs[Mega.current].checkpoint) and absf(at.y-r.position.y)<5 and at.x>=r.position.x-10 and at.x<=r.end.x+10:
-			Mega.runs[Mega.current].checkpoint=n;Mega.save();campus.refresh();toast("Checkpoint saved! Return here with R or the checkpoint button.",1)
+			Mega.runs[Mega.current].checkpoint=n;Mega.save();campus.refresh();library_pulse(at,"checkpoint");toast("Checkpoint saved! Return here with R or the checkpoint button.",1)
 func interact():
 	if busy or mode!="campus":return
 	var run=Mega.runs[Mega.current]
@@ -296,21 +308,8 @@ func pause_game():
 	text(p,"A LITTLE BREATHER",Rect2(30,25,440,45),29)
 	button(p,"Continue",Rect2(30,95,440,60),close,true);button(p,"Return to checkpoint",Rect2(30,173,440,60),retry);button(p,"Settings",Rect2(30,251,440,60),func():settings(func():close();pause_game()));button(p,"Save & title",Rect2(30,329,440,60),func():Mega.save();title())
 func settings(return_to):
-	var p=open(Rect2(285,95,710,530));back=return_to
-	text(p,"SETTINGS & CONTROLS",Rect2(30,25,650,45),30)
-	var percent=text(p,str(roundi(Progress.settings.volume*100))+"%",Rect2(570,99,95,35),22)
-	text(p,"Sound",Rect2(30,99,150,35),22)
-	var slider=HSlider.new();slider.position=Vector2(180,100);slider.size=Vector2(365,35);slider.min_value=0;slider.max_value=1;slider.step=.05;slider.value=Progress.settings.volume;p.add_child(slider);slider.value_changed.connect(func(v):Progress.settings.volume=v;percent.text=str(roundi(v*100))+"%";Progress.save_game());slider.grab_focus()
-	for n in range(3):
-		var key=["reduced_motion","music","touch"][n]
-		var t=CheckButton.new();t.text=["Reduced motion","Background music","Always show touch controls"][n];t.position=Vector2(30,158+n*54);t.size=Vector2(650,46);t.button_pressed=Progress.settings[key];t.add_theme_font_override("font",Art.font);t.add_theme_font_size_override("font_size",22)
-		for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:t.add_theme_color_override(state,Color("203849"))
-		t.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));t.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"));p.add_child(t);t.toggled.connect(func(v):Progress.settings[key]=v;Progress.save_game())
-	var calm=CheckButton.new();calm.name="CalmClimb";calm.text="Calm climb · pass pests safely";calm.position=Vector2(30,320);calm.size=Vector2(650,46);calm.button_pressed=Mega.prefs.calm;calm.add_theme_font_override("font",Art.font);calm.add_theme_font_size_override("font_size",22)
-	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:calm.add_theme_color_override(state,Color("203849"))
-	calm.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));calm.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"));p.add_child(calm);calm.toggled.connect(func(v):Mega.prefs.calm=v;Mega.save())
-	text(p,"Space twice: jump + Bark spring · E: use · R: checkpoint\nTouch: hold an arrow and tap Jump twice. Use landscape.",Rect2(30,375,650,55),17)
-	button(p,"Back",Rect2(210,460,290,55),return_to,true)
+	var p=open(preload("res://scripts/shared_settings.gd").MENU_RECT);back=return_to
+	var content=preload("res://scripts/shared_settings.gd").new();content.done=return_to;p.add_child(content)
 func play_sound(id,pitch=1.0):
 	if sound_bank.has(id) and Progress.settings.volume>0:
 		effects.stream=sound_bank[id];effects.pitch_scale=pitch;effects.volume_db=linear_to_db(Progress.settings.volume*.6);effects.play()
@@ -320,6 +319,7 @@ func toast(value,priority=0):
 	notice.text=value;notice_until=clock+maxf(5,float(String(value).length())/18.0);notice_back.size.y=74 if String(value).length()<95 else 96;notice.size.y=notice_back.size.y-16
 func update_hud():
 	var r=Mega.runs[Mega.current]
+	layout_library_hud()
 	objective_icon.texture=Art.tex("ui_parts_reward_check" if r.quest else campus.ASSETS[Mega.current])
 	height_meter.value=clampf((650-player.position.y)/(650-campus.top)*100,0,100)
 	route_label.text="Shelf "+str(last_shelf)+" / "+str(campus.RISES[Mega.current].size())+"\nClimb "+str(roundi(height_meter.value))+"%"
@@ -330,6 +330,11 @@ func update_hud():
 	context.text=("Use" if touch_mode else "[E]")+": "+("deliver quest item" if at_exit else "quest item secured" if r.quest else "pick up quest item") if near else ""
 	if Mega.current==0 and Mega.runs[0].checkpoint<1 and not near:context.text="Jump, then jump again to spring off Bark. Land to recharge."
 	touch_root.visible=touch_mode or Progress.settings.touch or OS.has_feature("mobile")
+	if Mega.current==0:
+		var route=route_label.get_parent();route.position=Vector2(20,126) if touch_root.visible else Vector2(980,650);route.size=Vector2(280,44)
+		route_label.position=Vector2(12,10);route_label.size=Vector2(256,28);route_label.add_theme_font_size_override("font_size",16)
+		route_label.text="Shelf "+str(last_shelf)+" / 24  ·  "+str(roundi(height_meter.value))+"% climbed"
+
 	for c in hud.get_children():
 		if c is Button and c.position.x==20:c.visible=not touch_root.visible
 		if c is Button and c.position.x==270:c.text="Bark's hint" if touch_root.visible else "Bark's hint [H]"
@@ -338,6 +343,8 @@ func update_hud():
 func _physics_process(delta):
 	clock+=delta;queue_redraw()
 	if not busy:
+		for pulse in library_pulses:pulse.age+=delta
+		library_pulses=library_pulses.filter(func(p):return p.age<.5)
 		for sparkle in pickup_effects:sparkle.age+=delta
 		pickup_effects=pickup_effects.filter(func(p):return p.age<.6)
 	if is_instance_valid(effects):effects.volume_db=linear_to_db(maxf(.0001,Progress.settings.volume*.6))
@@ -481,9 +488,32 @@ func _notification(what):
 		Input.action_release("left");Input.action_release("right");fingers.clear();player.axis=0
 		if mode=="campus" and not busy:pause_game()
 	if what==NOTIFICATION_WM_CLOSE_REQUEST and not quitting:
-		quitting=true;Mega.save();Progress.save_game();effects.stop();effects.stream=null;await soundscape.drain();get_tree().quit()
+		request_quit()
+
+func request_quit():
+	if quitting or (is_instance_valid(quit_prompt) and not quit_prompt.is_queued_for_deletion()):return
+	if not preload("res://scripts/save_exit.gd").save_all():
+		quit_prompt=preload("res://scripts/save_exit.gd").new();quit_prompt.retry=request_quit;quit_prompt.quit_anyway=finish_quit;add_child(quit_prompt);return
+	await finish_quit()
+
+func finish_quit():
+	quitting=true;busy=true;player.enabled=false;player.suspended=true
+	effects.stop();effects.stream=null;await soundscape.drain();get_tree().quit()
+
+func library_pulse(at,kind):
+	if Mega.current!=0 or Progress.settings.reduced_motion:return
+	library_pulses.append({"at":at,"kind":kind,"age":0.0})
+	if library_pulses.size()>8:library_pulses.pop_front()
 
 func _draw():
+	if mode=="campus" and not busy and not Progress.settings.reduced_motion:
+		for pulse in library_pulses:
+			var t=pulse.age/.5
+			var tint=Color("a5d9b2" if pulse.kind=="checkpoint" else "efcf82")
+			tint.a=(1-t)*.55
+			var points=PackedVector2Array()
+			for n in range(33):points.append(pulse.at+Vector2(cos(n*TAU/32)*(18+t*28),sin(n*TAU/32)*(4+t*6)))
+			draw_polyline(points,tint,2,true)
 	if mode=="campus" and not busy and not Progress.settings.reduced_motion:
 		for sparkle in pickup_effects:
 			var ratio=sparkle.age/.6
@@ -500,3 +530,17 @@ func _draw():
 		draw_arc(p,32,0,TAU,32,Color("f4df9a"),3)
 		draw_line(p+Vector2(0,-15),p+Vector2(0,13),Color("203849"),4)
 		draw_polyline(PackedVector2Array([p+Vector2(-10,3),p+Vector2(0,13),p+Vector2(10,3)]),Color("203849"),4)
+
+func layout_library_hud():
+	var library=Mega.current==0
+	library_header.size=Vector2(1040,104) if library else Vector2(1240,112)
+	objective.size=Vector2(630,74) if library else Vector2(782,74)
+	objective.add_theme_font_size_override("font_size",20 if library else 22)
+	counters.position.x=770 if library else 920
+	height_meter.size.x=620 if library else 777
+	for child in hud.get_children():
+		if child is Button and child.position.x in [20.0,270.0,540.0]:
+			child.position.y=650 if library else 620;child.size.y=44 if library else 70
+	if not library:
+		var route=route_label.get_parent();route.position=Vector2(20,141);route.size=Vector2(205,73)
+		route_label.position=Vector2(15,8);route_label.size=Vector2(175,59);route_label.add_theme_font_size_override("font_size",18)

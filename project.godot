@@ -2,15 +2,16 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="3.2 In Motion · Character Update"
-run/main_scene="res://scenes/mega.tscn"
+config/version="3.3.0 Library Ladder"
+run/main_scene="res://scenes/adventures.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/description="Three giant vertical climbs through school, bedroom and invention attic, with Bark-assisted spring jumps, quest items, collectibles and forgiving checkpoints."
+config/description="The complete painted campus story and all three giant climbs, together with the original Mark and Bark artwork and character animation studio."
 
 [autoload]
 Progress="*res://scripts/progress.gd"
 Art="*res://scripts/art.gd"
 Mega="*res://scripts/mega_state.gd"
+Adventures="*res://scripts/adventure_navigation.gd"
 
 [display]
 window/size/viewport_width=1280

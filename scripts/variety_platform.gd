@@ -1,5 +1,6 @@
 extends Node2D
 # The atlas top and the independent collision surface share local y=0.
+var library_style=false
 var width=260.0
 var kind="book"
 var reduced_motion=false
@@ -21,6 +22,9 @@ func _draw():
 		draw_rect(Rect2(0,0,width,38),Color("8c7150"));draw_line(Vector2.ZERO,Vector2(width,0),Color("fff0bb"),3);return
 	var depth=region.size.y*width/region.size.x
 	for n in range(3):draw_rect(Rect2(5+n*2,depth-4+n*2,width-10,5),Color(.12,.13,.11,.045))
+	if library_style:
+		# A soft cast shadow separates painted props from the recessed book wall.
+		draw_texture_rect_region(atlas,Rect2(4,6,width,depth),region,Color(.12,.10,.07,.22))
 	draw_texture_rect_region(atlas,Rect2(0,0,width,depth),region)
 	draw_line(Vector2(12,2),Vector2(width-12,2),Color("fff0bb"),2,true)
 	var x=width*.5;draw_colored_polygon(PackedVector2Array([Vector2(x-4,0),Vector2(x,-5),Vector2(x+4,0),Vector2(x,4)]),Color("fff0bb"))

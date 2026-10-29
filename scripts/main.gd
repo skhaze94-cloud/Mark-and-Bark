@@ -68,6 +68,7 @@ var modal_veil: ColorRect
 var celebration
 var flight_trail: Line2D
 var quitting: bool = false
+var quit_prompt: CanvasLayer
 var notebook_button: Button
 var hint_button: Button
 var modal_back: Callable
@@ -174,6 +175,8 @@ func _ready() -> void:
 	soundscape=load("res://scripts/soundscape.gd").new()
 	soundscape.game=self
 	add_child(soundscape)
+	Progress.settings_changed.connect(on_shared_settings_changed)
+	Progress.save_status_changed.connect(on_save_status_changed)
 	apply_settings()
 	show_title()
 
@@ -414,7 +417,7 @@ func show_title() -> void:
 	campus.add_child(decoration)
 	campus.world_label("Small friends. Big possibilities.",Vector2(795,236),19)
 	var p=open_modal(Rect2(48,42,602,638))
-	label_at(p,"DEFINITIVE UI & QUALITY OF LIFE",Rect2(36,24,530,28),16,"977134")
+	label_at(p,"THE COMPLETE CAMPUS STORY · 3.3.0",Rect2(36,24,530,28),16,"977134")
 	label_at(p,"MARK & BARK",Rect2(34,63,535,64),43)
 	label_at(p,"THE BIG IDEA",Rect2(36,130,530,42),27,"977134")
 	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,188,535,68),21)
@@ -423,13 +426,18 @@ func show_title() -> void:
 	button(p,"Replay tutorial",Rect2(306,354,260,57),start_tutorial)
 	button(p,"Settings & controls",Rect2(36,428,530,57),func():show_settings(show_title))
 	button(p,"Watch the campus film",Rect2(36,500,530,53),func():cinema.begin(return_from_film))
-	label_at(p,"Touch: hold arrows · tap Jump twice\nUse: interact · Hint: clue · Pause: menu" if input_touch or Progress.settings.touch else "Move: A/D or arrows · Double jump: Space twice\nInteract: E · Notebook: N · Hint: H · Pause: Esc",Rect2(36,578,530,46),15)
-	label_at(p,"Saved on this device · Fair complete" if Progress.data.completed else "Saved quest · Step "+str(int(Progress.data.stage)+1)+" / 7" if Progress.tutorial_done else "Start with a short, skippable tutorial",Rect2(36,247,530,22),15,"53715b")
+	button(p,"All adventures",Rect2(36,563,530,43),func():Adventures.go(Adventures.HOME))
+	label_at(p,"Touch: hold arrows · tap Jump twice · Use: interact" if input_touch or Progress.settings.touch else "A/D: move · Space twice: jump · E: use · N: notes · H: hint",Rect2(36,616,530,22),13)
+	var save_state="Progress could not be saved. Keep this game open." if not Progress.last_save_ok else "Recovered your previous saved adventure." if Progress.recovered_backup else "Saved on this device · Fair complete" if Progress.data.completed else "Saved quest · Step "+str(int(Progress.data.stage)+1)+" / 7" if Progress.tutorial_done else "Start with a short, skippable tutorial"
+	label_at(p,save_state,Rect2(36,247,530,22),15,"8b392b" if not Progress.last_save_ok else "53715b")
 	focus_action("Continue" if Progress.tutorial_done else "Start adventure")
 	camera.position=Vector2(640,360)
 	camera.zoom=Vector2.ONE
 	ambient.color=Color("edece1")
 	player.enabled=false
+
+func watch_film() -> void:
+	cinema.begin(return_from_film)
 
 func confirm_new() -> void:
 	var p=open_modal(Rect2(330,190,620,330))
@@ -632,6 +640,8 @@ func jump_pressed() -> void:
 
 func _physics_process(delta: float) -> void:
 	player.suspended=busy and mode in ["tutorial","campus"] and flight.is_empty()
+	if is_instance_valid(campus.bark) and campus.bark.has_method("drive"):
+		campus.bark.frozen=player.suspended or not room_transition.is_empty()
 	clock+=delta
 	if mode in ["title","cinematic","shrinking"]:
 		return
@@ -678,7 +688,8 @@ func _physics_process(delta: float) -> void:
 			update_checkpoint(delta)
 	if player.position.y>900:
 		restart_checkpoint()
-	if is_instance_valid(campus.bark):
+	if is_instance_valid(campus.bark) and not busy:
+		var previous_bark=campus.bark.position
 		var follow_x=clampf(player.position.x-90*player.facing,bounds.x+40,bounds.y-40)
 		if not (mode=="tutorial" and tutorial_step==0):
 			campus.bark.position.x=lerpf(campus.bark.position.x,follow_x,1-exp(-delta*3))
@@ -691,6 +702,11 @@ func _physics_process(delta: float) -> void:
 			var walking = absf(campus.bark.position.x-follow_x)>15
 			campus.bark.texture=Art.tex(frames[int(clock*6)%4] if walking else "bark_actions_idle")
 			campus.bark.scale.y=0.20 if Progress.settings.reduced_motion or walking else 0.20*(1+sin(clock*1.8)*0.009)
+		if campus.bark.has_method("drive") and not campus.bark.frozen:
+			var bark_velocity=(campus.bark.position-previous_bark)/maxf(delta,.001)
+			var bark_state="walk" if absf(bark_velocity.x)>18 else "idle"
+			if not player.is_on_floor():bark_state="anticipate"
+			campus.bark.drive(bark_state,player.is_on_floor(),bark_velocity,clock*6)
 	update_flight(delta)
 	if not busy:
 		toast_time-=delta
@@ -1100,62 +1116,15 @@ func restart_checkpoint() -> void:
 	toast("A fresh start nearby. Your discoveries are safe.")
 
 func show_settings(back: Callable) -> void:
-	var p=open_modal(Rect2(250,85,780,560))
+	var p=open_modal(preload("res://scripts/shared_settings.gd").MENU_RECT)
 	modal_back=back
-	label_at(p,"SETTINGS & CONTROLS",Rect2(30,22,720,48),29)
-	label_at(p,"Sound volume",Rect2(30,98,245,34),22)
-	var volume=HSlider.new()
-	volume.position=Vector2(285,98)
-	volume.size=Vector2(330,40)
-	volume.min_value=0
-	volume.max_value=1
-	volume.step=0.05
-	volume.value=Progress.settings.volume
-	p.add_child(volume)
-	var percent=label_at(p,str(roundi(volume.value*100))+"%",Rect2(630,102,95,32),20)
-	volume.value_changed.connect(func(value):Progress.settings.volume=value;percent.text=str(roundi(value*100))+"%";Progress.save_game())
-	volume.grab_focus()
-	var reduced=CheckButton.new()
-	reduced.text="Reduced motion: "+("On" if Progress.settings.reduced_motion else "Off")
-	reduced.position=Vector2(28,167)
-	reduced.size=Vector2(710,54)
-	reduced.button_pressed=Progress.settings.reduced_motion
-	reduced.add_theme_font_size_override("font_size",22)
-	reduced.add_theme_font_override("font",Art.font)
-	reduced.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"))
-	reduced.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"))
-	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:
-		reduced.add_theme_color_override(state,Color("203849"))
-	p.add_child(reduced)
-	reduced.toggled.connect(func(value):reduced.text="Reduced motion: "+("On" if value else "Off");Progress.settings.reduced_motion=value;Progress.save_game();apply_settings())
-	var touch=CheckButton.new()
-	touch.text="Always show touch controls: "+("On" if Progress.settings.touch else "Off")
-	touch.position=Vector2(28,234)
-	touch.size=Vector2(710,54)
-	touch.button_pressed=Progress.settings.touch
-	touch.add_theme_font_size_override("font_size",22)
-	touch.add_theme_font_override("font",Art.font)
-	touch.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"))
-	touch.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"))
-	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:
-		touch.add_theme_color_override(state,Color("203849"))
-	p.add_child(touch)
-	touch.toggled.connect(func(value):touch.text="Always show touch controls: "+("On" if value else "Off");Progress.settings.touch=value;Progress.save_game();apply_settings())
-	var music=CheckButton.new()
-	music.text="Gentle background music: "+("On" if Progress.settings.get("music",true) else "Off")
-	music.position=Vector2(28,296)
-	music.size=Vector2(710,54)
-	music.button_pressed=bool(Progress.settings.get("music",true))
-	music.add_theme_font_size_override("font_size",22)
-	music.add_theme_font_override("font",Art.font)
-	music.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"))
-	music.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"))
-	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:
-		music.add_theme_color_override(state,Color("203849"))
-	p.add_child(music)
-	music.toggled.connect(func(value):music.text="Gentle background music: "+("On" if value else "Off");Progress.settings.music=value;Progress.save_game())
-	label_at(p,"A/D or arrows: move · Space/W/Up: jump, then jump again\nE/Enter: use · N: notebook · H: hint · Esc: back/pause\nTouch: hold arrows · tap Jump twice · Use · Hint",Rect2(30,358,720,90),19)
-	button(p,"Back",Rect2(230,480,315,58),func():Progress.save_game();back.call(),true)
+	var content=preload("res://scripts/shared_settings.gd").new();content.done=back;p.add_child(content)
+
+func on_shared_settings_changed(_key,_value) -> void:
+	apply_settings()
+
+func on_save_status_changed(ok) -> void:
+	if not ok and mode in ["tutorial","campus"]:toast("Progress could not be saved. Your adventure is still open. Try again in Settings.")
 
 func apply_settings() -> void:
 	if is_instance_valid(player):
@@ -1250,9 +1219,13 @@ func component_card(parent: Node, asset: String, text: String, rect: Rect2, comp
 
 
 func request_quit() -> void:
-	if quitting:return
-	quitting=true
-	Progress.save_game()
+	if quitting or (is_instance_valid(quit_prompt) and not quit_prompt.is_queued_for_deletion()):return
+	if not preload("res://scripts/save_exit.gd").save_all():
+		quit_prompt=preload("res://scripts/save_exit.gd").new();quit_prompt.retry=request_quit;quit_prompt.quit_anyway=finish_quit;add_child(quit_prompt);return
+	await finish_quit()
+
+func finish_quit() -> void:
+	quitting=true;busy=true
 	player.enabled=false
 	player.suspended=true
 	sound_player.stop()

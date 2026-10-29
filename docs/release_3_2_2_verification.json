@@ -1,0 +1,148 @@
+{
+  "release": "3.2.2 Finishing Pass",
+  "verified_date_utc": "2026-10-29",
+  "scope": [
+    "menu music loop",
+    "save recovery and failure handling",
+    "shared settings",
+    "production export checks"
+  ],
+  "previous_source_commit": "3ebdeaedcfa9f1a60fc05970334753d8d8336ae5",
+  "source_checks": {
+    "engine": "4.4.1.stable.official.49a5bc7b6",
+    "clean_project_copy": true,
+    "isolated_save_data": true,
+    "suites": {
+      "import": {
+        "passed": 0,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "playthrough": {
+        "passed": 175,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "jump_review": {
+        "passed": 21,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "polish_review": {
+        "passed": 64,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "variety_review": {
+        "passed": 85,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "mega_playthrough": {
+        "passed": 198,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "animation_review": {
+        "passed": 89,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "restoration_review": {
+        "passed": 68,
+        "failed": 0,
+        "exit_code": 0
+      },
+      "finishing_review": {
+        "passed": 77,
+        "failed": 0,
+        "exit_code": 0
+      }
+    },
+    "total_passed": 777
+  },
+  "native_finishing": {
+    "passed": 77,
+    "failed": 0,
+    "viewport": [
+      1280,
+      720
+    ],
+    "renderer": "Godot compatibility renderer, Mesa llvmpipe",
+    "audio": "Dummy output; actual mixer playback-state assertions"
+  },
+  "production_pack": {
+    "targets": {
+      "resource_pack": {
+        "bytes": 28331488,
+        "runtime": "linux_release.x86_64"
+      },
+      "web": {
+        "files": [
+          "index.html",
+          "index.js",
+          "index.wasm",
+          "index.pck"
+        ],
+        "bytes": 72402780
+      },
+      "windows": {
+        "files": [
+          "Mark-and-Bark.exe",
+          "Mark-and-Bark.pck"
+        ],
+        "bytes": 141842400
+      }
+    },
+    "packed_checks": {
+      "seed": {
+        "engine": "4.4.1-stable (official)",
+        "exit_retry_requested": true,
+        "failed": 0,
+        "failures": [],
+        "passed": 21,
+        "phase": "seed",
+        "platform": "Linux",
+        "release": "3.2.2 Finishing Pass"
+      },
+      "resume": {
+        "engine": "4.4.1-stable (official)",
+        "exit_retry_requested": true,
+        "failed": 0,
+        "failures": [],
+        "passed": 22,
+        "phase": "resume",
+        "platform": "Linux",
+        "release": "3.2.2 Finishing Pass"
+      },
+      "recover": {
+        "engine": "4.4.1-stable (official)",
+        "exit_retry_requested": true,
+        "failed": 0,
+        "failures": [],
+        "passed": 23,
+        "phase": "recover",
+        "platform": "Linux",
+        "release": "3.2.2 Finishing Pass"
+      }
+    },
+    "total_packed_checks": 66
+  },
+  "artwork": {
+    "original_pngs_unchanged": 88,
+    "original_character_entries": 40,
+    "source_assets_changed": false
+  },
+  "windows_runtime": {
+    "enforced_by": ".github/workflows/verify-godot.yml windows job",
+    "execution_environment": "windows-2022",
+    "local_execution": false
+  },
+  "limits": [
+    "No physical Android/iOS device tests",
+    "No macOS build",
+    "No hardware performance measurement",
+    "No public Web deployment",
+    "Audio playback lifecycle verified without speaker quality assessment"
+  ]
+}

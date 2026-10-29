@@ -60,7 +60,7 @@ func run():
 	var image=load("res://assets/variety/platform_atlas.png").get_image()
 	check(image.get_size()==Vector2i(1536,1024) and image.get_pixel(0,0).a==0,"Painted atlas imports with real transparency")
 	game.journal();await ticks(2);check(game.panel.size.y==510,"Notebook provides room for progress and hints");game.close()
-	game.settings(game.close);await ticks(2);var calm=game.panel.get_node("CalmClimb");calm.button_pressed=true
+	game.settings(game.close);await ticks(2);var calm=game.panel.get_node("SharedSettings/CalmClimb");calm.button_pressed=true
 	check(Mega.prefs.calm,"Calm-climb control updates the preference");game.close();Mega.prefs.calm=false
 	await test_saves()
 	game.effects.stop();game.effects.stream=null;await game.soundscape.drain();game.queue_free();await ticks(4)

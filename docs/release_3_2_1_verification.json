@@ -1,0 +1,81 @@
+{
+  "engine": "4.4.1.stable.official.49a5bc7b6",
+  "suites": {
+    "import": {
+      "passed": 0,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "playthrough": {
+      "passed": 175,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "jump_review": {
+      "passed": 21,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "polish_review": {
+      "passed": 61,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "variety_review": {
+      "passed": 85,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "mega_playthrough": {
+      "passed": 198,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "animation_review": {
+      "passed": 89,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "restoration_review": {
+      "passed": 68,
+      "failed": 0,
+      "exit_code": 0
+    }
+  },
+  "total_passed": 697,
+  "release": "3.2.1 Storybook Restoration",
+  "base_commit": "0f0067035fc12d9047127500ba9a92da22991b8b",
+  "native_restoration": {
+    "passed": 68,
+    "failed": 0,
+    "exit_code": 0,
+    "renderer": "Godot GL Compatibility, Mesa llvmpipe",
+    "viewport": [
+      1280,
+      720
+    ],
+    "screenshots": [
+      "adventures",
+      "garden",
+      "workshop",
+      "return_home"
+    ]
+  },
+  "asset_integrity": {
+    "existing_pngs_checked": 88,
+    "original_character_pngs": 40,
+    "changed_existing_pngs": []
+  },
+  "limitations": [
+    "No physical Android/iOS device validation",
+    "Editable source; standalone executables not included",
+    "Climbing scenery remains the existing partly procedural presentation"
+  ],
+  "fresh_source_verification": {
+    "engine": "4.4.1.stable.official.49a5bc7b6",
+    "total_passed": 697,
+    "failed": 0,
+    "clean_import_cache": true,
+    "isolated_save_data": true
+  }
+}

@@ -44,7 +44,7 @@ func _ready() -> void:
 	shape.shape = capsule
 	shape.position.y = -48.0
 	add_child(shape)
-	sprite = Art.character("young_actions_idle")
+	sprite = Art.game_actor("young_actions_idle")
 	sprite.scale = Vector2.ONE * visual_scale
 	add_child(sprite)
 	ghost=Art.character("young_actions_idle",false)

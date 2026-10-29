@@ -23,7 +23,7 @@ func _ready():
 	showcase="--showcase" in OS.get_cmdline_user_args()
 	label("MARK & BARK",Rect2(44,20,650,48),36)
 	label("IN MOTION  /  CHARACTER STUDIO  /  3.2",Rect2(47,72,900,30),17,Color("8a713f"))
-	button("Back to game",Rect2(1040,32,192,52),func():get_tree().change_scene_to_file("res://scenes/mega.tscn"))
+	button("All adventures",Rect2(1040,32,192,52),func():Adventures.go(Adventures.HOME))
 	headline=label("",Rect2(80,140,1120,38),25);headline.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	label("MARK",Rect2(78,190,270,30),21)
 	label("Curiosity, courage & a very good landing.",Rect2(78,226,166,100),16,Color("6d725f"))
@@ -135,4 +135,4 @@ func _unhandled_input(event):
 	if event.physical_keycode>=KEY_1 and event.physical_keycode<=KEY_7:choose(event.physical_keycode-KEY_1)
 	elif event.physical_keycode==KEY_SPACE:toggle_pause()
 	elif event.physical_keycode==KEY_P:toggle_points()
-	elif event.physical_keycode==KEY_ESCAPE:get_tree().change_scene_to_file("res://scenes/mega.tscn")
+	elif event.physical_keycode==KEY_ESCAPE:Adventures.go(Adventures.HOME)

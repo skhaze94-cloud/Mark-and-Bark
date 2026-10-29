@@ -1,8 +1,22 @@
-# Mark & Bark 3.2 — In Motion
+# Mark & Bark 3.3.0 — The Library Ladder
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
-**The character update:** independently moving heads, shoulders, elbows, wrists, hips, knees, ankles and toes, plus expressive faces and a livelier leafy spring. The complete three-level Mega Variety campaign is included.
+**Both adventures are accessible again.** The illustrated opening menu offers the full original campus story, all three giant climbs, the campus film and the character studio. The school hallway, discovery garden, workshop puzzle, tutorial and discoveries were still bundled in 3.2, but its normal menu could not reach them.
+
+The original painted character presentation is enabled by default. Turn off **Original painted characters** on the opening menu for the extra face and limb articulation from 3.2. Walking, running, jumping, Bark's spring and the original PNGs remain available in both presentations. The studio retains the full articulated renderer. The original chapter's flat book/pencil platforms now use the existing painted atlas, and its leafy routes use the supplied mossy branch artwork. Physics and landing positions are unchanged.
+
+See the [regression audit and repairs](docs/RESTORATION_AUDIT_3_2_1.md). The climbing campaign's simpler, partly procedural scenery remains a distinct mode; this restoration does not replace it with a new world or claim to add 3D characters.
+
+The **3.2.2 finishing pass** makes the opening music loop reliably, shares one settings panel across both adventures and the opening menu, protects both save files with validated backups, and adds production Web and Windows export checks. See [the finishing notes](docs/FINISHING_3_2_2.md).
+
+## The Library Ladder visual upgrade
+
+![The painted Library Ladder](docs/previews/library_ladder_3_3.jpg)
+
+The first climb now uses the existing painted bookcases, reading nooks, plants and props in varied library alcoves, with warm window light and independent contact shadows under both friends. Painted platforms gain soft cast shadows. A compact keyboard HUD opens more of the scene; touch controls keep their familiar hit areas. Small spring, landing and checkpoint rings respect pause and Reduced motion. The bedroom and attic retain their existing presentation.
+
+All original artwork, routes, collision shapes, jump physics, collectibles and story remain intact. See [the Library Ladder notes](docs/LIBRARY_LADDER_3_3.md).
 
 ## Play
 
@@ -10,7 +24,9 @@ A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mish
 2. Open **Godot 4.4.1**, choose **Import**, and select `project.godot`.
 3. Let the bundled art and font import. Press **F5**.
 
-Everything needed to play is bundled. No paid plugins, .NET, Python or extra asset downloads are required for the game. This is an editable Godot project, not a standalone executable. Python is only needed for the optional verification tool.
+Choose **The Big Idea** for the complete painted school/garden/workshop story, or **The Giant Climbs** for the three extended vertical levels. Both keep their existing progress. **All adventures** in either title, or in the studio, returns to the opening selection.
+
+Everything needed to play is bundled. No paid plugins, .NET, Python or extra asset downloads are required for the game. The GitHub verification workflow also produces a **Windows ZIP** (extract it and run `Mark-and-Bark.exe` beside its `.pck`) and a **Web ZIP** (serve the complete folder over HTTP; opening `index.html` directly is unsupported). Python is only needed for the optional developer verification tools.
 
 ## Meet the livelier Mark & Bark
 
@@ -20,7 +36,7 @@ Both friends now use native Godot 2D skeletons over the original painted exports
 
 The jump impulse, controls, collision bodies, routes and forgiving input timing are preserved. The animation never waits for a button press to finish playing before Mark moves. Small spring leaves stay at the launch point. Pause freezes the performance, checkpoints clear it, and Reduced motion removes the extra deformation and effects.
 
-Choose **Character animation studio** on the title screen, or open `scenes/animation_studio.tscn` and press **F6**. Select Idle, Walk, Run, Jump, Bark spring, Talk or Cheer; pause, advance one frame, choose half speed, or show the joint points. **1–7** selects a pose, **Space** pauses, **P** toggles points and **Esc** returns to the game. In the campaign, **F8** toggles the two actors’ joint overlays.
+Choose **Character studio** on the opening menu, or open `scenes/animation_studio.tscn` and press **F6**. Select Idle, Walk, Run, Jump, Bark spring, Talk or Cheer; pause, advance one frame, choose half speed, or show the joint points. **1–7** selects a pose, **Space** pauses, **P** toggles points and **Esc** returns to all adventures. In the climbing campaign, **F8** toggles the two actors’ joint overlays.
 
 See the [recorded character and gameplay showcase](docs/previews/in_motion_3_2.mp4) and [rigging/editing notes](docs/IN_MOTION_3_2.md). The studio is a separate preview room; its jump display is a pose study. The live gameplay segment in the recording uses the actual campaign player and double-jump physics.
 
@@ -78,11 +94,13 @@ A bump returns Mark to his last safe shelf with every quest item and collectible
 
 The final delivery repairs the ray and plays the restored-size story ending. Explore afterwards, revisit unlocked levels, or Replay a climb for a fresh collection run while keeping best scores. Optional discoveries never block the story.
 
-The original school adventure, tutorial and paper-plane workshop are still included: open `scenes/main.tscn` and press **F6**. Its progress and sound settings remain separate from the campaign.
+The original school adventure, tutorial and paper-plane workshop are available from **The Big Idea** on the opening menu. Its quest progress remains separate from climbing progress; audio, touch, reduced-motion and character presentation preferences are shared.
 
 ## Saves
 
-The campaign uses Godot’s standard user-data folder for **Mark & Bark: The Big Idea**. `mark_bark_mega.json` stores campaign progress and calm mode; `.bak` holds the previous valid save. Version 1 saves retain unlocked levels, earlier checkpoints, discoveries and best scores. Version 2 supports the extended upper checkpoints and all 24 leaves. Settings for sound, touch and reduced motion use the existing original save.
+Both adventures use Godot’s standard user-data folder for **Mark & Bark: The Big Idea**. `big_idea_save.json` stores the original story and shared preferences; `mark_bark_mega.json` stores climbing progress and calm mode. Each now retains a validated `.bak` of the previous valid save. A missing or corrupt primary recovers from its backup. Version 1 climbing saves remain readable; version 2 supports the extended upper checkpoints and all 24 leaves.
+
+Settings on the opening menu and inside either adventure now offer the same volume, music, reduced-motion, touch, painted-character and calm-climb controls. Changes apply immediately and persist across restarts. A failed save shows a visible status; closing the native game after a failure offers **Try again**, **Keep playing** and **Quit anyway**.
 
 The application name stays unchanged so previous save locations remain compatible. New adventure asks before resetting this campaign and its scores; accessibility preferences and original-chapter progress are preserved.
 
@@ -94,8 +112,10 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh project, uses temporary test saves, runs all six suites and writes logs to the ignored `test_output/` folder. **629 checks pass**: 89 character-animation checks, 198 campaign checks, 85 variety/recovery checks, 61 interface checks, 21 teamwork-jump checks and 175 original-chapter checks. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh copy with a unique, verified test-save location, runs all nine suites and writes logs to the ignored `test_output/` folder. The current total is **791 passing checks**, including 77 finishing checks for write failures, backup recovery, preference persistence, the first-visit music loop, all three settings panels and safe failed-save exits. The 68 restoration checks exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+
+The GitHub workflow runs the complete suite on Godot **4.4.1**, captures native screenshots, builds the production Web and Windows releases with official checksum-verified templates, and tests the packed game in fresh processes. It plays the actual Web release in Chrome, checks settings after a page reload, and runs the exported Windows executable on Windows. Source, builds, screenshots and logs are downloadable workflow artifacts. See [export commands and verification boundaries](docs/FINISHING_3_2_2.md).
 
 Native Godot compatibility-renderer playthrough and visual fixtures were also reviewed. See [3.2 character update and editing notes](docs/IN_MOTION_3_2.md), [3.2 verification results](docs/release_3_2_verification.json), and [the earlier campaign artwork provenance](docs/RELEASE_3_1.md).
 
-Physical Android/iOS device testing and standalone platform exports are outside this source-project delivery. The tests cover keyboard, mouse and injected multi-touch events in Godot.
+Physical Android/iOS device testing, macOS exports and hardware performance measurements are outside this finishing pass. The tests cover keyboard, mouse and injected multi-touch events in Godot; automated browser rendering uses software graphics.
