@@ -142,6 +142,7 @@ async function main() {
     await page.mouse.click(640,430);
     await capture('09_climb_settings',['35%','Background music: Off','Calm climb (climbing adventure): On']);
     check(wasmCancellations.every(url => wasmResponses.has(url)), 'Discarded WebAssembly streams have a successful HTTP response and a running game');
+    if (errors.length) console.error('WEB ERRORS: '+JSON.stringify(errors));
     check(errors.length === 0, 'No browser, script, HTTP or missing-resource errors during the production Web playthrough');
     fs.writeFileSync(path.join(output,'web_summary.json'),JSON.stringify({browser:await browser.version(),canvas:[1280,720],passed:checks.length,failed:0,checks,errors,wasmCancellations},null,2));
     console.log(`WEB RESULT: ${checks.length} passed; 0 failed`);
