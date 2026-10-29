@@ -32,6 +32,7 @@ var clock=0.0
 var notice_until=0.0
 var notice_priority=0
 var quitting=false
+var quit_prompt: CanvasLayer
 var notice_back: Panel
 var context_back: Panel
 var objective_icon: TextureRect
@@ -94,7 +95,12 @@ func _ready():
 		if ResourceLoader.exists(path):sound_bank[id]=load(path)
 	intro_ray=load("res://scripts/mega_ray.gd").new();intro_ray.game=self;add_child(intro_ray)
 	get_tree().auto_accept_quit=false
+	Progress.save_status_changed.connect(on_save_status_changed)
+	Mega.save_status_changed.connect(on_save_status_changed)
 	title()
+
+func on_save_status_changed(ok):
+	if not ok and mode=="campus":toast("Progress could not be saved. Your adventure is still open. Try again in Settings.",3)
 func style(color):
 	var s=StyleBoxFlat.new();s.bg_color=Color(color);s.border_color=Color("d7b164");s.set_border_width_all(2);s.set_corner_radius_all(18);s.shadow_color=Color(0,0,0,.24);s.shadow_size=8;return s
 func card(parent,r,color="f5ecd6"):
@@ -122,7 +128,7 @@ func title():
 	else:campus.refresh()
 	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.2.1",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.2.2",Rect2(35,97,640,40),23,"8a713f")
 	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)
@@ -297,21 +303,8 @@ func pause_game():
 	text(p,"A LITTLE BREATHER",Rect2(30,25,440,45),29)
 	button(p,"Continue",Rect2(30,95,440,60),close,true);button(p,"Return to checkpoint",Rect2(30,173,440,60),retry);button(p,"Settings",Rect2(30,251,440,60),func():settings(func():close();pause_game()));button(p,"Save & title",Rect2(30,329,440,60),func():Mega.save();title())
 func settings(return_to):
-	var p=open(Rect2(285,95,710,530));back=return_to
-	text(p,"SETTINGS & CONTROLS",Rect2(30,25,650,45),30)
-	var percent=text(p,str(roundi(Progress.settings.volume*100))+"%",Rect2(570,99,95,35),22)
-	text(p,"Sound",Rect2(30,99,150,35),22)
-	var slider=HSlider.new();slider.position=Vector2(180,100);slider.size=Vector2(365,35);slider.min_value=0;slider.max_value=1;slider.step=.05;slider.value=Progress.settings.volume;p.add_child(slider);slider.value_changed.connect(func(v):Progress.settings.volume=v;percent.text=str(roundi(v*100))+"%";Progress.save_game());slider.grab_focus()
-	for n in range(3):
-		var key=["reduced_motion","music","touch"][n]
-		var t=CheckButton.new();t.text=["Reduced motion","Background music","Always show touch controls"][n];t.position=Vector2(30,158+n*54);t.size=Vector2(650,46);t.button_pressed=Progress.settings[key];t.add_theme_font_override("font",Art.font);t.add_theme_font_size_override("font_size",22)
-		for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:t.add_theme_color_override(state,Color("203849"))
-		t.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));t.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"));p.add_child(t);t.toggled.connect(func(v):Progress.settings[key]=v;Progress.save_game())
-	var calm=CheckButton.new();calm.name="CalmClimb";calm.text="Calm climb · pass pests safely";calm.position=Vector2(30,320);calm.size=Vector2(650,46);calm.button_pressed=Mega.prefs.calm;calm.add_theme_font_override("font",Art.font);calm.add_theme_font_size_override("font_size",22)
-	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:calm.add_theme_color_override(state,Color("203849"))
-	calm.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));calm.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"));p.add_child(calm);calm.toggled.connect(func(v):Mega.prefs.calm=v;Mega.save())
-	text(p,"Space twice: jump + Bark spring · E: use · R: checkpoint\nTouch: hold an arrow and tap Jump twice. Use landscape.",Rect2(30,375,650,55),17)
-	button(p,"Back",Rect2(210,460,290,55),return_to,true)
+	var p=open(preload("res://scripts/shared_settings.gd").MENU_RECT);back=return_to
+	var content=preload("res://scripts/shared_settings.gd").new();content.done=return_to;p.add_child(content)
 func play_sound(id,pitch=1.0):
 	if sound_bank.has(id) and Progress.settings.volume>0:
 		effects.stream=sound_bank[id];effects.pitch_scale=pitch;effects.volume_db=linear_to_db(Progress.settings.volume*.6);effects.play()
@@ -482,7 +475,17 @@ func _notification(what):
 		Input.action_release("left");Input.action_release("right");fingers.clear();player.axis=0
 		if mode=="campus" and not busy:pause_game()
 	if what==NOTIFICATION_WM_CLOSE_REQUEST and not quitting:
-		quitting=true;Mega.save();Progress.save_game();effects.stop();effects.stream=null;await soundscape.drain();get_tree().quit()
+		request_quit()
+
+func request_quit():
+	if quitting or (is_instance_valid(quit_prompt) and not quit_prompt.is_queued_for_deletion()):return
+	if not preload("res://scripts/save_exit.gd").save_all():
+		quit_prompt=preload("res://scripts/save_exit.gd").new();quit_prompt.retry=request_quit;quit_prompt.quit_anyway=finish_quit;add_child(quit_prompt);return
+	await finish_quit()
+
+func finish_quit():
+	quitting=true;busy=true;player.enabled=false;player.suspended=true
+	effects.stop();effects.stream=null;await soundscape.drain();get_tree().quit()
 
 func _draw():
 	if mode=="campus" and not busy and not Progress.settings.reduced_motion:

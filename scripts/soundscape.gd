@@ -13,16 +13,10 @@ func _ready() -> void:
 func make_loop(id: String) -> AudioStreamPlayer:
 	var player=AudioStreamPlayer.new()
 	add_child(player)
-	var path="res://assets/"+id+".wav"
-	if ResourceLoader.exists(path):
-		var stream=load(path) as AudioStreamWAV
-		if stream:
-			stream.loop_mode=AudioStreamWAV.LOOP_FORWARD
-			stream.loop_begin=0
-			stream.loop_end=int(stream.get_length()*stream.mix_rate)
-			player.stream=stream
-			player.volume_db=-80
-			player.play()
+	player.stream=preload("res://scripts/audio_loops.gd").stream(id)
+	if player.stream:
+		player.volume_db=-80
+		player.play()
 	return player
 
 func _process(delta: float) -> void:

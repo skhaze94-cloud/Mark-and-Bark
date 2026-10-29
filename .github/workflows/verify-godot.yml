@@ -1,4 +1,4 @@
-name: Godot 4.4.1 complete-project verification
+name: Godot 4.4.1 source, Web and Windows verification
 
 on:
   push:
@@ -6,38 +6,69 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   godot:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Download the documented Godot version
+      - name: Download and verify the documented Godot version
         run: |
           set -euxo pipefail
-          curl -fL --retry 3 --output /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
-          unzip -j /tmp/godot.zip -d /tmp/godot-bin
-          chmod +x /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64
-      - name: Import and run all seven regression suites
+          mkdir -p /tmp/godot-bin
+          cd /tmp/godot-bin
+          curl -fL --retry 3 -O https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
+          curl -fL --retry 3 -O https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/SHA512-SUMS.txt
+          grep ' Godot_v4.4.1-stable_linux.x86_64.zip$' SHA512-SUMS.txt | sha512sum --check -
+          unzip -j Godot_v4.4.1-stable_linux.x86_64.zip
+          chmod +x Godot_v4.4.1-stable_linux.x86_64
+      - name: Import a clean copy and run all eight regression suites
         run: python3 tools/verify.py --godot /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64
-      - name: Verify adventure navigation and capture native screenshots
+      - name: Verify native menus and capture screenshots
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y xvfb
+          sudo apt-get install -y xvfb tesseract-ocr python3-pil libnss3 libgbm1 libasound2t64
           set -o pipefail
+          /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64 --headless --audio-driver Dummy --path . --editor --import --quit 2>&1 | tee test_output/native_import.log
           xvfb-run -a /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --path . --fixed-fps 60 res://tests/restoration_review.tscn -- --screenshots 2>&1 | tee test_output/native_restoration.log
-          if grep -E 'SCRIPT ERROR:|^ERROR:|FAIL:' test_output/native_restoration.log; then exit 1; fi
-      - name: Package playable Godot source
+          xvfb-run -a /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --path . --fixed-fps 60 res://tests/finishing_review.tscn -- --screenshots 2>&1 | tee test_output/native_finishing.log
+          if grep -E 'SCRIPT ERROR:|^ERROR:|FAIL:' test_output/native_*.log; then exit 1; fi
+      - name: Fetch checksum-verified official export templates
+        run: python3 tools/fetch_export_templates.py --destination /tmp/godot-templates
+      - name: Build production Web and Windows releases and test the packed runtime
+        run: python3 tools/verify_exports.py --godot /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64 --templates /tmp/godot-templates
+      - name: Install the pinned browser test tools
         run: |
-          mkdir -p dist/Mark-and-Bark-3.2.1-Storybook-Restoration
-          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output ./ dist/Mark-and-Bark-3.2.1-Storybook-Restoration/
+          npm install --prefix /tmp/mark-bark-browser --no-audit --no-fund playwright@1.62.1
+          python3 tools/fetch_test_browser.py --destination /tmp/mark-bark-chrome
+      - name: Play the unmodified Web release and verify saved settings after reload
+        run: node tools/verify_web.cjs --browser /tmp/mark-bark-chrome/chrome-headless-shell-linux64/chrome-headless-shell --modules /tmp/mark-bark-browser/node_modules
+      - name: Package editable Godot source
+        run: |
+          mkdir -p dist/Mark-and-Bark-3.2.2-Finishing-Pass
+          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output --exclude=__pycache__ ./ dist/Mark-and-Bark-3.2.2-Finishing-Pass/
           cd dist
-          zip -qr Mark-and-Bark-3.2.1-Storybook-Restoration.zip Mark-and-Bark-3.2.1-Storybook-Restoration
-      - name: Upload playable source
+          zip -qr Mark-and-Bark-3.2.2-Finishing-Pass.zip Mark-and-Bark-3.2.2-Finishing-Pass
+      - name: Upload editable source
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-3.2.1-Storybook-Restoration
-          path: dist/Mark-and-Bark-3.2.1-Storybook-Restoration.zip
+          name: Mark-and-Bark-3.2.2-source
+          path: dist/Mark-and-Bark-3.2.2-Finishing-Pass.zip
+          if-no-files-found: error
+      - name: Upload production Web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mark-and-Bark-3.2.2-Web
+          path: test_output/exports/Mark-and-Bark-3.2.2-web.zip
+          if-no-files-found: error
+      - name: Upload production Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mark-and-Bark-3.2.2-Windows
+          path: test_output/exports/Mark-and-Bark-3.2.2-windows.zip
           if-no-files-found: error
       - name: Upload logs and screenshots for review
         if: always()
@@ -47,6 +78,34 @@ jobs:
           path: |
             test_output/qa_*.log
             test_output/qa_summary.json
-            test_output/native_restoration.log
+            test_output/native_*.log
             test_output/restoration_*.png
+            test_output/finishing_*.png
+            test_output/exports/*.log
+            test_output/exports/export_summary.json
+            test_output/exports/runtime/
+            test_output/web/
+          if-no-files-found: ignore
+
+  windows:
+    needs: godot
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Mark-and-Bark-3.2.2-Windows
+          path: test_output/windows-download
+      - name: Extract the production build
+        shell: pwsh
+        run: Expand-Archive -Path test_output/windows-download/Mark-and-Bark-3.2.2-windows.zip -DestinationPath test_output/windows-build
+      - name: Run the actual Windows release through save, resume, recovery and safe exit
+        run: python tools/verify_exports.py --runtime test_output/windows-build/Mark-and-Bark.exe --pack test_output/windows-build/Mark-and-Bark.pck --output test_output/windows-native
+      - name: Upload Windows runtime results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-release-verification
+          path: test_output/windows-native/
           if-no-files-found: ignore

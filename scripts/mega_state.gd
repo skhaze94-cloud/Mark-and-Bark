@@ -1,6 +1,7 @@
 extends Node
 const PATH="user://mark_bark_mega.json"
 const LIMITS=[23,26,32]
+signal save_status_changed(ok: bool)
 var enabled=true
 var unlocked=1
 var current=0
@@ -10,11 +11,15 @@ var best: Array=[]
 var prefs={"calm":false}
 var last_save_ok=true
 var recovered_backup=false
+var save_path: String=PATH
+var storage=preload("res://scripts/save_storage.gd").new()
+var last_save_error: Error=OK
 func _ready():
 	reset(false);prefs={"calm":false};recovered_backup=false
-	var data=read_valid(PATH)
+	last_save_ok=true;last_save_error=OK
+	var data=read_valid(save_path)
 	if data.is_empty():
-		data=read_valid(PATH+".bak");recovered_backup=not data.is_empty()
+		data=read_valid(save_path+".bak");recovered_backup=not data.is_empty()
 	if data.is_empty():return
 	unlocked=clampi(number(data.get("unlocked"),1),1,3)
 	current=clampi(number(data.get("current"),0),0,unlocked-1)
@@ -32,11 +37,11 @@ func _ready():
 			best[i].leaves=clampi(number(data.best[i].get("leaves"),0),0,24)
 			best[i].token=truth(data.best[i].get("token",false))
 func read_valid(path):
-	if not FileAccess.file_exists(path):return {}
-	var json=JSON.new()
-	if json.parse(FileAccess.get_file_as_string(path))!=OK:return {}
-	var d=json.data
-	return d if d is Dictionary and number(d.get("version"),0) in [1,2] else {}
+	var d=storage.read_json(path)
+	return d if valid_document(d) else {}
+func valid_document(d: Dictionary) -> bool:
+	var version=d.get("version")
+	return (version is int or version is float) and (version==1 or version==2)
 func reset(write=true):
 	unlocked=1;current=0;intro_done=false;runs=[];best=[]
 	for i in range(3):
@@ -58,13 +63,10 @@ func sync_best():
 func save():
 	sync_best()
 	if not enabled:return true
-	var f=FileAccess.open(PATH+".tmp",FileAccess.WRITE)
-	if not f:last_save_ok=false;return false
-	f.store_string(JSON.stringify({"version":2,"unlocked":unlocked,"current":current,"intro_done":intro_done,"runs":runs,"best":best,"prefs":prefs}));f.close()
-	# Keep the last valid save; never replace it with a corrupt primary file.
-	if not read_valid(PATH).is_empty():DirAccess.copy_absolute(PATH,PATH+".bak")
-	last_save_ok=DirAccess.rename_absolute(PATH+".tmp",PATH)==OK
+	last_save_error=storage.write_atomic(save_path,{"version":2,"unlocked":unlocked,"current":current,"intro_done":intro_done,"runs":runs,"best":best,"prefs":prefs},valid_document)
+	last_save_ok=last_save_error==OK
 	if last_save_ok:recovered_backup=false
+	save_status_changed.emit(last_save_ok)
 	return last_save_ok
 func number(value,fallback):
 	if (value is int or value is float) and is_finite(float(value)):return int(value)

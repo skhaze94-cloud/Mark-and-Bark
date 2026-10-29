@@ -2,3 +2,5 @@
 *.tmp
 exports/
 test_output/
+dist/
+__pycache__/

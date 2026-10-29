@@ -508,7 +508,7 @@ func run() -> void:
 	var settings_buttons: Array[Button]=[]
 	collect_buttons(game.modal,settings_buttons)
 	var toggles=settings_buttons.filter(func(b):return b is CheckButton)
-	check(toggles.size()==3 and toggles.all(func(b):return b.get_theme_color("font_color")==Color("203849") and ("On" in b.text or "Off" in b.text)),"Settings use readable navy text and explicit On/Off labels")
+	check(toggles.size()==5 and toggles.all(func(b):return b.get_theme_color("font_color")==Color("203849") and ("On" in b.text or "Off" in b.text)),"Shared preferences use readable navy text and explicit On/Off labels")
 	game.close_modal()
 	check(game.player.air_rings.is_empty(),"Reduced-motion and completed jumps leave no moving jump effects")
 	var stage=int(Progress.data.stage)
@@ -566,10 +566,10 @@ func run() -> void:
 	game.show_pause()
 	game.show_settings(game.show_pause)
 	var volume_control: HSlider=null
-	for child in game.modal.get_children():
+	for child in game.modal.get_node("SharedSettings").get_children():
 		if child is HSlider:volume_control=child
 	volume_control.value=0.35
-	check(game.modal.get_children().any(func(c):return c is Label and c.text=="35%"),"Audio slider displays an exact percentage")
+	check(game.modal.get_node("SharedSettings").get_children().any(func(c):return c is Label and c.text=="35%"),"Audio slider displays an exact percentage")
 	await press_key(KEY_ESCAPE)
 	check(game.busy and game.modal.get_children().any(func(c):return c is Label and c.text=="A LITTLE BREATHER"),"Escape from pause settings returns to pause")
 	await press_key(KEY_ESCAPE)

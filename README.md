@@ -1,4 +1,4 @@
-# Mark & Bark 3.2.1 — Storybook Restoration
+# Mark & Bark 3.2.2 — Finishing Pass
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
@@ -8,6 +8,8 @@ The original painted character presentation is enabled by default. Turn off **Or
 
 See the [regression audit and repairs](docs/RESTORATION_AUDIT_3_2_1.md). The climbing campaign's simpler, partly procedural scenery remains a distinct mode; this restoration does not replace it with a new world or claim to add 3D characters.
 
+The **3.2.2 finishing pass** makes the opening music loop reliably, shares one settings panel across both adventures and the opening menu, protects both save files with validated backups, and adds production Web and Windows export checks. See [the finishing notes](docs/FINISHING_3_2_2.md).
+
 ## Play
 
 1. Extract the ZIP into a fresh, writable folder.
@@ -16,7 +18,7 @@ See the [regression audit and repairs](docs/RESTORATION_AUDIT_3_2_1.md). The cli
 
 Choose **The Big Idea** for the complete painted school/garden/workshop story, or **The Giant Climbs** for the three extended vertical levels. Both keep their existing progress. **All adventures** in either title, or in the studio, returns to the opening selection.
 
-Everything needed to play is bundled. No paid plugins, .NET, Python or extra asset downloads are required for the game. This is an editable Godot project, not a standalone executable. Python is only needed for the optional verification tool.
+Everything needed to play is bundled. No paid plugins, .NET, Python or extra asset downloads are required for the game. The GitHub verification workflow also produces a **Windows ZIP** (extract it and run `Mark-and-Bark.exe` beside its `.pck`) and a **Web ZIP** (serve the complete folder over HTTP; opening `index.html` directly is unsupported). Python is only needed for the optional developer verification tools.
 
 ## Meet the livelier Mark & Bark
 
@@ -88,7 +90,9 @@ The original school adventure, tutorial and paper-plane workshop are available f
 
 ## Saves
 
-The campaign uses Godot’s standard user-data folder for **Mark & Bark: The Big Idea**. `mark_bark_mega.json` stores campaign progress and calm mode; `.bak` holds the previous valid save. Version 1 saves retain unlocked levels, earlier checkpoints, discoveries and best scores. Version 2 supports the extended upper checkpoints and all 24 leaves. Settings for sound, touch and reduced motion use the existing original save.
+Both adventures use Godot’s standard user-data folder for **Mark & Bark: The Big Idea**. `big_idea_save.json` stores the original story and shared preferences; `mark_bark_mega.json` stores climbing progress and calm mode. Each now retains a validated `.bak` of the previous valid save. A missing or corrupt primary recovers from its backup. Version 1 climbing saves remain readable; version 2 supports the extended upper checkpoints and all 24 leaves.
+
+Settings on the opening menu and inside either adventure now offer the same volume, music, reduced-motion, touch, painted-character and calm-climb controls. Changes apply immediately and persist across restarts. A failed save shows a visible status; closing the native game after a failure offers **Try again**, **Keep playing** and **Quit anyway**.
 
 The application name stays unchanged so previous save locations remain compatible. New adventure asks before resetting this campaign and its scores; accessibility preferences and original-chapter progress are preserved.
 
@@ -100,10 +104,10 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports the project, uses temporary test saves, runs all seven suites and writes logs to the ignored `test_output/` folder. The earlier six suites contain 629 checks; 68 restoration checks also exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh copy with a unique, verified test-save location, runs all eight suites and writes logs to the ignored `test_output/` folder. The current total is **777 passing checks**, including 77 finishing checks for write failures, backup recovery, preference persistence, the first-visit music loop, all three settings panels and safe failed-save exits. The 68 restoration checks exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
-The GitHub workflow now runs this complete suite on the documented Godot 4.4.1, then captures native screenshots of adventure selection, the restored garden and the workshop. The previous workflow ran only the older original-chapter suite on a different engine version.
+The GitHub workflow runs the complete suite on Godot **4.4.1**, captures native screenshots, builds the production Web and Windows releases with official checksum-verified templates, and tests the packed game in fresh processes. It plays the actual Web release in Chrome, checks settings after a page reload, and runs the exported Windows executable on Windows. Source, builds, screenshots and logs are downloadable workflow artifacts. See [export commands and verification boundaries](docs/FINISHING_3_2_2.md).
 
 Native Godot compatibility-renderer playthrough and visual fixtures were also reviewed. See [3.2 character update and editing notes](docs/IN_MOTION_3_2.md), [3.2 verification results](docs/release_3_2_verification.json), and [the earlier campaign artwork provenance](docs/RELEASE_3_1.md).
 
-Physical Android/iOS device testing and standalone platform exports are outside this source-project delivery. The tests cover keyboard, mouse and injected multi-touch events in Godot.
+Physical Android/iOS device testing, macOS exports and hardware performance measurements are outside this finishing pass. The tests cover keyboard, mouse and injected multi-touch events in Godot; automated browser rendering uses software graphics.
