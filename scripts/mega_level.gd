@@ -75,11 +75,16 @@ func build(i):
 	prop("school_props_noticeboard" if i==0 else "school_props_desk",exit,155)
 	label("DELIVERY POINT",exit+Vector2(-100,-170),18)
 	bark=Art.game_actor("bark_actions_idle");bark.scale=Vector2.ONE*.20;bark.position=Vector2(410,650);bark.z_index=4;add_child(bark)
+	if i==0:
+		for actor in [get_parent().player,bark]:
+			var shadow=load("res://scripts/prop_shadow.gd").new()
+			shadow.name="LibraryContactShadow"+("Bark" if actor==bark else "Mark");shadow.source=actor;shadow.follows=true
+			shadow.half_width=24 if actor==bark else 20;shadow.softness=4;shadow.opacity=.22;shadow.z_index=0;add_child(shadow)
 	refresh()
 func route_x(i,n):
 	var section=int(n/BASE_CENTERS[i].size());return BASE_CENTERS[i][n%BASE_CENTERS[i].size()]+[0,35,-25][section]
 func painted_ledge(rect,kind):
-	var l=load("res://scripts/variety_platform.gd").new();l.position=rect.position;l.width=rect.size.x;l.kind=kind;l.z_index=1;add_child(l);return l
+	var l=load("res://scripts/variety_platform.gd").new();l.position=rect.position;l.width=rect.size.x;l.kind=kind;l.library_style=level==0;l.z_index=1;add_child(l);return l
 func body(r: Rect2, one_way: bool):
 	var b=StaticBody2D.new();b.collision_layer=1;b.collision_mask=2
 	var c=CollisionShape2D.new();var s=RectangleShape2D.new();s.size=r.size;c.shape=s;c.position=r.get_center();c.one_way_collision=one_way;c.one_way_collision_margin=10;b.add_child(c);add_child(b)

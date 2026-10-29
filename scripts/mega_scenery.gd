@@ -10,7 +10,7 @@ func _process(_d):
 	motes.reduced_motion=reduced_motion;motes.top=top
 	var game=get_parent().get_parent();motes.paused=game.get("busy")==true
 	if is_instance_valid(game.get("camera")):
-		var bay=int(floor((game.camera.position.y-260)/380))
+		var bay=int(floor((game.camera.position.y-260)/(760 if level==0 else 380)))
 		if bay!=visible_bay:visible_bay=bay;queue_redraw()
 func box(r,c,rad=8):
 	if rad>0:
@@ -38,6 +38,8 @@ func window_at(x,y):
 	var beam=PackedVector2Array([Vector2(x+15,y+20),Vector2(x+245,y+20),Vector2(x+395,y+510),Vector2(x+210,y+510)])
 	draw_colored_polygon(beam,Color(1,.94,.68,.08))
 func _draw():
+	if level==0:
+		draw_library();return
 	texture_repeat=CanvasItem.TEXTURE_REPEAT_MIRROR
 	var wall=Color("e6d8b7") if level==0 else Color("c8d2c0") if level==1 else Color("ba9970")
 	draw_rect(Rect2(0,top,1600,700-top),wall)
@@ -123,3 +125,38 @@ func _draw():
 		sprite("school_props_science_volcano",Vector2(800,377),100)
 		sprite("school_props_lamp",Vector2(700,350),140)
 		sprite("collectibles_pencil",Vector2(1070,650),340)
+
+# Library furniture is painted, fixed in world space and bounded to nearby bays.
+# None of these decorations creates a collision or a collectible.
+func draw_library():
+	draw_rect(Rect2(0,top,1600,900-top),Color("d9c6a2"))
+	var center=0 if visible_bay==100000 else visible_bay
+	for bay in range(center-2,center+3):
+		var y=260+bay*760
+		if y+760<top or y>650:continue
+		draw_texture_rect(Art.tex("oak_floor"),Rect2(0,y,1600,760),true,Color(.65,.53,.37,.13))
+		# Recessed painted book walls frame a clear central climbing lane.
+		for x in [160,1440]:
+			box(Rect2(x-195,y-250,390,570),"ae9063",16)
+			sprite("school_props_bookcase",Vector2(x,y+300),370,.76)
+			window_at(x-130,y-245)
+			box(Rect2(x-210,y+300,420,24),"81653e",5)
+			sprite("school_props_plant",Vector2(x-130,y+300),95,.92)
+		if bay%3==0:
+			sprite("reading_nook_v3",Vector2(800,y+320),750,.67)
+		elif bay%3==1:
+			sprite("school_props_bookcase",Vector2(800,y+310),650,.62)
+			sprite("school_props_lamp",Vector2(1090,y-80),115,.9)
+		else:
+			sprite("school_props_noticeboard",Vector2(800,y+150),330,.72)
+			sprite("collectibles_books",Vector2(1050,y+315),160,.8)
+		# Warm light is static, including when reduced motion is enabled.
+		for x in [110,1230]:
+			var beam=PackedVector2Array([Vector2(x,y-200),Vector2(x+110,y-200),Vector2(x+330,y+355),Vector2(x+100,y+355)])
+			draw_colored_polygon(beam,Color(1,.91,.64,.065))
+		box(Rect2(0,y+330,1600,28),"a38c65",0)
+	draw_texture_rect(Art.tex("oak_floor"),Rect2(0,650,1600,230),true)
+	sprite("reading_nook_v3",Vector2(210,650),570)
+	sprite("school_props_bookcase",Vector2(1450,650),440)
+	sprite("school_props_plant",Vector2(1190,650),145)
+	sprite("school_props_noticeboard",Vector2(1030,630),190)

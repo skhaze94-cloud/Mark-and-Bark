@@ -49,6 +49,9 @@ var sound_bank={}
 var intro_ray
 var hint_target=Vector2.ZERO
 var hint_until=0.0
+var library_pulses=[]
+var library_header: Panel
+var library_pause: Button
 func _ready():
 	for action in {"left":[KEY_A,KEY_LEFT],"right":[KEY_D,KEY_RIGHT],"jump":[KEY_SPACE,KEY_W,KEY_UP],"interact":[KEY_E,KEY_ENTER],"hint":[KEY_H],"pause":[KEY_ESCAPE],"notebook":[KEY_N],"retry":[KEY_R]}:
 		if not InputMap.has_action(action):InputMap.add_action(action)
@@ -60,14 +63,14 @@ func _ready():
 	camera=Camera2D.new();camera.position=Vector2(800,330);add_child(camera);camera.make_current()
 	var canvas=CanvasLayer.new();canvas.layer=10;add_child(canvas)
 	hud=Control.new();hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud.mouse_filter=Control.MOUSE_FILTER_IGNORE;canvas.add_child(hud)
-	var head=card(hud,Rect2(20,16,1240,112),"203849")
+	var head=card(hud,Rect2(20,16,1240,112),"203849");library_header=head
 	objective_icon=TextureRect.new();objective_icon.position=Vector2(18,14);objective_icon.size=Vector2(76,76);objective_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;objective_icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;head.add_child(objective_icon)
 	objective=text(head,"",Rect2(108,11,782,74),22,"fff3d3")
 	height_meter=load("res://scripts/mega_meter.gd").new();height_meter.position=Vector2(108,91);height_meter.size=Vector2(777,8);height_meter.mouse_filter=Control.MOUSE_FILTER_IGNORE;head.add_child(height_meter)
 	var route=card(hud,Rect2(20,141,205,73),"203849");route.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	route_label=text(route,"",Rect2(15,8,175,59),18,"fff3d3")
 	counters=text(head,"",Rect2(920,15,165,85),17,"fff3d3")
-	button(head,"Pause",Rect2(1098,27,120,55),pause_game)
+	library_pause=button(head,"Pause",Rect2(1098,27,120,55),pause_game)
 	context_back=card(hud,Rect2(250,568,780,44),"203849");context_back.mouse_filter=Control.MOUSE_FILTER_IGNORE;context_back.hide()
 	context=text(hud,"",Rect2(260,575,760,40),20,"fff3d3");context.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;context.add_theme_color_override("font_shadow_color",Color("203849"));context.add_theme_constant_override("shadow_offset_y",2)
 	notice_back=card(hud,Rect2(270,140,740,74),"203849");notice_back.mouse_filter=Control.MOUSE_FILTER_IGNORE;notice_back.hide()
@@ -128,7 +131,7 @@ func title():
 	else:campus.refresh()
 	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.2.2",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.3.0",Rect2(35,97,640,40),23,"8a713f")
 	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)
@@ -147,7 +150,7 @@ func start():
 	if not Mega.intro_done:
 		intro_ray.begin(func():say(["Mark|The ray says 'make your ideas smaller'. Is that helpful?","Bark|Press it twice. That's how you get twice as helpful!","Mark|Bark! We're tiny. The bookcase is a mountain!","Bark|Excellent. Jump onto my leafy head for a second spring. Find your design at the top, then we'll borrow the power cell and lens from home.","Mark|Borrow, return, and improve. In that order."],func():Mega.intro_done=true;Mega.save()))
 func load_level(i):
-	pickup_effects.clear();notice_priority=0;notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
+	library_pulses.clear();pickup_effects.clear();notice_priority=0;notice_until=0;hint_until=0;notice.hide();notice_back.hide();context_back.hide();last_shelf=maxi(0,int(Mega.runs[i].checkpoint)+1);ambient.color=Color(["fff7e5","f1f7ed","fff0d6"][i])
 	Mega.current=i;Mega.save();mode="campus";close();campus.build(i);player.right_bound=1600;player.velocity=Vector2.ZERO;player.reset_jumps();spring_age=9;bark_stride=0;player.visual_scale=.24;player.sprite.scale=Vector2.ONE*.24;hud.show()
 	var cp=int(Mega.runs[i].checkpoint)
 	player.position=Vector2(campus.platforms[cp].get_center().x,campus.platforms[cp].position.y-3) if cp>=0 else Vector2(510,645)
@@ -194,12 +197,14 @@ func jump():
 func jumped(second):
 	play_sound("jump",1.15 if second else .95)
 	if second:
+		library_pulse(player.position+Vector2(0,54),"spring")
 		spring_age=0;spring_anchor=campus.bark.position;spring_facing=player.facing;spring_release_velocity=player.velocity.x;spring_contacts+=1
 		campus.bark.texture=Art.tex("bark_actions_hop");
 		if campus.bark.has_method("pulse"):campus.bark.pulse("spring_release",.45)
 		player.spring_contact=true;player.show_pose("young_actions_crouch",.09)
 		if spring_contacts%4==1:toast(["Bark: Feet on my leaves! Mark: Spring, please—not sneeze.","Bark: Try three jumps! Mark: Two. Make this one count.","Bark: Aim for next Tuesday! Mark: The shelf will do.","Bark: Close your eyes! Mark: I like knowing where the floor is.","Bark: Land in the pencil pot! Mark: The bridge looks kinder.","Bark: We could ask a moth for a lift. Mark: Let us jump past it.","Bark: My leaves are ticklish! Mark: Then hold very, very still.","Bark: What about a flying sandwich? Mark: First, a safe landing."][int(spring_contacts/4)%8])
 func landed(at,strength):
+	if strength>.25:library_pulse(at,"landing")
 	if campus.bark.has_method("land"):campus.bark.land(strength*.65)
 	campus.remember_landing(at)
 	if absf(at.y-650)<6:last_shelf=0
@@ -212,7 +217,7 @@ func landed(at,strength):
 	for n in range(campus.RISES[Mega.current].size()):
 		var r=campus.platforms[n]
 		if n%2==1 and n>int(Mega.runs[Mega.current].checkpoint) and absf(at.y-r.position.y)<5 and at.x>=r.position.x-10 and at.x<=r.end.x+10:
-			Mega.runs[Mega.current].checkpoint=n;Mega.save();campus.refresh();toast("Checkpoint saved! Return here with R or the checkpoint button.",1)
+			Mega.runs[Mega.current].checkpoint=n;Mega.save();campus.refresh();library_pulse(at,"checkpoint");toast("Checkpoint saved! Return here with R or the checkpoint button.",1)
 func interact():
 	if busy or mode!="campus":return
 	var run=Mega.runs[Mega.current]
@@ -314,6 +319,7 @@ func toast(value,priority=0):
 	notice.text=value;notice_until=clock+maxf(5,float(String(value).length())/18.0);notice_back.size.y=74 if String(value).length()<95 else 96;notice.size.y=notice_back.size.y-16
 func update_hud():
 	var r=Mega.runs[Mega.current]
+	layout_library_hud()
 	objective_icon.texture=Art.tex("ui_parts_reward_check" if r.quest else campus.ASSETS[Mega.current])
 	height_meter.value=clampf((650-player.position.y)/(650-campus.top)*100,0,100)
 	route_label.text="Shelf "+str(last_shelf)+" / "+str(campus.RISES[Mega.current].size())+"\nClimb "+str(roundi(height_meter.value))+"%"
@@ -324,6 +330,11 @@ func update_hud():
 	context.text=("Use" if touch_mode else "[E]")+": "+("deliver quest item" if at_exit else "quest item secured" if r.quest else "pick up quest item") if near else ""
 	if Mega.current==0 and Mega.runs[0].checkpoint<1 and not near:context.text="Jump, then jump again to spring off Bark. Land to recharge."
 	touch_root.visible=touch_mode or Progress.settings.touch or OS.has_feature("mobile")
+	if Mega.current==0:
+		var route=route_label.get_parent();route.position=Vector2(20,126) if touch_root.visible else Vector2(980,650);route.size=Vector2(280,44)
+		route_label.position=Vector2(12,10);route_label.size=Vector2(256,28);route_label.add_theme_font_size_override("font_size",16)
+		route_label.text="Shelf "+str(last_shelf)+" / 24  ·  "+str(roundi(height_meter.value))+"% climbed"
+
 	for c in hud.get_children():
 		if c is Button and c.position.x==20:c.visible=not touch_root.visible
 		if c is Button and c.position.x==270:c.text="Bark's hint" if touch_root.visible else "Bark's hint [H]"
@@ -332,6 +343,8 @@ func update_hud():
 func _physics_process(delta):
 	clock+=delta;queue_redraw()
 	if not busy:
+		for pulse in library_pulses:pulse.age+=delta
+		library_pulses=library_pulses.filter(func(p):return p.age<.5)
 		for sparkle in pickup_effects:sparkle.age+=delta
 		pickup_effects=pickup_effects.filter(func(p):return p.age<.6)
 	if is_instance_valid(effects):effects.volume_db=linear_to_db(maxf(.0001,Progress.settings.volume*.6))
@@ -487,7 +500,20 @@ func finish_quit():
 	quitting=true;busy=true;player.enabled=false;player.suspended=true
 	effects.stop();effects.stream=null;await soundscape.drain();get_tree().quit()
 
+func library_pulse(at,kind):
+	if Mega.current!=0 or Progress.settings.reduced_motion:return
+	library_pulses.append({"at":at,"kind":kind,"age":0.0})
+	if library_pulses.size()>8:library_pulses.pop_front()
+
 func _draw():
+	if mode=="campus" and not busy and not Progress.settings.reduced_motion:
+		for pulse in library_pulses:
+			var t=pulse.age/.5
+			var tint=Color("a5d9b2" if pulse.kind=="checkpoint" else "efcf82")
+			tint.a=(1-t)*.55
+			var points=PackedVector2Array()
+			for n in range(33):points.append(pulse.at+Vector2(cos(n*TAU/32)*(18+t*28),sin(n*TAU/32)*(4+t*6)))
+			draw_polyline(points,tint,2,true)
 	if mode=="campus" and not busy and not Progress.settings.reduced_motion:
 		for sparkle in pickup_effects:
 			var ratio=sparkle.age/.6
@@ -504,3 +530,17 @@ func _draw():
 		draw_arc(p,32,0,TAU,32,Color("f4df9a"),3)
 		draw_line(p+Vector2(0,-15),p+Vector2(0,13),Color("203849"),4)
 		draw_polyline(PackedVector2Array([p+Vector2(-10,3),p+Vector2(0,13),p+Vector2(10,3)]),Color("203849"),4)
+
+func layout_library_hud():
+	var library=Mega.current==0
+	library_header.size=Vector2(1040,104) if library else Vector2(1240,112)
+	objective.size=Vector2(630,74) if library else Vector2(782,74)
+	objective.add_theme_font_size_override("font_size",20 if library else 22)
+	counters.position.x=770 if library else 920
+	height_meter.size.x=620 if library else 777
+	for child in hud.get_children():
+		if child is Button and child.position.x in [20.0,270.0,540.0]:
+			child.position.y=650 if library else 620;child.size.y=44 if library else 70
+	if not library:
+		var route=route_label.get_parent();route.position=Vector2(20,141);route.size=Vector2(205,73)
+		route_label.position=Vector2(15,8);route_label.size=Vector2(175,59);route_label.add_theme_font_size_override("font_size",18)
