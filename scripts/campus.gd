@@ -130,6 +130,11 @@ func build(is_tutorial: bool) -> void:
 	bark_shadow.softness=5
 	bark_shadow.z_index=1
 	add_child(bark_shadow)
+	var actor=get_parent().get("player")
+	if is_instance_valid(actor):
+		var mark_shadow=load("res://scripts/prop_shadow.gd").new()
+		mark_shadow.name="MarkContactShadow";mark_shadow.source=actor;mark_shadow.follows=true
+		mark_shadow.half_width=22;mark_shadow.softness=4;mark_shadow.opacity=.22;mark_shadow.z_index=1;add_child(mark_shadow)
 	refresh()
 	queue_redraw()
 

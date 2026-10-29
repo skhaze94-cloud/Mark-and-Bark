@@ -8,8 +8,11 @@ var time: float = 0.0
 var reduced_motion: bool = false
 var camera_x: float = 640.0
 var bursts: Array[Dictionary] = []
+const Light=preload("res://scripts/painted_lighting.gd")
 
 func _process(delta: float) -> void:
+	if get_parent().get_parent().get("busy")==true:
+		queue_redraw();return
 	time += delta
 	for effect in bursts: effect.age += delta
 	bursts = bursts.filter(func(e): return e.age < 0.8)
@@ -74,6 +77,9 @@ func _draw() -> void:
 			draw_circle(p,3,Color(1,0.86,0.40,1-e.age/0.8))
 
 func interior(start: float, span: float, workshop: bool) -> void:
+	# Broad contact shade grounds the floor; the lit centre remains clear.
+	Light.glow(self,Vector2(start+span*.5,622),Vector2(span*.54,22),Color(.10,.09,.07,.13))
+	Light.glow(self,Vector2(start+span*.76,330),Vector2(240,300),Color(1,.89,.63,.07))
 	# The supplied painting already has walls and windows. Add light and floor
 	# perspective without covering its rich detail with opaque vector stand-ins.
 	for i in range(int(span/115)+1):
@@ -91,11 +97,16 @@ func interior(start: float, span: float, workshop: bool) -> void:
 
 func garden(start: float, span: float) -> void:
 	# Distant oak silhouettes move more slowly than the foreground.
-	var offset = 0.0
+	var center=775.0 if tutorial else 2700.0
+	var offset=0.0 if reduced_motion else clampf((camera_x-center)*.045,-25,25)
 	for i in range(6):
 		var x = start + 90 + i * span/5 + offset
 		draw_line(Vector2(x,560),Vector2(x-18,235),Color(0.30,0.39,0.26,0.18),23)
 		paint_ellipse(Vector2(x,230),Vector2(155,115),Color(0.26,0.42,0.30,0.12))
+	# Soft canopy shade and cool reflected light deepen the garden without hiding targets.
+	Light.glow(self,Vector2(start+span*.52,300),Vector2(span*.48,330),Color(.78,.90,.77,.07))
+	for local_x in [span*.12,span*.86]:
+		Light.glow(self,Vector2(start+local_x,606),Vector2(170,25),Color(.08,.18,.13,.16))
 	# Bridge decking over a decorative stream below the safe walkway.
 	draw_texture_rect(Art.tex("garden_soil"),Rect2(start,626,span,94),true,Color(0.76,0.79,0.67))
 	# The painted backdrop already contains its bridge and stream; keep its detail.

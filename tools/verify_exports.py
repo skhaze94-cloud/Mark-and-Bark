@@ -124,7 +124,7 @@ def main():
                     required = ['index.html', 'index.js', 'index.wasm', 'index.pck'] if name == 'web' else ['Mark-and-Bark.exe', 'Mark-and-Bark.pck']
                     if any(not (destination / item).is_file() for item in required):
                         raise RuntimeError(f'{name} export is missing a required runtime file.')
-                    archive(destination, output / f'Mark-and-Bark-3.3.0-{name}.zip')
+                    archive(destination, output / f'Mark-and-Bark-3.4.0-{name}.zip')
                     summary['targets'][name] = {'files': required,
                                                'bytes': sum(p.stat().st_size for p in destination.rglob('*') if p.is_file())}
                     print(f'{name} release build: PASS', flush=True)

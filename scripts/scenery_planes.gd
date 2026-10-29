@@ -6,6 +6,7 @@ var reduced_motion: bool = false
 var tutorial: bool = false
 var time: float = 0.0
 var light_sources: Array = []
+const Light=preload("res://scripts/painted_lighting.gd")
 
 func add_piece(id: String, at: Vector2, span: float, _depth: float, _center: float, layer: int, sway: float = 0.0) -> Sprite2D:
 	var sprite = Art.prop(id,span)
@@ -15,11 +16,17 @@ func add_piece(id: String, at: Vector2, span: float, _depth: float, _center: flo
 	cast.texture=sprite.texture
 	cast.centered=false
 	cast.offset=sprite.offset
-	cast.position=Vector2(9,6)
-	cast.modulate=Color(0.09,0.13,0.13,0.20)
+	cast.position=Vector2(15,5)
+	cast.scale=Vector2(1.08,.38)
+	cast.skew=-.28
+	cast.modulate=Color(0.09,0.13,0.13,0.16)
 	cast.show_behind_parent=true
 	sprite.add_child(cast)
 	add_child(sprite)
+	if id!="canopy_v3":
+		var contact=load("res://scripts/prop_shadow.gd").new()
+		contact.source=sprite;contact.anchor=at;contact.half_width=span*.26
+		contact.softness=clampf(span*.025,3,8);contact.opacity=.16;contact.z_index=layer-1;add_child(contact)
 	planes.append({"sprite":sprite,"origin":at,"sway":sway})
 	return sprite
 
@@ -41,7 +48,8 @@ func build(is_tutorial: bool) -> void:
 	queue_redraw()
 
 func _process(delta: float) -> void:
-	time+=delta
+	var game=get_parent().get_parent()
+	if game.get("busy")!=true:time+=delta
 	for piece in planes:
 		var sprite: Sprite2D=piece.sprite
 		sprite.position=piece.origin
@@ -52,6 +60,8 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	for source in light_sources:
+		Light.glow(self,source+Vector2(65,85),Vector2(190,230),Color(1,.90,.62,.10))
+		Light.beam(self,source,75,405,Color(1,.93,.74,.22))
 		var brightness=1.0 if reduced_motion else 0.97+sin(time*0.35+source.x)*0.03
 		var pts=PackedVector2Array([source,source+Vector2(75,0),source+Vector2(330,405),source+Vector2(130,405)])
 		draw_polygon(pts,PackedColorArray([Color(1,0.93,0.74,0.012),Color(1,0.93,0.74,0.018),Color(1,0.92,0.70,0.065*brightness),Color(1,0.92,0.70,0.015)]))
