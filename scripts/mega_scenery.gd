@@ -142,9 +142,9 @@ func draw_library():
 			window_at(x-130,y-245)
 			box(Rect2(x-210,y+300,420,24),"81653e",5)
 			sprite("school_props_plant",Vector2(x-130,y+300),95,.92)
-		if bay%3==0:
+		if posmod(bay,3)==0:
 			sprite("reading_nook_v3",Vector2(800,y+320),750,.67)
-		elif bay%3==1:
+		elif posmod(bay,3)==1:
 			sprite("school_props_bookcase",Vector2(800,y+310),650,.62)
 			sprite("school_props_lamp",Vector2(1090,y-80),115,.9)
 		else:
