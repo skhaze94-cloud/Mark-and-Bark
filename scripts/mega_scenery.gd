@@ -129,7 +129,7 @@ func _zone(y: float) -> int:
 	return int(clampf((650.0 - y) / climb_height, 0.0, 0.999) * 3.0)
 
 func _back_wall() -> void:
-	var wall: Color = Color("d8cbae") if level == 0 else Color("c2cfc4") if level == 1 else Color("b6a58d")
+	var wall: Color = Color("ddd3b8") if level == 0 else Color("ccd3d0") if level == 1 else Color("b7afa3")
 	draw_rect(Rect2(0, top, 1600, 900 - top), wall)
 	# Broad value bands create a recessed back wall without a moving backdrop.
 	for side in range(5):
@@ -152,11 +152,11 @@ func _wall_bay(y: float, bay: int, zone: int) -> void:
 	var grain_alpha: float = 0.085 if level == 2 else 0.065
 	draw_texture_rect(Art.tex("oak_floor"), Rect2(50, y - BAY_HEIGHT, 1500, BAY_HEIGHT), true, Color(0.72, 0.74, 0.62, grain_alpha))
 	if level == 0:
-		_recess(Rect2(355, y - 710, 890, 625), "c4c4ab" if zone < 2 else "c3ccbc", true)
+		_recess(Rect2(355, y - 710, 890, 625), "c7ccba" if zone < 2 else "c7d3c6", true)
 	elif level == 1:
-		_recess(Rect2(390, y - 700, 820, 590), "b4c5b8" if zone < 2 else "b8ccc0")
+		_recess(Rect2(390, y - 700, 820, 590), "bec9c8" if zone < 2 else "c5ced5")
 	else:
-		_recess(Rect2(355, y - 700, 890, 600), "aaa995" if zone < 2 else "a4b1a5")
+		_recess(Rect2(355, y - 700, 890, 600), "afafa5" if zone < 2 else "a8b5b5")
 	# A second, lighter grain pass keeps recesses textured as well.
 	draw_texture_rect(Art.tex("oak_floor"), Rect2(385, y - 675, 830, 550), true, Color(0.74, 0.77, 0.66, 0.048))
 	for n in range(8):
@@ -416,8 +416,14 @@ func _porthole(at: Vector2) -> void:
 	draw_circle(at + Vector2(9, 10), 115, Color(0.19, 0.24, 0.24, 0.14))
 	draw_circle(at, 112, Color("8d7959"))
 	draw_circle(at, 101, Color("d7c49c"))
-	draw_circle(at, 90, Color("9fb7bb"))
+	draw_circle(at, 90, Color("8199ae"))
+	for star_index in range(13):
+		var angle: float = float(star_index) * 2.39996
+		var radius: float = 19.0 + float(posmod(star_index * 19, 57))
+		var dot: Vector2 = at + Vector2(cos(angle), sin(angle)) * radius
+		draw_circle(dot, 1.1 + float(star_index % 3) * 0.3, Color(0.98, 0.96, 0.80, 0.70))
 	draw_circle(at + Vector2(24, -27), 24, Color("e6e4c2"))
+	draw_circle(at + Vector2(34, -34), 22, Color("8199ae"))
 	draw_arc(at, 82, 3.4, 5.3, 32, Color(0.94, 0.98, 0.91, 0.45), 3, true)
 	draw_line(at + Vector2(0, -90), at + Vector2(0, 90), Color("d7c49c"), 7)
 	draw_line(at + Vector2(-90, 0), at + Vector2(90, 0), Color("d7c49c"), 7)
@@ -476,22 +482,83 @@ func _floor() -> void:
 
 func _bed() -> void:
 	_contact(Vector2(285, 645), 218, 0.20)
-	box(Rect2(63, 350, 410, 290), "8b7150", 21)
-	box(Rect2(80, 420, 425, 180), "e9dfbe", 28)
-	box(Rect2(90, 438, 120, 73), "fff2d7", 24)
-	draw_arc(Vector2(148, 475), 38, 3.8, 5.5, 24, Color(0.72, 0.67, 0.53, 0.24), 2, true)
-	box(Rect2(225, 434, 270, 166), "6c8c8c", 17)
-	for x in range(244, 493, 35):
-		draw_line(Vector2(x, 441), Vector2(x, 591), Color(0.77, 0.84, 0.72, 0.41), 2, true)
-	for y in range(460, 590, 30):
-		draw_line(Vector2(231, y), Vector2(488, y), Color(0.77, 0.84, 0.72, 0.35), 2, true)
-	draw_line(Vector2(235, 581), Vector2(486, 581), Color("c4ceaf"), 3)
+	# A curved oak headboard belongs beside the painted furniture. Layered
+	# pigment, inset moulding and asymmetrical grain give it a softer finish.
+	var headboard: PackedVector2Array = PackedVector2Array()
+	for n in range(33):
+		var angle: float = PI + float(n) * PI / 32.0
+		headboard.append(Vector2(270, 398) + Vector2(cos(angle) * 202, sin(angle) * 70))
+	headboard.append(Vector2(472, 617))
+	headboard.append(Vector2(68, 617))
+	var cast: PackedVector2Array = PackedVector2Array()
+	for point in headboard:
+		cast.append(point + Vector2(8, 11))
+	draw_colored_polygon(cast, Color(0.17, 0.21, 0.19, 0.17))
+	draw_colored_polygon(headboard, Color("926b43"))
+	draw_texture_rect(Art.tex("oak_floor"), Rect2(85, 389, 370, 218), true, Color(0.89, 0.73, 0.47, 0.42))
+	# The inset follows the arched silhouette rather than reading as a flat box.
+	var inset: PackedVector2Array = PackedVector2Array()
+	for n in range(29):
+		var angle: float = PI + float(n) * PI / 28.0
+		inset.append(Vector2(270, 396) + Vector2(cos(angle) * 176, sin(angle) * 48))
+	draw_polyline(inset, Color("d7b67f"), 5, true)
+	draw_polyline(inset, Color(0.95, 0.83, 0.61, 0.38), 1.5, true)
+	for x in [82, 454]:
+		draw_line(Vector2(x + 5, 401), Vector2(x + 5, 612), Color(0.26, 0.22, 0.15, 0.27), 14, true)
+		draw_line(Vector2(x, 397), Vector2(x, 612), Color("bc935b"), 11, true)
+		draw_line(Vector2(x - 3, 401), Vector2(x - 3, 603), Color(0.98, 0.84, 0.60, 0.42), 2, true)
+		draw_circle(Vector2(x, 387), 12, Color("83603c"))
+		draw_circle(Vector2(x - 1, 384), 10, Color("d1b077"))
+		draw_circle(Vector2(x - 4, 381), 3, Color(0.99, 0.90, 0.68, 0.62))
+	for n in range(12):
+		var grain_y: float = 378 + n * 15
+		var grain: PackedVector2Array = PackedVector2Array()
+		for step in range(9):
+			grain.append(Vector2(108 + step * 38, grain_y + sin(float(step) * 1.1 + n) * 3))
+		draw_polyline(grain, Color(0.34, 0.26, 0.16, 0.08), 1.4, true)
+	box(Rect2(80, 420, 425, 180), "e5ddbc", 30)
+	box(Rect2(87, 430, 410, 145), "eee7ce", 27, false)
+	# Soft mattress welt and pillow creases replace the single flat cream slab.
+	draw_line(Vector2(105, 584), Vector2(482, 584), Color(0.57, 0.52, 0.38, 0.34), 2, true)
+	box(Rect2(92, 444, 126, 78), "d3cbb1", 25, false)
+	box(Rect2(89, 437, 124, 74), "fff1d8", 25)
+	for side in [-1, 1]:
+		var crease: PackedVector2Array = PackedVector2Array()
+		for n in range(13):
+			var t: float = float(n) / 12.0
+			crease.append(Vector2(151 + side * (31 + 15 * t), 447 + t * 47 + sin(t * PI) * 3))
+		draw_polyline(crease, Color(0.64, 0.57, 0.41, 0.12), 2.5, true)
+	box(Rect2(225, 434, 270, 166), "7897a6", 22)
+	for n in range(7):
+		var fold_x: float = 236 + n * 39
+		var fold: PackedVector2Array = PackedVector2Array()
+		for step in range(15):
+			var t: float = float(step) / 14.0
+			fold.append(Vector2(fold_x + sin(t * PI * 1.4 + n) * 4, 443 + t * 145))
+		draw_polyline(fold, Color(0.28, 0.43, 0.49, 0.17), 7, true)
+		draw_polyline(fold, Color(0.86, 0.89, 0.81, 0.31), 1.6, true)
+	for n in range(4):
+		var stitch: PackedVector2Array = PackedVector2Array()
+		for step in range(29):
+			var t: float = float(step) / 28.0
+			stitch.append(Vector2(236 + t * 249, 454 + n * 34 + sin(t * PI * 4 + n) * 7))
+		draw_polyline(stitch, Color(0.94, 0.88, 0.73, 0.24), 1.3, true)
+	# A folded linen hem catches light and creates a thicker fabric edge.
+	box(Rect2(228, 434, 265, 24), "a6b9b6", 11, false)
+	draw_line(Vector2(238, 456), Vector2(483, 456), Color(0.28, 0.42, 0.45, 0.27), 2, true)
+	for n in range(6):
+		_star(Vector2(256 + n * 40, 478 + (n % 2) * 52), 8, Color(0.98, 0.91, 0.70, 0.70), 4)
+	draw_line(Vector2(235, 586), Vector2(482, 586), Color("d5cfaf"), 3, true)
 	for x in [95, 457]:
-		box(Rect2(x, 607, 22, 43), "8b7150", 5)
-	box(Rect2(76, 601, 432, 25), "a18355", 7)
+		box(Rect2(x, 607, 22, 43), "8c6840", 5)
+		box(Rect2(x + 3, 614, 5, 30), "c09b63", 2, false)
+	box(Rect2(76, 601, 432, 25), "9b7748", 7)
+	draw_texture_rect(Art.tex("oak_floor"), Rect2(90, 607, 403, 12), true, Color(0.98, 0.82, 0.54, 0.32))
+	draw_line(Vector2(88, 604), Vector2(494, 604), Color(0.99, 0.84, 0.59, 0.48), 2, true)
 
 func _base_furniture() -> void:
 	_floor()
+	_story_rug()
 	if level == 0:
 		_contact(Vector2(228, 650), 235, 0.19)
 		sprite("reading_nook_v3", Vector2(225, 650), 590)
@@ -536,6 +603,209 @@ func _edge_framing(y: float, bay: int) -> void:
 		else:
 			sprite("school_props_plant", Vector2(x, y - 18), 155, 0.42, false, Color("6f8275"))
 
+# Whimsy is painted into the rooms. These ornaments never spawn physics,
+# collectibles or input targets, and are deterministic at every world height.
+func _leaf(at: Vector2, angle: float, length: float, ink: Color) -> void:
+	var points: PackedVector2Array = PackedVector2Array()
+	var direction: Vector2 = Vector2(cos(angle), sin(angle))
+	var normal: Vector2 = Vector2(-direction.y, direction.x)
+	for n in range(13):
+		var t: float = float(n) / 12.0
+		points.append(at + direction * length * t + normal * sin(t * PI) * length * 0.25)
+	for n in range(12, -1, -1):
+		var t: float = float(n) / 12.0
+		points.append(at + direction * length * t - normal * sin(t * PI) * length * 0.25)
+	draw_colored_polygon(points, ink)
+	var vein: Color = ink.lightened(0.35)
+	vein.a *= 0.55
+	draw_line(at, at + direction * length * 0.86, vein, 1, true)
+
+func _blossom(at: Vector2, radius: float, ink: Color) -> void:
+	for petal in range(5):
+		var angle: float = -PI * 0.5 + float(petal) * TAU / 5.0
+		_ellipse(at + Vector2(cos(angle), sin(angle)) * radius * 0.49, Vector2(radius * 0.43, radius * 0.43), ink)
+	draw_circle(at + Vector2(0.8, 1), radius * 0.21, Color(0.67, 0.49, 0.26, ink.a * 0.52))
+	draw_circle(at, radius * 0.19, Color(0.98, 0.86, 0.53, ink.a))
+
+func _star(at: Vector2, radius: float, ink: Color, tips: int = 5) -> void:
+	var points: PackedVector2Array = PackedVector2Array()
+	for n in range(tips * 2):
+		var angle: float = -PI * 0.5 + float(n) * PI / float(tips)
+		points.append(at + Vector2(cos(angle), sin(angle)) * radius * (1.0 if n % 2 == 0 else 0.42))
+	draw_colored_polygon(points, ink)
+
+func _vine(at: Vector2, length: float, bend: float, phase: float, flowers: bool = true, alpha: float = 0.62) -> void:
+	var stem: PackedVector2Array = PackedVector2Array()
+	for n in range(19):
+		var t: float = float(n) / 18.0
+		stem.append(at + Vector2(sin(t * PI * 1.8 + phase) * bend * t, t * length))
+	draw_polyline(stem, Color(0.29, 0.46, 0.35, alpha * 0.72), 2.4, true)
+	for n in range(1, 9):
+		var t: float = float(n) / 9.0
+		var point: Vector2 = at + Vector2(sin(t * PI * 1.8 + phase) * bend * t, t * length)
+		var side: float = -1.0 if n % 2 == 0 else 1.0
+		_leaf(point, -0.35 if side > 0 else PI + 0.35, 18 + float(n % 3) * 5, Color(0.39 + float(n % 2) * 0.07, 0.57, 0.43, alpha))
+		if flowers and n % 3 == 0:
+			_blossom(point + Vector2(side * 20, -1), 10, Color(0.93, 0.70, 0.64, alpha))
+
+func _botanical_arch(y: float, bay: int, zone: int) -> void:
+	# A fine garland follows the recessed arch, leaving the active shelf edges clear.
+	var garland: PackedVector2Array = PackedVector2Array()
+	for n in range(33):
+		var t: float = float(n) / 32.0
+		garland.append(Vector2(380 + t * 840, y - 609 - sin(t * PI) * 85))
+	draw_polyline(garland, Color(0.45, 0.58, 0.42, 0.30), 3, true)
+	for n in range(11):
+		var t: float = (float(n) + 0.35) / 11.0
+		var at: Vector2 = Vector2(380 + t * 840, y - 609 - sin(t * PI) * 85)
+		_leaf(at, -0.7 if n % 2 == 0 else 0.8, 21 + float(n % 3) * 3, Color(0.47, 0.62, 0.45, 0.45))
+		if n % 3 == posmod(bay, 3):
+			_blossom(at + Vector2(4, 5), 8.5, Color(0.96, 0.77, 0.63, 0.62))
+	_vine(Vector2(375, y - 620), 210 + zone * 25, 26, float(posmod(bay, 5)), true, 0.48)
+	_vine(Vector2(1225, y - 620), 170 + zone * 35, -29, float(posmod(bay + 2, 5)), true, 0.48)
+
+func _paper_bird(at: Vector2, size: float, ink: Color, facing: float = 1.0) -> void:
+	# A little folded-paper swallow; deliberately unlike any gameplay pickup.
+	var shadow: Vector2 = Vector2(4, 6)
+	var outline: PackedVector2Array = PackedVector2Array([
+		Vector2(-0.54, 0.07), Vector2(-0.84, -0.46), Vector2(-0.08, -0.13),
+		Vector2(0.14, -0.64), Vector2(0.34, -0.15), Vector2(0.72, -0.07),
+		Vector2(0.31, 0.07), Vector2(0.12, 0.41), Vector2(-0.12, 0.12)
+	])
+	for n in range(outline.size()):
+		outline[n] = at + outline[n] * Vector2(size * facing, size)
+	var cast: PackedVector2Array = PackedVector2Array()
+	for point in outline:
+		cast.append(point + shadow)
+	draw_colored_polygon(cast, Color(0.24, 0.34, 0.32, ink.a * 0.11))
+	draw_colored_polygon(outline, ink)
+	draw_line(at + Vector2(-0.55 * size * facing, 0.04 * size), at + Vector2(0.22 * size * facing, -0.08 * size), ink.darkened(0.18), 1.2, true)
+
+func _cloud(at: Vector2, size: float, ink: Color) -> void:
+	_ellipse(at + Vector2(-size * 0.34, 0), Vector2(size * 0.39, size * 0.19), ink)
+	_ellipse(at + Vector2(size * 0.06, -size * 0.09), Vector2(size * 0.43, size * 0.28), ink)
+	_ellipse(at + Vector2(size * 0.42, size * 0.015), Vector2(size * 0.34, size * 0.17), ink)
+
+func _moon_mobile(at: Vector2, length: float, mirrored: bool = false) -> void:
+	var direction: float = -1.0 if mirrored else 1.0
+	var moon_at: Vector2 = at + Vector2(0, length)
+	draw_line(at, moon_at + Vector2(0, -28), Color(0.46, 0.45, 0.50, 0.42), 1.5, true)
+	# Construct a crescent directly so it remains transparent over every wall.
+	var crescent: PackedVector2Array = PackedVector2Array()
+	for n in range(31):
+		var angle: float = -PI * 0.5 + float(n) * PI / 30.0
+		crescent.append(moon_at + Vector2(cos(angle) * 31 * direction, sin(angle) * 31))
+	for n in range(30, -1, -1):
+		var angle: float = -PI * 0.5 + float(n) * PI / 30.0
+		crescent.append(moon_at + Vector2(cos(angle) * 12 * direction, sin(angle) * 31))
+	_glow(moon_at, Vector2(62, 62), Color(1.0, 0.90, 0.68, 0.08))
+	draw_colored_polygon(crescent, Color(0.96, 0.88, 0.66, 0.87))
+	for n in range(3):
+		var star_at: Vector2 = moon_at + Vector2((40 + n * 24) * direction, -18 + (n % 2) * 38)
+		draw_line(at + Vector2((40 + n * 24) * direction, 0), star_at - Vector2(0, 9), Color(0.48, 0.46, 0.54, 0.30), 1, true)
+		_star(star_at, 9 + n % 2 * 3, Color(0.94, 0.85, 0.67, 0.70))
+
+func _dream_mural(y: float, bay: int, zone: int) -> void:
+	# Faded paint sits on the far wall, behind the original illustrated furniture.
+	var drift: float = float(posmod(bay * 23, 80))
+	_glow(Vector2(800, y - 520), Vector2(410, 180), Color(0.72, 0.73, 0.89, 0.13))
+	_cloud(Vector2(640 + drift, y - 556), 150, Color(0.97, 0.94, 0.91, 0.19))
+	_cloud(Vector2(974 - drift, y - 614), 112, Color(0.98, 0.94, 0.91, 0.18))
+	for n in range(9):
+		var at: Vector2 = Vector2(475 + float(posmod(n * 107 + bay * 31, 640)), y - 645 + float(posmod(n * 37, 165)))
+		_star(at, 3.5 + n % 3, Color(0.97, 0.94, 0.79, 0.30), 4)
+
+func _star_chart(at: Vector2, radius: float, phase: int, alpha: float = 0.32) -> void:
+	var ink: Color = Color(0.42, 0.54, 0.59, alpha)
+	var cream: Color = Color(0.95, 0.88, 0.67, alpha * 1.65)
+	draw_arc(at, radius, 0, TAU, 64, ink, 1.6, true)
+	draw_arc(at, radius * 0.86, 0, TAU, 64, ink, 1, true)
+	for n in range(12):
+		var angle: float = float(n) * TAU / 12.0
+		var direction: Vector2 = Vector2(cos(angle), sin(angle))
+		draw_line(at + direction * radius * 0.91, at + direction * radius * (1.035 if n % 3 == 0 else 0.98), ink, 1.3, true)
+	var path: PackedVector2Array = PackedVector2Array()
+	for n in range(6):
+		var point: Vector2 = at + Vector2(-0.65 + float(n) * 0.25, sin(float(n * 2 + phase)) * 0.45) * radius
+		path.append(point)
+		draw_circle(point, 2.7, cream)
+	draw_polyline(path, ink, 1.2, true)
+	_star(at + Vector2(radius * 0.23, -radius * 0.36), 8, cream, 4)
+
+func _planet_mobile(at: Vector2, length: float, kind: int) -> void:
+	var planet: Vector2 = at + Vector2(0, length)
+	draw_line(at, planet - Vector2(0, 23), Color(0.38, 0.41, 0.42, 0.45), 1.4, true)
+	_glow(planet, Vector2(67, 55), Color(0.94, 0.83, 0.62, 0.045))
+	var ink: Color = Color("b6c4bc") if kind == 0 else Color("ccaa92")
+	draw_circle(planet + Vector2(3, 4), 22, Color(0.24, 0.31, 0.31, 0.12))
+	draw_circle(planet, 22, ink)
+	draw_arc(planet + Vector2(-5, -3), 15, 3.4, 5.1, 20, ink.lightened(0.22), 3, true)
+	var ring: PackedVector2Array = PackedVector2Array()
+	for n in range(49):
+		var angle: float = float(n) * TAU / 48.0
+		ring.append(planet + Vector2(cos(angle) * 36, sin(angle) * 7).rotated(-0.32))
+	draw_polyline(ring, Color(0.93, 0.83, 0.61, 0.64), 2, true)
+
+func _whimsy_wall(y: float, bay: int, zone: int) -> void:
+	# Wall paintings sit behind the furniture, not over its illustrated faces.
+	if level == 0:
+		_botanical_arch(y, bay, zone)
+	elif level == 1:
+		_dream_mural(y, bay, zone)
+	else:
+		var chart_x: float = 685.0 if posmod(bay, 2) == 0 else 920.0
+		_star_chart(Vector2(chart_x, y - 525), 125 + zone * 9, posmod(bay, 7), 0.21)
+
+func _whimsy_bay(y: float, bay: int, zone: int) -> void:
+	if level == 0:
+		var perch: Vector2 = Vector2(1430, y - 585) if posmod(bay, 2) == 0 else Vector2(195, y - 545)
+		_paper_bird(perch, 35, Color(0.95, 0.89, 0.72, 0.79), -1 if perch.x > 800 else 1)
+		if posmod(bay, 3) == 0:
+			# An illustrated pressed-flower plate, far from collectible routes.
+			var plate: Vector2 = Vector2(160, y - 620)
+			_ellipse(plate, Vector2(47, 62), Color(0.91, 0.88, 0.71, 0.43))
+			draw_arc(plate, 49, 0, TAU, 40, Color(0.67, 0.64, 0.44, 0.28), 1.5, true)
+			_leaf(plate + Vector2(0, 27), -1.5, 45, Color(0.41, 0.57, 0.43, 0.54))
+			_blossom(plate + Vector2(3, -10), 15, Color(0.85, 0.63, 0.60, 0.70))
+	elif level == 1:
+		var side_x: float = 155.0 if posmod(bay, 2) == 0 else 1400.0
+		_moon_mobile(Vector2(side_x, y - 717), 103 + zone * 16, side_x > 800)
+		# Trailing blossoms soften the window edge without covering its pane.
+		var ribbon_x: float = 1460.0 if side_x < 800 else 105.0
+		_vine(Vector2(ribbon_x, y - 690), 165, 13, 0.2, true, 0.31)
+		if posmod(bay, 3) == 1:
+			_paper_bird(Vector2(1325, y - 345), 27, Color(0.92, 0.80, 0.78, 0.65), -1)
+	else:
+		var mobile_x: float = 170.0 if posmod(bay, 2) == 0 else 1430.0
+		_planet_mobile(Vector2(mobile_x, y - 706), 115 + zone * 12, posmod(bay, 2))
+		if posmod(bay, 3) == 2:
+			_paper_bird(Vector2(1390 if mobile_x < 800 else 215, y - 375), 40, Color(0.87, 0.86, 0.70, 0.72), -1 if mobile_x < 800 else 1)
+
+func _base_whimsy() -> void:
+	# These three floor discoveries sit below the HUD and beside the route.
+	# The regular upper-bay mobiles remain subtle background details.
+	if level == 0:
+		_vine(Vector2(1358, 218), 180, 26, 0.6, true, 0.76)
+		_paper_bird(Vector2(1382, 215), 38, Color(0.98, 0.88, 0.69, 0.90), -1)
+	elif level == 1:
+		_moon_mobile(Vector2(337, 168), 103, false)
+		_cloud(Vector2(277, 284), 49, Color(0.96, 0.92, 0.90, 0.47))
+	else:
+		_planet_mobile(Vector2(365, 171), 132, 0)
+		_star_chart(Vector2(364, 406), 43, 2, 0.36)
+
+func _story_rug() -> void:
+	# The flattened ellipse belongs to the real floor and suggests no new ledge.
+	var ink: Color = Color(0.54, 0.64, 0.53, 0.36) if level == 0 else Color(0.63, 0.61, 0.70, 0.34) if level == 1 else Color(0.57, 0.63, 0.64, 0.31)
+	_ellipse(Vector2(805, 716), Vector2(425, 62), Color(0.21, 0.30, 0.29, 0.09))
+	_ellipse(Vector2(800, 706), Vector2(425, 62), ink)
+	_ellipse(Vector2(800, 706), Vector2(406, 53), Color(0.97, 0.89, 0.69, 0.27))
+	_ellipse(Vector2(800, 706), Vector2(391, 46), ink)
+	for n in range(15):
+		var angle: float = float(n) * TAU / 15.0
+		var at: Vector2 = Vector2(800, 706) + Vector2(cos(angle) * 365, sin(angle) * 38)
+		_ellipse(at, Vector2(5, 2), Color(0.96, 0.89, 0.70, 0.38))
+
 func _draw() -> void:
 	_back_wall()
 	var center: int = 0 if visible_bay == 100000 else visible_bay
@@ -547,12 +817,15 @@ func _draw() -> void:
 			continue
 		var zone: int = _zone(y)
 		_wall_bay(y, bay, zone)
+		_whimsy_wall(y, bay, zone)
 		if level == 0:
 			_library_bay(y, bay, zone)
 		elif level == 1:
 			_bedroom_bay(y, bay, zone)
 		else:
 			_attic_bay(y, bay, zone)
+		_whimsy_bay(y, bay, zone)
 		_edge_framing(y, bay)
 	if center >= -2 and center <= 1:
 		_base_furniture()
+		_base_whimsy()

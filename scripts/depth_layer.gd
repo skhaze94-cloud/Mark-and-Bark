@@ -10,6 +10,14 @@ var camera_x: float = 640.0
 var bursts: Array[Dictionary] = []
 const Light=preload("res://scripts/painted_lighting.gd")
 
+func _ready() -> void:
+	# The new painted ornaments are static, so their canvas is recorded once.
+	var details = preload("res://scripts/story_whimsy.gd").new()
+	details.name = "StorybookDetails"
+	details.foreground = foreground
+	details.tutorial = tutorial
+	add_child(details)
+
 func _process(delta: float) -> void:
 	if get_parent().get_parent().get("busy")==true:
 		queue_redraw();return

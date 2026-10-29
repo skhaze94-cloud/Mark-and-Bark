@@ -2,7 +2,7 @@ name: Godot 4.4.1 source, Web and Windows verification
 
 on:
   push:
-    branches: [main, fix/restore-storybook-adventure, graphics/painted-depth-3-4]
+    branches: [main, fix/restore-storybook-adventure, graphics/painted-depth-3-4, graphics/whimsy-update-3-5]
   pull_request:
   workflow_dispatch:
 
@@ -29,7 +29,7 @@ jobs:
           grep ' Godot_v4.4.1-stable_linux.x86_64.zip$' SHA512-SUMS.txt | sha512sum --check -
           unzip -j Godot_v4.4.1-stable_linux.x86_64.zip
           chmod +x Godot_v4.4.1-stable_linux.x86_64
-      - name: Import a clean copy and run all ten regression suites
+      - name: Import a clean copy and run all eleven regression suites
         run: python3 tools/verify.py --godot /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64
       - name: Verify native menus and capture screenshots
         run: |
@@ -63,27 +63,27 @@ jobs:
         run: node tools/verify_web.cjs --browser /tmp/mark-bark-chrome/chrome-headless-shell-linux64/chrome-headless-shell --modules /tmp/mark-bark-browser/node_modules
       - name: Package editable Godot source
         run: |
-          mkdir -p dist/Mark-and-Bark-3.4.0-Painted-Depth
-          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output --exclude=__pycache__ ./ dist/Mark-and-Bark-3.4.0-Painted-Depth/
+          mkdir -p dist/Mark-and-Bark-3.5.0-Whimsy-Update
+          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output --exclude=__pycache__ ./ dist/Mark-and-Bark-3.5.0-Whimsy-Update/
           cd dist
-          zip -qr Mark-and-Bark-3.4.0-Painted-Depth.zip Mark-and-Bark-3.4.0-Painted-Depth
+          zip -qr Mark-and-Bark-3.5.0-Whimsy-Update.zip Mark-and-Bark-3.5.0-Whimsy-Update
       - name: Upload editable source
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-3.4.0-source
-          path: dist/Mark-and-Bark-3.4.0-Painted-Depth.zip
+          name: Mark-and-Bark-3.5.0-source
+          path: dist/Mark-and-Bark-3.5.0-Whimsy-Update.zip
           if-no-files-found: error
       - name: Upload production Web build
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-3.4.0-Web
-          path: test_output/exports/Mark-and-Bark-3.4.0-web.zip
+          name: Mark-and-Bark-3.5.0-Web
+          path: test_output/exports/Mark-and-Bark-3.5.0-web.zip
           if-no-files-found: error
       - name: Upload production Windows build
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-3.4.0-Windows
-          path: test_output/exports/Mark-and-Bark-3.4.0-windows.zip
+          name: Mark-and-Bark-3.5.0-Windows
+          path: test_output/exports/Mark-and-Bark-3.5.0-windows.zip
           if-no-files-found: error
       - name: Upload logs and screenshots for review
         if: always()
@@ -113,11 +113,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Mark-and-Bark-3.4.0-Windows
+          name: Mark-and-Bark-3.5.0-Windows
           path: test_output/windows-download
       - name: Extract the production build
         shell: pwsh
-        run: Expand-Archive -Path test_output/windows-download/Mark-and-Bark-3.4.0-windows.zip -DestinationPath test_output/windows-build
+        run: Expand-Archive -Path test_output/windows-download/Mark-and-Bark-3.5.0-windows.zip -DestinationPath test_output/windows-build
       - name: Run the actual Windows release through save, resume, recovery and safe exit
         run: python tools/verify_exports.py --runtime test_output/windows-build/Mark-and-Bark.exe --pack test_output/windows-build/Mark-and-Bark.pck --output test_output/windows-native
       - name: Upload Windows runtime results

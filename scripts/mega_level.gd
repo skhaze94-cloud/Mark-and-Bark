@@ -21,6 +21,7 @@ var top=0.0
 var clock=0.0
 var reduced_motion=false
 var scenery
+var whimsy
 var checkpoints=[]
 var branches=[]
 var branch_indices=[]
@@ -36,6 +37,7 @@ func build(i):
 	for rise in RISES[i]:height+=rise
 	top=650-height
 	scenery=load("res://scripts/mega_scenery.gd").new();scenery.level=i;scenery.top=top-900;scenery.z_index=-10;add_child(scenery)
+	whimsy=load("res://scripts/whimsy_layer.gd").new();whimsy.name="WhimsyLayer";whimsy.context="climb";whimsy.level=i;whimsy.top=top-900;whimsy.controller=get_parent();whimsy.z_index=-3;add_child(whimsy)
 	body(Rect2(0,650,1600,150),false)
 	# Twenty-four evenly spread discoveries, including the upper attic.
 	for id in range(LEAF_COUNT):leaf_shelves.append(roundi(float(id)*(RISES[i].size()-1)/(LEAF_COUNT-1)))
