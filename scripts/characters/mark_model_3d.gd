@@ -183,9 +183,11 @@ func _build_arm(spine: Node3D, side: String) -> void:
 	var skin = _mat("skin", "e9aa73")
 	var shoulder = _joint("shoulder_"+side, spine, Vector3(sign*0.31,0.24,0))
 	shoulder.rotation.z=sign*0.095
+	_oval(shoulder,Vector3.ZERO,Vector3(0.102,0.105,0.10),jacket)
 	_loft(shoulder,[Vector4(-0.30,0.087,0.09,0.01),Vector4(-0.23,0.105,0.105,0),Vector4(-0.10,0.115,0.115,0),Vector4(0.01,0.092,0.09,0)],jacket,20)
 	var elbow = _joint("elbow_"+side, shoulder, Vector3(0,-0.285,0.015))
 	elbow.rotation.x=-0.10
+	_oval(elbow,Vector3.ZERO,Vector3(0.09,0.09,0.094),jacket)
 	_loft(elbow,[Vector4(-0.285,0.072,0.075,0),Vector4(-0.245,0.092,0.095,0),Vector4(-0.12,0.09,0.095,0.015),Vector4(0.02,0.09,0.092,0)],jacket,20)
 	for n in range(3):
 		var y: float=-0.12-float(n)*0.045
@@ -206,10 +208,13 @@ func _build_leg(hips: Node3D, side: String) -> void:
 	var denim_light=_mat("denim_light","57768a")
 	var denim_dark=_mat("denim_dark","293e52")
 	var thigh=_joint("thigh_"+side,hips,Vector3(sign*0.14,-0.015,0))
+	_oval(thigh,Vector3.ZERO,Vector3(0.122,0.10,0.126),denim)
 	var thigh_shape=Node3D.new();thigh.add_child(thigh_shape);thigh_shape.scale.y=0.34/0.405
 	_loft(thigh_shape,[Vector4(-0.415,0.092,0.095,0),Vector4(-0.32,0.105,0.11,0),Vector4(-0.14,0.12,0.125,0),Vector4(0.03,0.125,0.13,0)],denim,24)
 	_tube(thigh_shape,[Vector3(sign*0.11,-0.05,0.065),Vector3(sign*0.11,-0.21,0.065),Vector3(sign*0.086,-0.40,0.047)],0.0035,denim_light)
 	var knee=_joint("knee_"+side,thigh,Vector3(0,-0.34,0))
+	# Rounded cloth overlaps the open loft ends throughout a deep knee bend.
+	_oval(knee,Vector3.ZERO,Vector3(0.096,0.10,0.102),denim)
 	var knee_shape=Node3D.new();knee.add_child(knee_shape);knee_shape.scale.y=0.34/0.405
 	_loft(knee_shape,[Vector4(-0.40,0.081,0.08,0),Vector4(-0.34,0.084,0.082,0.01),Vector4(-0.20,0.09,0.089,0.005),Vector4(-0.03,0.095,0.101,0),Vector4(0.025,0.094,0.10,0)],denim,24)
 	for n in range(3):

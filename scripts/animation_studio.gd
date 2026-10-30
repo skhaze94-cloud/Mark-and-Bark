@@ -26,7 +26,7 @@ func _ready():
 	label("MARK & BARK",Rect2(44,20,650,48),36)
 	label("CHARACTER 2.0  /  3D PERFORMANCE STUDIO  /  3.7",Rect2(47,72,900,30),17,Color("8a713f"))
 	button("All adventures",Rect2(1040,32,192,52),func():Adventures.go(Adventures.HOME))
-	headline=label("",Rect2(80,140,1120,38),25);headline.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	headline=label("",Rect2(400,24,620,48),22);headline.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	label("MARK",Rect2(78,190,270,30),21)
 	label("Curiosity, courage & a very good landing.",Rect2(78,226,166,100),16,Color("6d725f"))
 	label("BARK",Rect2(1040,190,150,30),21)
@@ -138,6 +138,7 @@ func update_actors():
 	elif current==5:mark_id="young_actions_notebook";bark_id="bark_actions_hint";state="talk"
 	elif current==6:mark_id="young_actions_jump";bark_id="bark_actions_cheer";state="celebrate"
 	mark.texture=Art.tex(mark_id);bark.texture=Art.tex(bark_id)
+	if is_instance_valid(mark.character3d) and mark.character3d.active:height*=.74
 	mark.position.y=558-height;bark.position.y=558-height*.55
 	if grounded and not last_grounded:
 		mark.land(.7);bark.land(.5)
