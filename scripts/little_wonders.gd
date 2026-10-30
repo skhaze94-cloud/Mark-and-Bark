@@ -61,8 +61,9 @@ func interact() -> bool:
 	active = nearest()
 	age = 0.0
 	nearby = -1
-	controller.campus.bark.pulse("delight",0.8)
+	controller.campus.bark.pulse("wave",0.9)
 	controller.player.sprite.pulse("hint",0.6)
+	_friend_moment()
 	controller.play_sound("collect", [0.88,1.04,1.18][active])
 	if Progress.settings.reduced_motion:
 		age = 6.0
@@ -80,6 +81,8 @@ func _complete() -> void:
 		Mega.save()
 		revelations += 1
 	controller.campus.bark.pulse("celebrate" if visits.size()==3 else "delight",0.7)
+	controller.player.sprite.pulse("wave",.95)
+	_friend_moment()
 	active = -1
 	cooldown = 3.0
 	queue_redraw()
@@ -321,3 +324,12 @@ func _bubble(words: String) -> void:
 	lines.append(line)
 	for n in range(mini(2,lines.size())):
 		draw_string(font,rect.position+Vector2(14,22+n*19),lines[n],HORIZONTAL_ALIGNMENT_LEFT,-1,15,INK)
+
+func _friend_moment() -> void:
+	var mark=controller.player.sprite
+	var bark=controller.campus.bark
+	var direction=signf(bark.global_position.x-mark.global_position.x)
+	if direction==0:direction=1.0
+	# Convert world direction to each painted actor's local facing.
+	mark.character3d.greet_friend(direction*signf(mark.scale.x))
+	bark.character3d.greet_friend(-direction*signf(bark.scale.x))

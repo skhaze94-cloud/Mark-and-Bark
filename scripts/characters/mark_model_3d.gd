@@ -9,6 +9,8 @@ var _materials: Dictionary = {}
 var _eye_rest: Dictionary = {}
 var _brow_rest: Dictionary = {}
 var props: Dictionary = {}
+var emotion: String = "idle"
+const Paint = preload("res://scripts/characters/painted_shapes_3d.gd")
 
 func _ready() -> void:
 	build()
@@ -121,8 +123,8 @@ func _loft(parent: Node3D, rings: Array, material: Material, segments: int = 28)
 	return _mesh(parent, geometry, material)
 
 func _build_body(spine: Node3D, coat: Node3D, neck: Node3D, hips: Node3D) -> void:
-	var jacket = _mat("jacket", "265a70")
-	var blue_light = _mat("jacket_light", "428296")
+	var jacket = _mat("jacket", "2e4d6b")
+	var blue_light = _mat("jacket_light", "52778d")
 	var blue_dark = _mat("jacket_dark", "1a3048")
 	var denim = _mat("denim", "3c5a70")
 	var ochre = _mat("shirt", "e5ad38")
@@ -179,8 +181,8 @@ func _front_panel(parent: Node3D, rows: Array, material: Material) -> void:
 
 func _build_arm(spine: Node3D, side: String) -> void:
 	var sign: float = -1.0 if side == "near" else 1.0
-	var jacket = _mat("jacket", "265a70")
-	var blue_light = _mat("jacket_light", "428296")
+	var jacket = _mat("jacket", "2e4d6b")
+	var blue_light = _mat("jacket_light", "52778d")
 	var rib = _mat("jacket_dark", "1a3048")
 	var skin = _mat("skin", "e9aa73")
 	var shoulder = _joint("shoulder_"+side, spine, Vector3(sign*0.31,0.24,0))
@@ -259,7 +261,7 @@ func _build_head(head: Node3D, crown: Node3D) -> void:
 	var skin=_mat("skin","e9aa73")
 	var skin_light=_mat("skin_light","f0b67e")
 	var ear_inner=_mat("ear_inner","c78c65")
-	var face_mesh=_loft(head,[Vector4(-0.29,0.08,0.10,0.015),Vector4(-0.25,0.18,0.18,0.01),Vector4(-0.16,0.27,0.225,0),Vector4(-0.03,0.335,0.258,-0.01),Vector4(0.12,0.345,0.27,-0.018),Vector4(0.25,0.30,0.24,-0.02),Vector4(0.32,0.16,0.15,-0.02),Vector4(0.34,0.01,0.01,-0.02)],skin,36)
+	var face_mesh=_loft(head,[Vector4(-0.29,0.08,0.10,0.015),Vector4(-0.25,0.20,0.18,0.01),Vector4(-0.16,0.295,0.225,0),Vector4(-0.03,0.335,0.258,-0.01),Vector4(0.12,0.345,0.27,-0.018),Vector4(0.25,0.30,0.24,-0.02),Vector4(0.32,0.16,0.15,-0.02),Vector4(0.34,0.01,0.01,-0.02)],skin,36)
 	_paint_cheeks(face_mesh)
 	for side in [-1.0,1.0]:
 		var ear=_oval(head,Vector3(side*0.332,-0.025,-0.008),Vector3(0.085,0.115,0.065),skin)
@@ -269,16 +271,20 @@ func _build_head(head: Node3D, crown: Node3D) -> void:
 	_oval(head,Vector3(0,-0.07,0.263),Vector3(0.040,0.037,0.018),skin_light)
 
 	_build_eyes(head)
-	var mouth=Node3D.new();mouth.name="mouth";mouth.position=Vector3(0,-0.175,0.23);head.add_child(mouth);face.mouth=mouth;joints.mouth=mouth
+	var mouth=Node3D.new();mouth.name="mouth";mouth.position=Vector3(0,-0.16,0.235);head.add_child(mouth);face.mouth=mouth;joints.mouth=mouth
 	var smile_points: Array=[]
 	for n in range(13):
 		var t: float=float(n)/12.0*2.0-1.0
-		smile_points.append(Vector3(t*0.115,-0.028*(1.0-t*t),0.016*(1.0-t*t)))
+		smile_points.append(Vector3(t*0.125,-0.030*(1.0-t*t)+t*.006,0.016*(1.0-t*t)))
 	_tube(mouth,smile_points,0.0065,_mat("mouth_line","8d573e"))
 	_tube(mouth,[Vector3(-0.05,-0.041,0.01),Vector3(0,-0.046,0.019),Vector3(0.05,-0.04,0.01)],0.004,_mat("lip","d9906a"))
 	var open=Node3D.new();open.name="mouth_open";open.position=Vector3(0,-0.016,0.015);mouth.add_child(open);face.mouth_open=open
-	_oval(open,Vector3.ZERO,Vector3(0.052,0.034,0.009),_mat("mouth_inside","6f3a2d"))
-	_oval(open,Vector3(0,-0.015,0.007),Vector3(0.031,0.012,0.005),_mat("tongue","ce8b76"))
+	_oval(open,Vector3.ZERO,Vector3(0.085,0.054,0.005),_mat("mouth_inside","6f3a2d"))
+	_oval(open,Vector3(0,-0.027,0.007),Vector3(0.047,0.016,0.003),_mat("tongue","ce8b76"))
+	var tooth=_oval(open,Vector3(0,.023,.008),Vector3(.062,.013,.003),_mat("teeth","fff0d4"))
+	face.teeth=tooth
+	for paint in ["mouth_line","mouth_inside","tongue","teeth"]:
+		_materials[paint].shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
 	_build_hair(crown)
 
 func _build_eyes(head: Node3D) -> void:
@@ -295,11 +301,11 @@ func _build_eyes(head: Node3D) -> void:
 		var eye=Node3D.new();eye.name="eye_"+side;eye.position=Vector3(sign*0.14,0.014,0.234);head.add_child(eye);face["eye_"+side]=eye;joints["eye_"+side]=eye
 		eye.rotation.y=sign*0.28
 		_eye_rest[side]=eye.transform
-		_oval(eye,Vector3.ZERO,Vector3(0.085,0.098,0.010),brow_mat)
-		_oval(eye,Vector3(0,-0.002,0.007),Vector3(0.077,0.089,0.008),white)
+		Paint.almond(eye,Vector3.ZERO,Vector2(.091,.096),brow_mat)
+		Paint.almond(eye,Vector3(0,-.003,.006),Vector2(.082,.084),white)
 		var pupil=Node3D.new();pupil.name="pupil_"+side;pupil.position=Vector3(0,0,0.018);eye.add_child(pupil);face["pupil_"+side]=pupil;joints["pupil_"+side]=pupil
-		_oval(pupil,Vector3.ZERO,Vector3(0.052,0.068,0.004),iris)
-		_oval(pupil,Vector3(0,0.002,0.004),Vector3(0.039,0.056,0.003),ink)
+		_oval(pupil,Vector3.ZERO,Vector3(0.053,0.063,0.004),iris)
+		_oval(pupil,Vector3(0,0.002,0.004),Vector3(0.031,0.047,0.003),ink)
 		_oval(pupil,Vector3(-0.016,0.027,0.008),Vector3(0.012,0.014,0.002),glint)
 		var eyebrow=Node3D.new();eyebrow.name="brow_"+side;eyebrow.position=Vector3(sign*0.145,0.151,0.239);head.add_child(eyebrow);face["brow_"+side]=eyebrow;joints["brow_"+side]=eyebrow;_brow_rest[side]=eyebrow.position
 		_tube(eyebrow,[Vector3(-0.074,0,0),Vector3(-0.03,0.017,0.008),Vector3(0.028,0.018,0.008),Vector3(0.070,0.004,0)],0.011,brow_mat,0.55)
@@ -324,10 +330,10 @@ func _build_hair(crown: Node3D) -> void:
 		var z: float=sin(angle)*radius*0.76-0.03
 		var y: float=0.05+sqrt(maxf(0,1.0-pow(radius/0.34,2)))*0.09
 		_lock(crown,Vector3(x,y-0.05,z),Vector3(x+0.025,y+0.10,z+0.015),Vector3(x+0.10,y-0.015,z+0.04),0.083,[chestnut,warm,dark,light][n%4])
-	for n in range(7):
-		var x: float=-0.27+float(n)*0.087
-		var lean: float=-0.035+sin(float(n)*2.3)*0.027
-		_lock(crown,Vector3(x,0.045+sin(float(n)*1.2)*0.015,0.185),Vector3(x+lean,0.105,0.295),Vector3(x+lean*1.6,-0.022+sin(float(n)*2.1)*0.032,0.248),0.085,[chestnut,warm,dark][n%3])
+	for n in range(5):
+		var x: float=-0.26+float(n)*0.125
+		var lean: float=0.045+sin(float(n)*2.3)*0.035
+		_lock(crown,Vector3(x,0.045+sin(float(n)*1.2)*0.015,0.185),Vector3(x+lean,0.105,0.295),Vector3(x+lean*1.6,-0.045+sin(float(n)*2.1)*0.030,0.248),0.095,[chestnut,warm,dark][n%3])
 	for side in [-1.0,1.0]:
 		_lock(crown,Vector3(side*0.29,-0.025,0.04),Vector3(side*0.345,-0.09,0.085),Vector3(side*0.30,-0.235,0.04),0.056,dark)
 
@@ -362,14 +368,17 @@ func set_expression(blink: float, gaze: Vector2, mouth_open: float, smile: float
 	if not _built or face.is_empty():return
 	for side in ["near","far"]:
 		var eye: Node3D=face["eye_"+side]
-		eye.scale.y=maxf(0.04,1.0-clampf(blink,0,1))
+		var happy: float=.18 if emotion in ["delight","celebrate","cheer"] else 0.0
+		eye.scale.y=maxf(0.04,(1.0-clampf(blink,0,1))*(1.0-happy))
 		face["pupil_"+side].position=Vector3(clampf(gaze.x,-1,1)*0.010,clampf(gaze.y,-1,1)*0.012,0.018)
 		var eyebrow: Node3D=face["brow_"+side]
 		eyebrow.position=_brow_rest[side]+Vector3(0,brow*0.027,0)
-		eyebrow.rotation.z=brow*0.12*(-1.0 if side=="near" else 1.0)
+		eyebrow.rotation.z=brow*0.24*(-1.0 if side=="near" else 1.0)+(0.06 if side=="near" and emotion in ["hint","curious"] else 0.0)
 	face.mouth.scale=Vector3(1.0+smile*0.12,1.0+smile*0.16,1)
+	face.mouth.rotation.z=-.065 if emotion in ["idle","hint","curious"] else 0.0
 	face.mouth_open.visible=mouth_open>0.035
-	face.mouth_open.scale.y=maxf(0.05,mouth_open)
+	face.teeth.visible=emotion in ["delight","celebrate","cheer","jump"]
+	face.mouth_open.scale.y=maxf(0.05,mouth_open*1.7)
 
 func _paint_cheeks(part: MeshInstance3D) -> void:
 	# Pigment follows the curved skin itself, instead of floating blush geometry.
@@ -440,3 +449,6 @@ func _batch_static(parent: Node3D) -> void:
 		for part in group:
 			parent.remove_child(part)
 			part.free()
+
+func set_emotion(state: String) -> void:
+	emotion=state

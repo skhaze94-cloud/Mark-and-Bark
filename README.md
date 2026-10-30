@@ -1,3 +1,16 @@
+## 4.1 — A Painting Come to Life
+
+Mark regains a clear hairline, swept fringe, navy jacket, soft cheeks, almond eyes
+and an expressive grin. His goggles now travel on his satchel. Bark has a generous
+illustrated toothy grin, asymmetrical brows, a quieter crown and an elastic trunk.
+Both friends wave, glance toward each other at library discoveries, and show
+held expressions for curiosity and delight. Warm matte pigment varies subtly
+across modeled surfaces; face paint remains clear at gameplay size.
+
+Original artwork, the two painting styles, saved progression and movement are
+preserved. Android 4.1.0 (410) uses the existing package and signing identity.
+See [design and validation notes](docs/CHARACTERS_4_1.md).
+
 ## 4.0 — Painted Hearts
 
 Mark and Bark regain a gentler illustrated expression through shallow painted eyes,

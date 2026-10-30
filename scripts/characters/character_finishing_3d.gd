@@ -9,6 +9,7 @@ var pieces=[]
 var motes=[]
 var flourish_age=2.0
 var was_cheering=false
+var settle=0.0
 
 func mat(id,colour,metal=0.0):
  if materials.has(id):return materials[id]
@@ -48,20 +49,11 @@ func build(model,kind):
  build_flourish()
 
 func mark_details(model):
- var head=model.joints.head;var spine=model.joints.spine
+ var face_head=model.joints.head;var spine=model.joints.spine
  mat("scarf","bd5345").cull_mode=BaseMaterial3D.CULL_DISABLED
  var brass=mat("brass","dbb96e",.65);var leather=mat("leather","9c563b");var stitch=mat("stitch","f0d39a")
- # Goggles sit over the hairline; recessed teal glass and raised rims have depth.
- rod(head,Vector3(-.31,.235,.08),Vector3(-.24,.235,.245),.028,leather)
- rod(head,Vector3(.31,.235,.08),Vector3(.24,.235,.245),.028,leather)
- for x in [-.135,.135]:
-  oval(head,Vector3(x,.235,.245),Vector3(.105,.082,.028),leather)
-  ring(head,Vector3(x,.235,.27),.075,.012,brass)
-  oval(head,Vector3(x,.235,.277),Vector3(.062,.062,.012),mat("glass","3f9eaa",.25))
-  oval(head,Vector3(x-.021,.26,.291),Vector3(.018,.008,.004),stitch)
- rod(head,Vector3(-.05,.235,.278),Vector3(.05,.235,.278),.014,brass)
  for side in [-1,1]:
-  for i in range(3):oval(head,Vector3(side*(.18+i*.027),-.105+(i%2)*.022,.221-i*.009),Vector3(.007,.008,.004),mat("freckles","ad704e"))
+  for i in range(3):oval(face_head,Vector3(side*(.18+i*.027),-.105+(i%2)*.022,.221-i*.009),Vector3(.007,.008,.004),mat("freckles","ad704e"))
  # A soft red neckerchief creates a clear colour accent at gameplay size.
  oval(spine,Vector3(0,.355,.035),Vector3(.17,.075,.115),mat("scarf","bd5345"))
  oval(spine,Vector3(.13,.315,.16),Vector3(.065,.062,.05),mat("scarflight","ea8260"))
@@ -75,6 +67,16 @@ func mark_details(model):
  oval(bag,Vector3(0,.065,.088),Vector3(.158,.11,.043),mat("flap","be7950"))
  ring(bag,Vector3(0,.015,.135),.024,.007,brass)
  for i in range(7):oval(bag,Vector3(-.11+i*.036,.09,.127),Vector3(.007,.003,.003),stitch)
+ # Goggles are clipped to the satchel, leaving the expressive hairline clear.
+ var head=pivot(bag,Vector3(0,-.06,.10));head.scale=Vector3.ONE*.43
+ rod(head,Vector3(-.31,.235,.08),Vector3(-.24,.235,.245),.028,leather)
+ rod(head,Vector3(.31,.235,.08),Vector3(.24,.235,.245),.028,leather)
+ for x in [-.135,.135]:
+  oval(head,Vector3(x,.235,.245),Vector3(.105,.082,.028),leather)
+  ring(head,Vector3(x,.235,.27),.075,.012,brass)
+  oval(head,Vector3(x,.235,.277),Vector3(.062,.062,.012),mat("glass","3f9eaa",.25))
+  oval(head,Vector3(x-.021,.26,.291),Vector3(.018,.008,.004),stitch)
+ rod(head,Vector3(-.05,.235,.278),Vector3(.05,.235,.278),.014,brass)
  # A small enamel star pin, visible on the opposite lapel.
  var pin=pivot(spine,Vector3(-.225,.15,.175))
  oval(pin,Vector3.ZERO,Vector3(.049,.049,.012),brass)
@@ -88,9 +90,9 @@ func bark_details(model):
  var green=mat("emerald","49825b");green.cull_mode=BaseMaterial3D.CULL_DISABLED
  var lime=mat("lime","a6b85f");lime.cull_mode=BaseMaterial3D.CULL_DISABLED
  var copper=mat("copper","d3924d");copper.cull_mode=BaseMaterial3D.CULL_DISABLED
- for i in range(6):
+ for i in range(4):
   var a=i*2.39996
-  var p=leaf(crown,Vector3(cos(a)*.22,.04+(i%3)*.035,sin(a)*.17),Vector3(sin(a)*.85,a,cos(a)*-.95),.24+(i%3)*.035,.085,[green,lime,copper][i%3])
+  var p=leaf(crown,Vector3(cos(a)*.22,.04+(i%3)*.035,sin(a)*.17),Vector3(sin(a)*.85,a,cos(a)*-.95),.19+(i%3)*.025,.070,[green,lime,copper][i%3])
   leaves.append({"node":p,"rest":p.rotation,"phase":float(i)})
  # Moss pads follow the woody shoulder contours, away from the facial panel.
  for side in [-1,1]:
@@ -116,11 +118,14 @@ func bark_details(model):
  oval(flower,Vector3(0,0,.017),Vector3(.025,.025,.015),mat("pollen","d79d3e"))
 
 func advance(delta,motion,still,reduced):
+ if reduced:
+  for mote in motes:mote.hide()
  if still:return
  if reduced:
   flourish_age=2.0
   for mote in motes:mote.hide()
  else:
+  settle=maxf(0,settle-delta*3.0)
   clock+=delta
   flourish_age+=delta
   for i in range(motes.size()):
@@ -137,7 +142,7 @@ func advance(delta,motion,still,reduced):
   tails[i].rotation.x=0 if reduced else -.15-speed*.7+sin(clock*6-i)*(.07+speed*.1)
   tails[i].rotation.z=-.55-i*.2+(0 if reduced else sin(clock*3.5-i)*.08)
  for item in leaves:
-  item.node.rotation=item.rest if reduced else item.rest+Vector3(sin(clock*2.7+item.phase)*(.035+speed*.06),0,cos(clock*3.1+item.phase)*.035)
+  item.node.rotation=item.rest if reduced else item.rest+Vector3(sin(clock*2.7+item.phase)*(.015+speed*.06+settle*.07),0,cos(clock*3.1+item.phase)*(.015+settle*.03))
 
 func batch(model):
  var boundaries=model.joints.values()+tails
@@ -165,3 +170,6 @@ func build_flourish():
 
 func celebrate():
  if flourish_age>=1.2:flourish_age=0.0
+
+func land(strength):
+ settle=clampf(strength,0,1)

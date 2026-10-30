@@ -119,6 +119,7 @@ func _build_model() -> void:
 	finishing = preload("res://scripts/characters/character_finishing_3d.gd").new()
 	model.add_child(finishing)
 	finishing.build(model,role)
+	_painted_materials(model,{})
 	performance.bind_model(model)
 	_built_role = role
 	_request_frame = true
@@ -196,6 +197,7 @@ func pulse(name: String, seconds: float) -> void:
 func land(strength: float) -> void:
 	if is_instance_valid(performance):
 		performance.land(strength)
+		finishing.land(strength)
 		_request_frame = true
 
 func reset_motion() -> void:
@@ -224,3 +226,22 @@ func projected_joint(id: String) -> Vector2:
 	# Transform into the semantic Sprite2D's coordinates for existing overlays.
 	var local: Vector2 = display.position + camera.unproject_position(point) * display.scale
 	return transform * local
+
+func greet_friend(direction: float) -> void:
+	if is_instance_valid(performance):
+		performance.look_at_friend(direction)
+		_request_frame=true
+
+func _painted_materials(node: Node, cache: Dictionary) -> void:
+	if node is GeometryInstance3D and node.material_override is StandardMaterial3D:
+		var source: StandardMaterial3D=node.material_override
+		if source.shading_mode!=BaseMaterial3D.SHADING_MODE_UNSHADED and source.cull_mode!=BaseMaterial3D.CULL_DISABLED:
+			var id=source.get_instance_id()
+			if not cache.has(id):
+				var paint=ShaderMaterial.new()
+				paint.shader=preload("res://shaders/character_pigment.gdshader")
+				paint.set_shader_parameter("pigment",source.albedo_color)
+				paint.set_shader_parameter("vertex_pigment",source.vertex_color_use_as_albedo)
+				cache[id]=paint
+			node.material_override=cache[id]
+	for child in node.get_children():_painted_materials(child,cache)

@@ -23,6 +23,28 @@ func _ready():
   check(f.motes.all(func(m):return not m.visible),"Reduced motion hides flourishes")
   f.celebrate();f.advance(1.3,Vector2.ZERO,false,false)
   check(f.motes.all(func(m):return not m.visible) and count==f.get_child_count(),"Flourishes expire without allocation")
+  f.celebrate();f.advance(.1,Vector2.ZERO,false,false)
+  f.advance(.1,Vector2.ZERO,true,true)
+  check(f.motes.all(func(m):return not m.visible),"Reduced motion hides visible flecks even during pause")
+  var performance=actor.character3d.performance
+  performance.drive("idle",true);performance.advance(.1)
+  var resting=performance.model.joints.shoulder_far.rotation
+  performance.pulse("wave",1.0);performance.advance(.1)
+  check(performance.active_state=="wave" and performance.model.joints.shoulder_far.rotation.distance_to(resting)>.3,"A greeting performs a visible articulated wave")
+  check(performance.model.emotion=="wave","Event expression follows the greeting pose")
+  performance.look_at_friend(1);performance.advance(.1)
+  check(performance.gaze.x>0 and performance.model.joints.head.rotation.y>0,"Discovery glance directs eyes and head toward the friend")
+  var remaining=performance.friend_left;performance.frozen=true;performance.advance(.1)
+  check(performance.friend_left==remaining,"Pause freezes the shared glance")
+  performance.frozen=false;performance.reduced_motion=true;performance.advance(.1)
+  var held=performance.model.joints.wrist_far.rotation
+  performance.advance(.1)
+  check(performance.model.joints.wrist_far.rotation.is_equal_approx(held),"Reduced motion holds the greeting without oscillating")
+  performance.reduced_motion=false
+  for i in range(25):performance.advance(.1)
+  check(performance.friend_left==0 and performance.active_state=="idle","Greeting and glance return to a calm idle")
+  performance.drive("celebrate",true);performance.advance(.1)
+  check(performance.smile>.8 and performance.mouth_open>.4,"Celebration has a distinct delighted expression")
   actor.free()
  print("PAINTED RESULT: ",passed," passed; ",failures," failed")
  get_tree().quit(0 if failures==0 else 1)
