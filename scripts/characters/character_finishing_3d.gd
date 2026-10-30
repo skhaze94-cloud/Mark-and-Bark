@@ -1,6 +1,10 @@
 extends Node3D
 ## Joint-mounted sculptural details. Updated only by the character presenter.
 var tails=[]
+var tail_chains=[]
+var tail_velocity=0.0
+var tail_bend=0.0
+var skin_rig: Skeleton3D
 var leaves=[]
 var clock=0.0
 var role="mark"
@@ -45,6 +49,7 @@ func leaf(parent,at,angle,length_value,width,material):
 
 func build(model,kind):
  role=kind
+ skin_rig=model.soft_skin
  if role=="mark":mark_details(model)
  else:bark_details(model)
  batch(model)
@@ -61,7 +66,9 @@ func mark_details(model):
  oval(spine,Vector3(.13,.315,.16),Vector3(.065,.062,.05),mat("scarflight","ea8260"))
  for i in range(2):
   var p=pivot(spine,Vector3(.13+i*.035,.31,.12));p.rotation.z=-.55-i*.2
-  leaf(p,Vector3.ZERO,Vector3(PI,0,0),.34-i*.07,.065,mat("scarf","bd5345"));tails.append(p)
+  var mid=pivot(p,Vector3(0,-(.34-i*.07)*.5,0))
+  skin_rig.ribbon("PaintedScarf"+str(i),[p,mid],.34-i*.07,.065,mat("scarf","bd5345"))
+  tails.append(p);tail_chains.append(mid)
  # Cross-body leather strap and rounded, gusseted notebook satchel.
  rod(spine,Vector3(-.23,.26,.16),Vector3(.23,-.23,.19),.026,leather)
  var bag=pivot(spine,Vector3(.27,-.19,-.035))
@@ -143,9 +150,20 @@ func advance(delta,motion,still,reduced):
     mote.rotation=Vector3(t*2+i,t+i,t*3+i)
     mote.scale=Vector3.ONE*(1.0-t/1.2)
  var speed=clampf(absf(motion.x)/260.0,0,1)
+ # Damped follow-through responds to acceleration and landing, and rests calmly.
+ var dt=clampf(delta,0,.05)
+ var target=-speed*.65-settle*.22
+ if reduced:
+  tail_bend=0;tail_velocity=0
+ else:
+  tail_velocity+=(target-tail_bend)*65*dt
+  tail_velocity*=exp(-12*dt)
+  tail_bend=clampf(tail_bend+tail_velocity*dt,-1.0,.30)
  for i in range(tails.size()):
-  tails[i].rotation.x=0 if reduced else -.15-speed*.7+sin(clock*6-i)*(.07+speed*.1)
-  tails[i].rotation.z=-.55-i*.2+(0 if reduced else sin(clock*3.5-i)*.08)
+  tails[i].rotation.x=0 if reduced else tail_bend*.55
+  tails[i].rotation.z=-.55-i*.2
+  tail_chains[i].rotation.x=0 if reduced else tail_bend*(1.0+i*.15)
+ if not tails.is_empty():skin_rig.sync()
  for item in leaves:
   var lift=.10 if emotion in ["curious","thinking","spot"] else 0.0
   item.node.rotation=item.rest if reduced else item.rest+Vector3(lift+sin(clock*2.7+item.phase)*(.015+speed*.06+settle*.07),0,cos(clock*3.1+item.phase)*(.015+settle*.03))

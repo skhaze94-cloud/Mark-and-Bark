@@ -11,6 +11,8 @@ var _brow_rest: Dictionary = {}
 var props: Dictionary = {}
 var emotion: String = "idle"
 var hands: Dictionary = {}
+var soft_skin: Skeleton3D
+const SoftSkin = preload("res://scripts/characters/soft_skin_3d.gd")
 const Paint = preload("res://scripts/characters/painted_shapes_3d.gd")
 
 func _ready() -> void:
@@ -20,6 +22,8 @@ func build() -> void:
 	if _built:
 		return
 	_built = true
+	soft_skin = SoftSkin.new()
+	soft_skin.configure(self)
 	# A little shoulder and torso breadth gives the child a solid silhouette.
 	scale = Vector3(1.12, 1.0, 1.06)
 	var hips = _joint("hips", self, Vector3(0, 0.895, 0))
@@ -198,17 +202,13 @@ func _build_arm(spine: Node3D, side: String) -> void:
 	var shoulder = _joint("shoulder_"+side, spine, Vector3(sign*0.275,0.20,0))
 	shoulder.rotation.z=sign*0.095
 	_oval(shoulder,Vector3.ZERO,Vector3(0.102,0.105,0.10),jacket)
-	_loft(shoulder,[Vector4(-0.30,0.087,0.09,0.01),Vector4(-0.23,0.105,0.105,0),Vector4(-0.10,0.115,0.115,0),Vector4(0.01,0.092,0.09,0)],jacket,20)
 	var elbow = _joint("elbow_"+side, shoulder, Vector3(0,-0.285,0.015))
 	elbow.rotation.x=-0.23
-	_oval(elbow,Vector3.ZERO,Vector3(0.101,0.103,0.101),jacket)
-	_loft(elbow,[Vector4(-0.285,0.072,0.075,0),Vector4(-0.245,0.092,0.095,0),Vector4(-0.12,0.09,0.095,0.015),Vector4(0.02,0.09,0.092,0)],jacket,20)
-	for n in range(3):
-		var y: float=-0.12-float(n)*0.045
-		_tube(elbow,[Vector3(-0.07,y,0.05),Vector3(0,y-0.013,0.099),Vector3(0.07,y+0.004,0.045)],0.004,blue_light)
-	_loft(elbow,[Vector4(-0.29,0.074,0.076,0),Vector4(-0.275,0.08,0.08,0),Vector4(-0.245,0.083,0.084,0)],rib,20)
 	var wrist=_joint("wrist_"+side,elbow,Vector3(0,-0.28,0))
 	wrist.scale=Vector3(1.08,1.08,1.04)
+	soft_skin.limb("ContinuousSleeve_"+side,[shoulder,elbow,wrist],[.103,.096,.078],jacket,1.04)
+	# A cuff belongs to the hand attachment, clear of the elbow deformation zone.
+	_loft(wrist,[Vector4(-.008,.080,.082,0),Vector4(.025,.082,.084,0),Vector4(.045,.080,.081,0)],rib,24)
 	_loft(wrist,[Vector4(-0.15,0.04,0.035,0.01),Vector4(-0.10,0.068,0.046,0.01),Vector4(-0.025,0.069,0.042,0),Vector4(0.025,0.046,0.038,0)],skin,20)
 	# Soft palm with separate rounded fingers; the index stays readable when pointing.
 	var digits=[]
@@ -231,21 +231,11 @@ func _build_leg(hips: Node3D, side: String) -> void:
 	var thigh=_joint("thigh_"+side,hips,Vector3(sign*0.14,-0.015,0))
 	thigh.rotation.z=-sign*.045
 	_oval(thigh,Vector3.ZERO,Vector3(0.122,0.10,0.126),denim)
-	var thigh_shape=Node3D.new();thigh.add_child(thigh_shape);thigh_shape.scale.y=0.34/0.405
-	_loft(thigh_shape,[Vector4(-0.415,0.092,0.095,0),Vector4(-0.32,0.105,0.11,0),Vector4(-0.14,0.12,0.125,0),Vector4(0.03,0.125,0.13,0)],denim,24)
-	_tube(thigh_shape,[Vector3(sign*0.11,-0.05,0.065),Vector3(sign*0.11,-0.21,0.065),Vector3(sign*0.086,-0.40,0.047)],0.0035,denim_light)
 	var knee=_joint("knee_"+side,thigh,Vector3(0,-0.34,0))
-	# Rounded cloth overlaps the open loft ends throughout a deep knee bend.
-	_oval(knee,Vector3.ZERO,Vector3(0.105,0.113,0.110),denim)
-	var knee_shape=Node3D.new();knee.add_child(knee_shape);knee_shape.scale.y=0.34/0.405
-	_loft(knee_shape,[Vector4(-0.40,0.081,0.08,0),Vector4(-0.34,0.084,0.082,0.01),Vector4(-0.20,0.09,0.089,0.005),Vector4(-0.03,0.095,0.101,0),Vector4(0.025,0.094,0.10,0)],denim,24)
-	for n in range(3):
-		var y: float=-0.065-float(n)*0.055
-		_tube(knee_shape,[Vector3(-0.076,y,0.05),Vector3(-0.02,y-0.012,0.098),Vector3(0.064,y+0.006,0.067)],0.0035,denim_light)
-	_loft(knee_shape,[Vector4(-0.405,0.085,0.085,0),Vector4(-0.37,0.095,0.088,0),Vector4(-0.35,0.092,0.085,0)],denim_light,24)
-	_tube(knee_shape,[Vector3(-0.082,-0.37,0.018),Vector3(0,-0.38,0.092),Vector3(0.08,-0.37,0.02)],0.0035,denim_dark)
 	var ankle=_joint("ankle_"+side,knee,Vector3(0,-0.34,0))
 	ankle.rotation.y=sign*.18
+	soft_skin.limb("ContinuousTrouser_"+side,[thigh,knee,ankle],[.122,.098,.086],denim,1.04)
+	_loft(ankle,[Vector4(-.01,.089,.088,0),Vector4(.025,.096,.091,0),Vector4(.050,.091,.089,0)],denim_light,24)
 	_joint("toe_"+side,ankle,Vector3(0,-0.18,0.24))
 	_build_shoe(ankle,sign)
 
@@ -454,7 +444,7 @@ func set_pose_state(state: String) -> void:
 
 func _batch_static(parent: Node3D) -> void:
 	for child in parent.get_children():
-		if child is Node3D and not child is MeshInstance3D:
+		if child is Node3D and not child is MeshInstance3D and not child is Skeleton3D:
 			_batch_static(child)
 	var groups: Dictionary={}
 	for child in parent.get_children():

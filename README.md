@@ -1,3 +1,15 @@
+## 4.5 — Soft & Springy
+
+Continuous weighted sleeves, trouser legs, branches and leg roots bend across
+elbows and knees. Bark's trunk and painted grain deform together; Mark's scarf
+uses flexible ribbons with damped follow-through. Original faces and proportions,
+all adventures, saves, minimal HUD and painting styles remain.
+
+Android 4.5.0 (450) retains the existing package and signing identity. See
+[implementation and testing boundaries](docs/CHARACTERS_4_5.md). Physical Android
+device performance remains untested; small accessories and attachment pieces
+retain their existing articulated construction.
+
 ## 4.3 — Original Shapes
 
 A proportion correction against the original front/side paintings: Bark has a

@@ -18,7 +18,7 @@ func run():
  for i in 4:await process_frame
  DirAccess.make_dir_recursive_absolute(directory)
  var baseline="--baseline" in OS.get_cmdline_user_args()
- var tag="4.3" if baseline else "4.4"
+ var tag="4.4" if baseline else "4.5"
  if "--movie" in OS.get_cmdline_user_args():
   await movie();quit();return
  for pose in ["idle","curious","uncertain","surprise","delight","wave","present","walk","jump","talk"]:
@@ -35,14 +35,17 @@ func run():
    for actor in actors:actor.character3d.viewport.get_texture().get_image().save_png(directory+"/"+tag+"_"+actor.role+"_"+pose+"_"+view+".png")
  quit()
 func movie():
- for frame in range(288):
+ for frame in range(384):
   var t=float(frame)/24.0
-  var stage=int(t/2.0)
-  var state=["idle","curious","surprise","present","laugh","delight"][mini(stage,5)]
-  headline.text="SEAMLESS MOTION · "+["A quiet moment","What have you found?","Oh!","Look at this!","An excellent joke","Two very happy friends"][mini(stage,5)]
+  var stage=mini(int(t/2.0),7)
+  var state=["idle","walk","anticipate","jump","land","wave","thinking","delight"][stage]
+  headline.text="SOFT & SPRINGY · "+["Two painted friends","A confident little stride","Ready…","A spring into the air","A soft landing","Hello, friend!","A very important thought","A leafy celebration"][stage]
   for actor in actors:
    actor.frozen=false
-   actor.drive("thinking" if state=="curious" and actor.role=="bark" else state,true)
-   if stage==3 and frame%48==0:actor.character3d.greet_friend(1 if actor.role=="mark" else -1)
+   var velocity=Vector2(150,0) if stage==1 else Vector2(80,lerpf(-320,260,fmod(t,2)/2)) if stage==3 else Vector2.ZERO
+   actor.drive(state,stage!=3,velocity,t*5)
+   if stage==4 and frame%48==0:
+    actor.character3d.performance.land(.85)
+    actor.character3d.finishing.land(.85)
    actor._process(1.0/24.0)
   await process_frame

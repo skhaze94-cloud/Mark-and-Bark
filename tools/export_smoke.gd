@@ -57,6 +57,9 @@ func run():
 	menu.back_button.pressed.emit();await ticks(3)
 	check(home.music_player.stream_paused and is_equal_approx(progress.settings.volume,.35),"Export applies mute and volume without restarting the scene")
 	check(home.mark.character3d.active and home.bark.character3d.active,"Exported home renders both genuine3D character models")
+	for friend in [home.mark,home.bark]:
+		var rig=friend.character3d.model.soft_skin
+		check(rig is Skeleton3D and rig.get_bone_count()>=12 and rig.surfaces.size()>=4 and rig.surfaces.all(func(p):return p.skin!=null),"Export contains weighted character surfaces and their real skeleton")
 	await nav.go(nav.STORY,"start_continue");var story=current_scene;await ticks(6)
 	check(story.mode=="campus" and story.campus.backgrounds.size()==3 and story.campus.board!=null,"Export enters the full painted story with its invention board")
 	check(story.player.sprite.texture!=null and story.player.sprite.character3d.active and not story.player.sprite.mesh.visible,"Export renders3D characters while retaining original source artwork")

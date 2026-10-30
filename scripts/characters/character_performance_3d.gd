@@ -344,6 +344,8 @@ func _apply_pose(delta: float, immediate: bool = false) -> void:
 	if model.has_method("set_pose_state") and active_state != _last_prop_state:
 		model.call("set_pose_state", active_state)
 		_last_prop_state = active_state
+	if model.get("soft_skin") != null:
+		model.soft_skin.sync()
 	applied_positions.clear()
 	for key in joints:
 		applied_positions[key] = joint_position(key)

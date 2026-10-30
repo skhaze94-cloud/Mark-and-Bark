@@ -38,7 +38,7 @@ def main():
                                 check=True, capture_output=True, text=True)
         report[label] = result.stdout
     assert "name='com.samkhaze.markandbark'" in report['badging']
-    assert "versionCode='440' versionName='4.4.0'" in report['badging']
+    assert "versionCode='450' versionName='4.5.0'" in report['badging']
     assert "native-code: 'arm64-v8a'" in report['badging']
     assert "targetSdkVersion:'35'" in report['badging']
     assert 'uses-permission:' not in report['badging']

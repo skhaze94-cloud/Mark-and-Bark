@@ -14,6 +14,8 @@ var _smile_line: Node3D
 var _surprised: Node3D
 var _cheeks: Array[Node3D] = []
 var emotion: String = "idle"
+var soft_skin: Skeleton3D
+const SoftSkin = preload("res://scripts/characters/soft_skin_3d.gd")
 const Paint = preload("res://scripts/characters/painted_shapes_3d.gd")
 
 func _ready() -> void:
@@ -26,19 +28,23 @@ func build() -> void:
 	# Broad living-tree presence, with a modest height increase over the painting.
 	scale = Vector3(1.10,1.0,1.08)
 	_materials()
+	soft_skin = SoftSkin.new()
+	soft_skin.configure(self)
 	var hips = _joint("hips", self, Vector3(0, 0.44, 0))
 	var spine = _joint("spine", hips, Vector3(0, 0.27, 0))
-	# A single continuous trunk reaches down around the hips. There is no
-	# separate pelvic bowl or visible waist hinge when the upper body leans.
-	_trunk(spine, -0.32, 1.02, 0.13, 0.29, 0.76, 17)
-	_chips(spine, -0.30, 0.98, 0.14, 0.29, 0.76, 86, 17)
-	_bark_ridges(spine, -0.32, 1.01, 0.13, 0.29, 0.76, 6, 0)
-	_bark_fringe(spine)
 	var neck = _joint("neck", spine, Vector3(0, 0.61, 0.01))
 	var head = _joint("head", neck, Vector3.ZERO)
-	_trunk(head, -0.08, 0.56, 0.31, 0.32, 0.79, 43, true)
-	_chips(head, -0.055, 0.54, 0.31, 0.32, 0.79, 40, 31, true)
-	_bark_ridges(head, -0.06, 0.56, 0.31, 0.32, 0.79, 12, 1)
+	# One uninterrupted surface from the root hem to the uneven crown.
+	var trunk = Node3D.new(); spine.add_child(trunk)
+	_trunk(trunk,-.32,1.41,.13,.32,.79,17,true)
+	_chips(trunk,-.30,.98,.14,.29,.76,86,17)
+	_bark_ridges(trunk,-.32,1.01,.13,.29,.76,6,0)
+	_bark_fringe(trunk)
+	var upper = Node3D.new(); head.add_child(upper)
+	_chips(upper,-.055,.54,.31,.32,.79,40,31,true)
+	_bark_ridges(upper,-.06,.56,.31,.32,.79,12,1)
+	_skin_trunk(trunk)
+	_skin_trunk(upper)
 	_face(head)
 	_crown(head)
 	for side in [-1.0, 1.0]:
@@ -108,7 +114,7 @@ func _ellipsoid(parent: Node3D, at: Vector3, radii: Vector3, material: Material)
 func _trunk(parent: Node3D, bottom: float, height: float, radius_bottom: float, radius_top: float, depth: float, seed: int, broken: bool = false) -> void:
 	var st = SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var rings: int = 13
+	var rings: int = 40 if height > 1.3 else 13
 	var sides: int = 36
 	var rows: Array = []
 	for row in range(rings + 1):
@@ -117,7 +123,9 @@ func _trunk(parent: Node3D, bottom: float, height: float, radius_bottom: float, 
 		for n in range(sides):
 			var angle: float = float(n) * TAU / sides
 			var grain: float = sin(angle * 13.0 + t * 2.2 + seed) * 0.018 + sin(angle * 23.0 - t + seed) * 0.009
-			var radius: float = lerpf(radius_bottom, radius_top, t) + sin(t * PI) * 0.025 + grain
+			var profile: float = lerpf(.13,.30,smoothstep(0,.72,t)) if height>1.3 else lerpf(radius_bottom,radius_top,t)
+			if height>1.3:profile=lerpf(profile,.32,smoothstep(.65,1,t))
+			var radius: float = profile + sin(t * PI) * 0.015 + grain
 			# The face occupies this sector: keep grain behind its painted surface.
 			if broken and sin(angle)>.6 and t<.82:
 				radius=minf(radius,.315)
@@ -192,6 +200,10 @@ func _chips(parent: Node3D, bottom: float, height: float, radius_bottom: float, 
 	instance.name = "RaisedBarkGrain"
 	instance.multimesh = multimesh
 	instance.material_override = materials.wood
+	# Preserve authored data: the headless renderer cannot read MultiMesh GPU
+	# transforms back reliably while a procedural model is being constructed.
+	instance.set_meta("painted_transforms",transforms)
+	instance.set_meta("painted_colors",colors)
 	parent.add_child(instance)
 
 func _bark_ridges(parent: Node3D, bottom: float, height: float, radius_bottom: float, radius_top: float, depth: float, count: int, skip_face: int) -> void:
@@ -240,14 +252,10 @@ func _arm(spine: Node3D, side: float) -> void:
 	var suffix: String="near" if side<0 else "far"
 	var shoulder=_joint("shoulder_"+suffix,spine,Vector3(side*.25,.40,-.015))
 	shoulder.rotation.z=side*.85
-	_ellipsoid(shoulder,Vector3.ZERO,Vector3(.062,.068,.060),materials.joint_wood)
-	_tube(shoulder,[Vector3.ZERO,Vector3(side*.025,-.085,.01),Vector3(side*.025,-.18,.025)],[.057,.045,.035],materials.wood,12,21)
 	var elbow=_joint("elbow_"+suffix,shoulder,Vector3(side*.025,-.18,.025))
 	elbow.rotation.z=side*.85
-	_ellipsoid(elbow,Vector3.ZERO,Vector3(.043,.052,.043),materials.joint_wood)
-	_tube(elbow,[Vector3.ZERO,Vector3(-side*.015,-.085,.04),Vector3(side*.015,-.16,.065)],[.036,.041,.033],materials.wood,12,11)
 	var wrist=_joint("wrist_"+suffix,elbow,Vector3(side*.015,-.16,.065))
-	_ellipsoid(wrist,Vector3.ZERO,Vector3(.040,.048,.041),materials.joint_wood)
+	soft_skin.limb("LivingBranch_"+suffix,[shoulder,elbow,wrist],[.057,.040,.033],materials.wood,1.0,true)
 	# Five long twig rays grow from a forked palm; no mitten-shaped hand mass.
 	_tube(wrist,[Vector3(0,.02,0),Vector3(0,-.065,.015),Vector3(0,-.11,.02)],[.039,.046,.029],materials.wood,12,8)
 	var tips=[Vector3(-.18,-.12,.025),Vector3(-.13,-.255,.035),Vector3(-.025,-.30,.035),Vector3(.09,-.265,.025),Vector3(.19,-.17,.015)]
@@ -262,12 +270,9 @@ func _arm(spine: Node3D, side: float) -> void:
 func _leg(hips: Node3D, side: float) -> void:
 	var suffix: String = "near" if side < 0 else "far"
 	var thigh = _joint("thigh_"+suffix, hips, Vector3(side*0.12,-0.025,0))
-	_tube(thigh,[Vector3.ZERO,Vector3(side*0.015,-0.12,0.015),Vector3(side*0.025,-0.20,0.035)],[0.095,0.085,0.07],materials.wood,11,4)
-	var knee = _joint("knee_"+suffix, thigh, Vector3(side*0.025,-0.20,0.035))
-	_ellipsoid(knee,Vector3.ZERO,Vector3(.080,.085,.080),materials.joint_wood)
-	_tube(knee,[Vector3.ZERO,Vector3(side*.025,-.06,-.012),Vector3(side*.045,-.12,-.01),Vector3(side*.05,-.16,.015)],[.075,.081,.079,.080],materials.wood,12,7)
-	var ankle = _joint("ankle_"+suffix, knee, Vector3(side*0.05,-0.16,0.015))
-	_ellipsoid(ankle,Vector3.ZERO,Vector3(.083,.075,.083),materials.joint_wood)
+	var knee = _joint("knee_"+suffix, thigh, Vector3(side*.025,-.20,.035))
+	var ankle = _joint("ankle_"+suffix,knee,Vector3(side*.05,-.16,.015))
+	soft_skin.limb("LivingRoot_"+suffix,[thigh,knee,ankle],[.095,.075,.080],materials.wood,1.0,true)
 	var toe = _joint("toe_"+suffix, ankle, Vector3(0,-0.025,0.075))
 	_ellipsoid(toe,Vector3(0,0.030,0.025),Vector3(0.14,0.065,0.16),materials.ridge)
 	for root in range(4):
@@ -459,6 +464,8 @@ func _collect_static(branch: Node3D, relative: Transform3D, groups: Dictionary, 
 			if not groups.has(key):
 				groups[key] = []
 			groups[key].append({"node":child,"transform":relative*child.transform})
+		elif child is Skeleton3D:
+			continue
 		elif child is MultiMeshInstance3D:
 			continue
 		elif child is Node3D:
@@ -469,3 +476,28 @@ func _collect_static(branch: Node3D, relative: Transform3D, groups: Dictionary, 
 
 func set_emotion(state: String) -> void:
 	emotion=state
+
+func _skin_trunk(branch: Node3D) -> void:
+	_batch_static(branch,{})
+	_skin_trunk_children(branch)
+	branch.get_parent().remove_child(branch); branch.free()
+
+func _skin_trunk_children(branch: Node3D) -> void:
+	for child in branch.get_children():
+		if child is MeshInstance3D:
+			soft_skin.trunk_part(child)
+		elif child is MultiMeshInstance3D:
+			var st=SurfaceTool.new(); st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			var source=child.multimesh.mesh.surface_get_arrays(0)
+			var transforms=child.get_meta("painted_transforms")
+			var colors=child.get_meta("painted_colors")
+			for i in range(transforms.size()):
+				var at: Transform3D=transforms[i]
+				for index in source[Mesh.ARRAY_INDEX]:
+					st.set_color(colors[i])
+					st.set_normal((at.basis.inverse().transposed()*source[Mesh.ARRAY_NORMAL][index]).normalized())
+					st.add_vertex(at*source[Mesh.ARRAY_VERTEX][index])
+			var part=_mesh(branch,st.commit(),child.material_override)
+			soft_skin.trunk_part(part)
+		else:
+			_skin_trunk_children(child)

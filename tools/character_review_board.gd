@@ -22,34 +22,34 @@ func save_board(board,name):
  board.queue_free();await process_frame
 func run():
  var board=Board.new();root.add_child(board)
- board.title("MARK & BARK · ORIGINAL SHAPES",Vector2(34,14),28)
- for col in range(3):board.title(["Original concept paintings","4.2 · Full of Character","4.3 · Original Shapes"][col],Vector2(col*426+32,57),20)
+ board.title("MARK & BARK · SOFT & SPRINGY",Vector2(34,14),28)
+ for col in range(3):board.title(["Original concept paintings","4.4 · Seamless Motion","4.5 · Soft & Springy"][col],Vector2(col*426+32,57),20)
  for row in range(2):
   var role="mark" if row==0 else "bark";var y=365 if row==0 else 685
   board.title(role.to_upper(),Vector2(20,105+row*310),16)
   board.art("res://assets/"+("young_front.png" if row==0 else "bark_front.png"),Vector2(210,y),255)
-  for col in [1,2]:board.art(DIR+("4.2" if col==1 else "4.3")+"_"+role+"_idle_front.png",Vector2(col*426+210,y),255)
- await save_board(board,"character43_comparison.png")
- board=Board.new();root.add_child(board);board.title("4.3 · FACES, SILHOUETTES & VIEWS",Vector2(30,12),28)
+  for col in [1,2]:board.art(DIR+("4.4" if col==1 else "4.5")+"_"+role+"_idle_front.png",Vector2(col*426+210,y),255)
+ await save_board(board,"character45_comparison.png")
+ board=Board.new();root.add_child(board);board.title("4.5 · FACES, SILHOUETTES & VIEWS",Vector2(30,12),28)
  var views=["front","quarter","front","quarter"]
  for col in range(4):
   var pose="idle" if col<2 else "delight"
   board.title(("Rest · " if col<2 else "Delight · ")+views[col],Vector2(col*320+45,58),20)
   for row in range(2):
    var role="mark" if row==0 else "bark";var y=340 if row==0 else 675
-   var path=DIR+"4.3_"+role+"_"+pose+"_"+views[col]+".png"
+   var path=DIR+"4.5_"+role+"_"+pose+"_"+views[col]+".png"
    board.art(path,Vector2(col*320+125,y),225)
    board.art(path,Vector2(col*320+265,y),110,true)
- await save_board(board,"character43_studies.png")
- board=Board.new();root.add_child(board);board.title("4.3 · CURIOUS, UNSURE, SURPRISED, DELIGHTED & PROUD",Vector2(30,12),26)
- var poses=["curious","uncertain","surprise","delight","present"]
+ await save_board(board,"character45_studies.png")
+ board=Board.new();root.add_child(board);board.title("4.5 · WALK, JUMP, WAVE, PRESENT & THINK",Vector2(30,12),26)
+ var poses=["walk","jump","wave","present","curious"]
  for col in range(5):
   board.title(poses[col].capitalize(),Vector2(col*256+55,58),20)
   for row in range(2):
    var role="mark" if row==0 else "bark";var y=310 if row==0 else 630
-   var path=DIR+"4.3_"+role+"_"+poses[col]+"_quarter.png"
+   var path=DIR+"4.5_"+role+"_"+poses[col]+"_quarter.png"
    board.art(path,Vector2(col*256+128,y),215)
    board.art(path,Vector2(col*256+128,y+62),48)
  board.title("Native close views · small samples below show gameplay-size readability",Vector2(30,690),17)
- await save_board(board,"character43_poses.png")
+ await save_board(board,"character45_poses.png")
  quit()
