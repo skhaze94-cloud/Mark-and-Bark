@@ -47,7 +47,9 @@ func _mat(key: String, colour: String, roughness: float = 0.88) -> StandardMater
 	if not _materials.has(key):
 		var material = StandardMaterial3D.new()
 		material.albedo_color = Color(colour)
-		material.roughness = roughness
+		material.roughness = 1.0
+		material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+		material.diffuse_mode = BaseMaterial3D.DIFFUSE_BURLEY
 		material.vertex_color_use_as_albedo = true
 		material.cull_mode = BaseMaterial3D.CULL_BACK
 		_materials[key] = material
@@ -264,9 +266,8 @@ func _build_head(head: Node3D, crown: Node3D) -> void:
 		ear.rotation.z=side*-0.12
 		_oval(head,Vector3(side*0.365,-0.025,0.041),Vector3(0.042,0.071,0.018),ear_inner)
 		_oval(head,Vector3(side*0.36,-0.045,0.052),Vector3(0.023,0.032,0.018),skin_light)
-	_oval(head,Vector3(0,-0.07,0.262),Vector3(0.046,0.055,0.051),skin_light)
-	for side in [-1.0,1.0]:
-		_oval(head,Vector3(side*0.026,-0.105,0.307),Vector3(0.009,0.007,0.005),ear_inner)
+	_oval(head,Vector3(0,-0.07,0.263),Vector3(0.040,0.037,0.018),skin_light)
+
 	_build_eyes(head)
 	var mouth=Node3D.new();mouth.name="mouth";mouth.position=Vector3(0,-0.175,0.23);head.add_child(mouth);face.mouth=mouth;joints.mouth=mouth
 	var smile_points: Array=[]
@@ -281,24 +282,27 @@ func _build_head(head: Node3D, crown: Node3D) -> void:
 	_build_hair(crown)
 
 func _build_eyes(head: Node3D) -> void:
-	var white=_mat("eye_white","fff1d9",0.48)
-	var iris=_mat("iris","734a2d",0.40)
-	var pupil_mat=_mat("pupil","211a16",0.34)
-	var glint=_mat("glint","ffffff",0.25)
-	var brow_mat=_mat("brow","462b1b")
+	# Shallow ink and cream shapes read as an illustration wrapped onto the head.
+	var white=_mat("eye_white","fff3dc")
+	var iris=_mat("iris","79513c")
+	var ink=_mat("pupil","34291f")
+	var glint=_mat("glint","fff8e7")
+	var brow_mat=_mat("brow","543725")
+	for paint in [white,iris,ink,glint,brow_mat]:
+		paint.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
 	for side in ["near","far"]:
 		var sign: float=-1.0 if side=="near" else 1.0
-		var eye=Node3D.new();eye.name="eye_"+side;eye.position=Vector3(sign*0.145,0.012,0.224);head.add_child(eye);face["eye_"+side]=eye;joints["eye_"+side]=eye
+		var eye=Node3D.new();eye.name="eye_"+side;eye.position=Vector3(sign*0.14,0.014,0.234);head.add_child(eye);face["eye_"+side]=eye;joints["eye_"+side]=eye
+		eye.rotation.y=sign*0.28
 		_eye_rest[side]=eye.transform
-		_oval(eye,Vector3.ZERO,Vector3(0.080,0.104,0.045),white)
-		var pupil=Node3D.new();pupil.name="pupil_"+side;pupil.position=Vector3(0,0,0.035);eye.add_child(pupil);face["pupil_"+side]=pupil;joints["pupil_"+side]=pupil
-		_oval(pupil,Vector3.ZERO,Vector3(0.049,0.070,0.015),iris)
-		_oval(pupil,Vector3(0,0.003,0.013),Vector3(0.031,0.050,0.008),pupil_mat)
-		_oval(pupil,Vector3(-0.016,0.031,0.022),Vector3(0.012,0.017,0.004),glint)
-		_oval(pupil,Vector3(0.017,-0.024,0.020),Vector3(0.005,0.007,0.003),glint)
-		var brow=Node3D.new();brow.name="brow_"+side;brow.position=Vector3(sign*0.145,0.16,0.228);head.add_child(brow);face["brow_"+side]=brow;joints["brow_"+side]=brow;_brow_rest[side]=brow.position
-		_tube(brow,[Vector3(-0.085,-0.01,0),Vector3(-0.035,0.016,0.012),Vector3(0.025,0.02,0.012),Vector3(0.075,0,0)],0.014,brow_mat,0.55)
-		_tube(eye,[Vector3(-0.078,0.055,0.02),Vector3(-0.04,0.096,0.036),Vector3(0.03,0.101,0.036),Vector3(0.077,0.056,0.02)],0.0055,brow_mat)
+		_oval(eye,Vector3.ZERO,Vector3(0.085,0.098,0.010),brow_mat)
+		_oval(eye,Vector3(0,-0.002,0.007),Vector3(0.077,0.089,0.008),white)
+		var pupil=Node3D.new();pupil.name="pupil_"+side;pupil.position=Vector3(0,0,0.018);eye.add_child(pupil);face["pupil_"+side]=pupil;joints["pupil_"+side]=pupil
+		_oval(pupil,Vector3.ZERO,Vector3(0.052,0.068,0.004),iris)
+		_oval(pupil,Vector3(0,0.002,0.004),Vector3(0.039,0.056,0.003),ink)
+		_oval(pupil,Vector3(-0.016,0.027,0.008),Vector3(0.012,0.014,0.002),glint)
+		var eyebrow=Node3D.new();eyebrow.name="brow_"+side;eyebrow.position=Vector3(sign*0.145,0.151,0.239);head.add_child(eyebrow);face["brow_"+side]=eyebrow;joints["brow_"+side]=eyebrow;_brow_rest[side]=eyebrow.position
+		_tube(eyebrow,[Vector3(-0.074,0,0),Vector3(-0.03,0.017,0.008),Vector3(0.028,0.018,0.008),Vector3(0.070,0.004,0)],0.011,brow_mat,0.55)
 
 func _build_hair(crown: Node3D) -> void:
 	var dark=_mat("hair_dark","372317",0.78)
@@ -307,15 +311,15 @@ func _build_hair(crown: Node3D) -> void:
 	var light=_mat("hair_light","6e4527",0.78)
 	_oval(crown,Vector3(0,0.025,-0.055),Vector3(0.355,0.155,0.285),dark)
 	# Rich overlapping swept locks, not a helmet or a row of identical spikes.
-	for n in range(18):
-		var angle: float=float(n)*TAU/18.0
+	for n in range(12):
+		var angle: float=float(n)*TAU/12.0
 		var base=Vector3(cos(angle)*0.29,-0.035,sin(angle)*0.225-0.04)
 		var control=base+Vector3(0.018,0.16,0.012)
 		var tip=base+Vector3(0.095,0.035,0.012)
 		_lock(crown,base,control,tip,0.073,[chestnut,warm,dark][n%3])
-	for n in range(23):
+	for n in range(13):
 		var angle: float=float(n)*2.399963
-		var radius: float=sqrt((float(n)+0.5)/23.0)*0.29
+		var radius: float=sqrt((float(n)+0.5)/13.0)*0.29
 		var x: float=cos(angle)*radius
 		var z: float=sin(angle)*radius*0.76-0.03
 		var y: float=0.05+sqrt(maxf(0,1.0-pow(radius/0.34,2)))*0.09
@@ -359,7 +363,7 @@ func set_expression(blink: float, gaze: Vector2, mouth_open: float, smile: float
 	for side in ["near","far"]:
 		var eye: Node3D=face["eye_"+side]
 		eye.scale.y=maxf(0.04,1.0-clampf(blink,0,1))
-		face["pupil_"+side].position=Vector3(clampf(gaze.x,-1,1)*0.018,clampf(gaze.y,-1,1)*0.022,0.035)
+		face["pupil_"+side].position=Vector3(clampf(gaze.x,-1,1)*0.010,clampf(gaze.y,-1,1)*0.012,0.018)
 		var eyebrow: Node3D=face["brow_"+side]
 		eyebrow.position=_brow_rest[side]+Vector3(0,brow*0.027,0)
 		eyebrow.rotation.z=brow*0.12*(-1.0 if side=="near" else 1.0)

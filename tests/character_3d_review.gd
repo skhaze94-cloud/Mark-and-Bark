@@ -19,6 +19,9 @@ func check(ok, message):
 func ticks(count = 3):
 	for i in range(count):
 		await get_tree().physics_frame
+	# process_frame fires before actor _process; slow native rendering can run
+	# several physics ticks before one visual update. Let that update complete.
+	await get_tree().process_frame
 	await get_tree().process_frame
 
 func _ready():

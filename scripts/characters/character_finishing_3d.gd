@@ -6,11 +6,14 @@ var clock=0.0
 var role="mark"
 var materials={}
 var pieces=[]
+var motes=[]
+var flourish_age=2.0
+var was_cheering=false
 
 func mat(id,colour,metal=0.0):
  if materials.has(id):return materials[id]
- var m=StandardMaterial3D.new();m.albedo_color=Color(colour);m.roughness=.73;m.metallic=metal
- if metal>0:m.roughness=.32
+ var m=StandardMaterial3D.new();m.albedo_color=Color(colour);m.roughness=1.0;m.metallic=metal*.15;m.specular_mode=BaseMaterial3D.SPECULAR_DISABLED
+ if metal>0:m.roughness=.9
  materials[id]=m;return m
 
 func oval(parent,at,radius,material):
@@ -42,6 +45,7 @@ func build(model,kind):
  if role=="mark":mark_details(model)
  else:bark_details(model)
  batch(model)
+ build_flourish()
 
 func mark_details(model):
  var head=model.joints.head;var spine=model.joints.spine
@@ -84,13 +88,13 @@ func bark_details(model):
  var green=mat("emerald","49825b");green.cull_mode=BaseMaterial3D.CULL_DISABLED
  var lime=mat("lime","a6b85f");lime.cull_mode=BaseMaterial3D.CULL_DISABLED
  var copper=mat("copper","d3924d");copper.cull_mode=BaseMaterial3D.CULL_DISABLED
- for i in range(11):
+ for i in range(6):
   var a=i*2.39996
   var p=leaf(crown,Vector3(cos(a)*.22,.04+(i%3)*.035,sin(a)*.17),Vector3(sin(a)*.85,a,cos(a)*-.95),.24+(i%3)*.035,.085,[green,lime,copper][i%3])
   leaves.append({"node":p,"rest":p.rotation,"phase":float(i)})
  # Moss pads follow the woody shoulder contours, away from the facial panel.
  for side in [-1,1]:
-  for i in range(5):oval(spine,Vector3(side*(.25+i*.013),.35-i*.052,-.09),Vector3(.065,.047,.065),green if i%2 else lime)
+  for i in range(3):oval(spine,Vector3(side*(.25+i*.013),.35-i*.052,-.09),Vector3(.065,.047,.065),green if i%2 else lime)
  # Two little shelf mushrooms have ivory stalks, curved caps and raised spots.
  for i in range(2):
   var p=pivot(spine,Vector3(-.30-i*.07,.36-i*.08,.025))
@@ -113,7 +117,21 @@ func bark_details(model):
 
 func advance(delta,motion,still,reduced):
  if still:return
- if not reduced:clock+=delta
+ if reduced:
+  flourish_age=2.0
+  for mote in motes:mote.hide()
+ else:
+  clock+=delta
+  flourish_age+=delta
+  for i in range(motes.size()):
+   var mote=motes[i]
+   mote.visible=flourish_age<1.2
+   if mote.visible:
+    var t=flourish_age
+    var side=-1.0 if i%2==0 else 1.0
+    mote.position=Vector3(side*(.30+t*.22)+sin(t*4+i)*.06,1.65+t*.5-t*t*.6+i*.055,.16)
+    mote.rotation=Vector3(t*2+i,t+i,t*3+i)
+    mote.scale=Vector3.ONE*(1.0-t/1.2)
  var speed=clampf(absf(motion.x)/260.0,0,1)
  for i in range(tails.size()):
   tails[i].rotation.x=0 if reduced else -.15-speed*.7+sin(clock*6-i)*(.07+speed*.1)
@@ -137,3 +155,13 @@ func batch(model):
   var mesh=MeshInstance3D.new();mesh.mesh=st.commit();mesh.material_override=group.parts[0].material_override;group.anchor.add_child(mesh)
   for part in group.parts:part.get_parent().remove_child(part);part.free()
  pieces.clear()
+
+func build_flourish():
+ # Six reusable paper flecks; no frame-by-frame allocation or particle system.
+ for i in range(6):
+  var mote=leaf(self,Vector3.ZERO,Vector3.ZERO,.07,.022,mat("fleck","e9bf69" if role=="mark" else "e9bdab"))
+  mote.hide();motes.append(mote)
+ pieces.clear()
+
+func celebrate():
+ if flourish_age>=1.2:flourish_age=0.0

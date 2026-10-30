@@ -26,13 +26,13 @@ func build() -> void:
 	# A single continuous trunk reaches down around the hips. There is no
 	# separate pelvic bowl or visible waist hinge when the upper body leans.
 	_trunk(spine, -0.32, 1.02, 0.21, 0.36, 0.76, 17)
-	_chips(spine, -0.28, 0.94, 0.22, 0.36, 0.76, 42, 17)
-	_bark_ridges(spine, -0.32, 1.01, 0.21, 0.36, 0.76, 16, 0)
+	_chips(spine, -0.28, 0.94, 0.22, 0.36, 0.76, 18, 17)
+	_bark_ridges(spine, -0.32, 1.01, 0.21, 0.36, 0.76, 10, 0)
 	_bark_fringe(spine)
 	var neck = _joint("neck", spine, Vector3(0, 0.61, 0.01))
 	var head = _joint("head", neck, Vector3.ZERO)
 	_trunk(head, -0.08, 0.56, 0.35, 0.31, 0.79, 43, true)
-	_chips(head, -0.055, 0.54, 0.35, 0.31, 0.79, 26, 31, true)
+	_chips(head, -0.055, 0.54, 0.35, 0.31, 0.79, 12, 31, true)
 	_bark_ridges(head, -0.06, 0.56, 0.35, 0.31, 0.79, 12, 1)
 	_face(head)
 	_crown(head)
@@ -67,7 +67,8 @@ func _materials() -> void:
 func _material(tint: Color, roughness: float, vertex: bool = false) -> StandardMaterial3D:
 	var material = StandardMaterial3D.new()
 	material.albedo_color = tint
-	material.roughness = roughness
+	material.roughness = 1.0
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 	material.metallic = 0.0
 	material.vertex_color_use_as_albedo = vertex
 	material.vertex_color_is_srgb = vertex
@@ -259,39 +260,35 @@ func _leg(hips: Node3D, side: float) -> void:
 	_tube(ankle,[Vector3(0,0.02,0),Vector3(side*0.075,-0.012,-0.09),Vector3(side*0.12,-0.018,-0.16)],[0.045,0.031,0.010],materials.wood,7,5)
 
 func _face(head: Node3D) -> void:
-	_ellipsoid(head,Vector3(0,0.16,0.242),Vector3(0.294,0.31,0.046),materials.face)
+	# Painted almond eyes lie close to a warm, quiet facial panel.
+	for paint in [materials.cream,materials.iris,materials.pupil,materials.glint,materials.brow,materials.mouth]:
+		paint.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+	_ellipsoid(head,Vector3(0,0.16,0.242),Vector3(0.294,0.30,0.037),materials.face)
 	for side in [-1.0,1.0]:
 		var suffix: String = "near" if side < 0 else "far"
-		var eye = _joint("eye_"+suffix,head,Vector3(side*0.135,0.25,0.275))
-		_ellipsoid(eye,Vector3.ZERO,Vector3(0.137,0.154,0.074),materials.cream)
-		var pupil = _joint("pupil_"+suffix,eye,Vector3(0.012,0.0,0.065))
-		_ellipsoid(pupil,Vector3.ZERO,Vector3(0.067,0.096,0.033),materials.iris)
-		_ellipsoid(pupil,Vector3(0.008,0,0.025),Vector3(0.042,0.075,0.020),materials.pupil)
-		_ellipsoid(pupil,Vector3(-0.012,0.038,0.041),Vector3(0.016,0.024,0.011),materials.glint)
-		_ellipsoid(pupil,Vector3(0.026,-0.031,0.041),Vector3(0.008,0.012,0.007),materials.glint)
+		var eye = _joint("eye_"+suffix,head,Vector3(side*0.14,0.255,0.272))
+		eye.rotation.y=side*0.18
+		_ellipsoid(eye,Vector3.ZERO,Vector3(0.106,0.115,0.009),materials.brow)
+		_ellipsoid(eye,Vector3(0,-0.002,0.006),Vector3(0.097,0.106,0.008),materials.cream)
+		var pupil = _joint("pupil_"+suffix,eye,Vector3(0,0,0.017))
+		_ellipsoid(pupil,Vector3.ZERO,Vector3(0.066,0.083,0.004),materials.iris)
+		_ellipsoid(pupil,Vector3(0,0.002,0.004),Vector3(0.047,0.066,0.003),materials.pupil)
+		_ellipsoid(pupil,Vector3(-0.019,0.029,0.008),Vector3(0.014,0.018,0.002),materials.glint)
 		_pupils.append(pupil)
-		var lid = Node3D.new()
-		eye.add_child(lid)
-		_ellipsoid(lid,Vector3.ZERO,Vector3(0.141,0.158,0.079),materials.face)
-		_eye_lids.append(lid)
-		var brow = _joint("brow_"+suffix,head,Vector3(side*0.135,0.445,0.294))
-		_tube(brow,[Vector3(-0.105,0,0),Vector3(-0.055,0.035,0.008),Vector3(0.015,0.041,0.01),Vector3(0.11,0.007,-0.004)],[0.022,0.03,0.029,0.012],materials.brow,8)
-		_brows.append(brow)
-		_brow_rest.append(brow.position)
-		# Eye-corner bark furrows are shaped shallow pieces, not painted eye decals.
-		_tube(head,[Vector3(side*0.25,0.12,0.275),Vector3(side*0.23,0.08,0.288),Vector3(side*0.18,0.055,0.294)],[0.008],materials.ridge,5)
-	_ellipsoid(head,Vector3(0,0.105,0.314),Vector3(0.041,0.052,0.037),materials.light_wood)
-	var mouth = _joint("mouth",head,Vector3(0,-0.035,0.286))
-	_mouth_open = _ellipsoid(mouth,Vector3(0,0.008,0.006),Vector3(0.12,0.075,0.025),materials.mouth)
-	_tongue = _ellipsoid(mouth,Vector3(0,-0.025,0.028),Vector3(0.077,0.022,0.012),materials.tongue)
+		# Blink compresses the whole painted eye; no moving skin ball over it.
+		_eye_lids.append(eye)
+		var eyebrow = _joint("brow_"+suffix,head,Vector3(side*0.14,0.405,0.275))
+		_tube(eyebrow,[Vector3(-0.09,0,0),Vector3(-0.035,0.023,0.006),Vector3(0.03,0.025,0.006),Vector3(0.09,0.006,0)],[0.015,0.018,0.016,0.008],materials.brow,8)
+		_brows.append(eyebrow);_brow_rest.append(eyebrow.position)
+	_ellipsoid(head,Vector3(0,0.115,0.281),Vector3(0.032,0.030,0.012),materials.light_wood)
+	var mouth = _joint("mouth",head,Vector3(0,0.035,0.281))
+	_mouth_open = _ellipsoid(mouth,Vector3(0,-0.015,0.008),Vector3(0.09,0.055,0.005),materials.mouth)
+	_tongue = _ellipsoid(mouth,Vector3(0,-0.035,0.014),Vector3(0.051,0.015,0.003),materials.tongue)
 	var smile_points: Array[Vector3] = []
 	for n in range(17):
 		var t: float = float(n)/16.0*2.0-1.0
-		smile_points.append(Vector3(t*0.18,0.055*t*t-0.015,0.023-absf(t)*0.018))
-	_tube(mouth,smile_points,[0.012],materials.mouth,6)
-	for side in [-1.0,1.0]:
-		_ellipsoid(mouth,Vector3(side*0.18,0.04,0.002),Vector3(0.019,0.017,0.015),materials.ridge)
-		_tube(head,[Vector3(side*0.09,-0.13,0.27),Vector3(side*0.15,-0.18,0.237),Vector3(side*0.18,-0.24,0.21)],[0.013,0.012,0.005],materials.ridge,6)
+		smile_points.append(Vector3(t*0.16,0.045*t*t-0.025,0.012-absf(t)*0.010))
+	_tube(mouth,smile_points,[0.007],materials.mouth,6)
 
 func _crown(head: Node3D) -> void:
 	var crown = _joint("crown",head,Vector3(0,0.50,-0.015))
@@ -386,13 +383,13 @@ func set_expression(blink: float, gaze: Vector2, mouth_open: float, smile: float
 		return
 	for n in range(_eye_lids.size()):
 		var closing: float = clampf(blink,0,1)
-		_eye_lids[n].scale.y = maxf(0.025,closing)
-		_eye_lids[n].position = Vector3(0,0.158*(1.0-closing),0.050+closing*0.015)
-		_pupils[n].position = Vector3(0.012+clampf(gaze.x,-1,1)*0.025,clampf(gaze.y,-1,1)*0.025,0.065)
+		_eye_lids[n].scale.y = maxf(0.04,1.0-closing)
+
+		_pupils[n].position = Vector3(clampf(gaze.x,-1,1)*0.012,clampf(gaze.y,-1,1)*0.014,0.017)
 		_brows[n].position = _brow_rest[n]+Vector3(0,clampf(brow,-1,1)*0.035,0)
 		_brows[n].rotation.z = (1.0 if n==0 else -1.0)*clampf(brow,-1,1)*0.14
 	var opening: float = clampf(mouth_open,0,1)
-	_mouth_open.scale.y = 0.075 * maxf(0.045,opening)
+	_mouth_open.scale.y = 0.055 * maxf(0.045,opening)
 	_tongue.visible = opening>0.22
 	if joints.has("mouth"):
 		joints.mouth.scale.x = 0.92+clampf(smile,0,1)*0.12

@@ -65,13 +65,13 @@ func _build_scene() -> void:
 	environment.background_color = Color(0, 0, 0, 0)
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("e4e6ef")
-	environment.ambient_light_energy = 0.30
+	environment.ambient_light_energy = 0.65
 	environment.tonemap_mode = Environment.TONE_MAPPER_LINEAR
 	environment_node.environment = environment
 	world.add_child(environment_node)
-	_light("WarmKey", Vector3(-35, -38, 0), Color("fff0df"), 0.75, true)
-	_light("CoolFill", Vector3(-14, 135, 0), Color("d5e7f4"), 0.18, false)
-	_light("LeafRim", Vector3(-25, -155, 0), Color("fff4df"), 0.22, false)
+	_light("WarmKey", Vector3(-35, -38, 0), Color("fff0df"), 0.48, false)
+	_light("CoolFill", Vector3(-14, 135, 0), Color("d5e7f4"), 0.12, false)
+	_light("LeafRim", Vector3(-25, -155, 0), Color("fff4df"), 0.10, false)
 	camera = Camera3D.new()
 	camera.name = "PortraitCamera"
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
@@ -162,6 +162,10 @@ func step(delta: float) -> void:
 	performance.pose_hint = owner_actor.displayed_pose
 	performance.drive(owner_actor.mode, owner_actor.grounded, owner_actor.motion, owner_actor.cadence)
 	performance.advance(delta)
+	var cheering: bool = performance.active_state in ["cheer", "celebrate", "delight"]
+	if cheering and not finishing.was_cheering and not reduced and not still:
+		finishing.celebrate()
+	finishing.was_cheering = cheering
 	finishing.advance(delta * owner_actor.playback_rate, owner_actor.motion, still, reduced)
 	var on_screen: bool = owner_actor.is_visible_in_tree() and _on_screen()
 	if not on_screen:

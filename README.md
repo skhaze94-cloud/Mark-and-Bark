@@ -1,3 +1,14 @@
+## 4.0 — Painted Hearts
+
+Mark and Bark regain a gentler illustrated expression through shallow painted eyes,
+restrained highlights, softer lighting, calmer hair and bark detail, and warm matte
+materials. Their articulated 3D bodies, scarf, satchel, leaves and optional original
+painting styles remain available. A brief reusable paper/petal flourish accompanies
+a celebration; pausing freezes it and reduced motion hides it.
+
+Android: version 4.0.0, code 400; same package and signing identity for updates.
+See [character notes](docs/CHARACTERS_4_0.md).
+
 # Mark & Bark 3.9.0 — Storybook Friends
 
 Mark now wears sculpted brass goggles, a coral scarf with animated tails, a stitched leather satchel and an enamel pin. His warmer, broader face has freckles and a teal jacket. Bark has a fuller emerald and copper canopy, mossy shoulders, two tiny mushrooms, an acorn keepsake and a crown blossom. Joint-mounted details follow their existing 3D performances; decorative motion respects Pause and Reduced motion. Static detail meshes are combined by material and animation pivot to limit draw calls.
