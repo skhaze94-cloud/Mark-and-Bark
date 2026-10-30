@@ -26,7 +26,7 @@ func _ready() -> void:
 	whimsy=load("res://scripts/whimsy_layer.gd").new();whimsy.name="WhimsyLayer";whimsy.context="menu";whimsy.controller=self;add_child(whimsy)
 	label(self,"MARK & BARK",Rect2(48,28,780,65),47,"fff3d3")
 	label(self,"Small friends. Big possibilities.",Rect2(52,101,760,35),23,"f0ce83")
-	label(self,"ORIGINAL SHAPES · 4.3",Rect2(820,126,400,28),16,"f4d39a")
+	label(self,"SEAMLESS MOTION · 4.4",Rect2(820,126,400,28),16,"f4d39a")
 	card(Rect2(48,166,680,213))
 	picture("school_hub",Rect2(65,184,202,177))
 	label(self,"THE BIG IDEA",Rect2(292,184,407,40),29)

@@ -2,8 +2,8 @@ extends Node2D
 ## A true lit 3D scene projected into the established, foot-anchored 2D world.
 ## Source Sprite2D textures remain available for legacy art, quests and inspection.
 const FRAME = Vector2(512, 640)
-const RENDER_SIZE = Vector2i(384, 480)
-const GAMEPLAY_RENDER_SIZE = Vector2i(256, 320)
+const RENDER_SIZE = Vector2i(512, 640)
+const GAMEPLAY_RENDER_SIZE = Vector2i(320, 400)
 var owner_actor: Sprite2D
 var viewport: SubViewport
 var world: Node3D
@@ -51,7 +51,7 @@ func _build_scene() -> void:
 	viewport.gui_disable_input = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	viewport.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
-	viewport.msaa_3d = Viewport.MSAA_2X
+	viewport.msaa_3d = Viewport.MSAA_4X
 	add_child(viewport)
 	world = Node3D.new()
 	world.name = "CharacterWorld"

@@ -54,6 +54,7 @@ func build() -> void:
 
 func _materials() -> void:
 	materials.wood = _material(Color.WHITE, 0.92, true)
+	materials.joint_wood = _material(Color("ad773e"),1.0)
 	materials.groove = _material(Color("805027"), 0.94)
 	materials.ridge = _material(Color("bf803c"), 0.88)
 	materials.light_wood = _material(Color("d7a25c"), 0.9)
@@ -100,8 +101,8 @@ func _ellipsoid(parent: Node3D, at: Vector3, radii: Vector3, material: Material)
 	var sphere = SphereMesh.new()
 	sphere.radius = 1.0
 	sphere.height = 2.0
-	sphere.radial_segments = 18
-	sphere.rings = 10
+	sphere.radial_segments = 24
+	sphere.rings = 16
 	return _mesh(parent, sphere, material, at, radii)
 
 func _trunk(parent: Node3D, bottom: float, height: float, radius_bottom: float, radius_top: float, depth: float, seed: int, broken: bool = false) -> void:
@@ -239,11 +240,14 @@ func _arm(spine: Node3D, side: float) -> void:
 	var suffix: String="near" if side<0 else "far"
 	var shoulder=_joint("shoulder_"+suffix,spine,Vector3(side*.25,.40,-.015))
 	shoulder.rotation.z=side*.85
+	_ellipsoid(shoulder,Vector3.ZERO,Vector3(.062,.068,.060),materials.joint_wood)
 	_tube(shoulder,[Vector3.ZERO,Vector3(side*.025,-.085,.01),Vector3(side*.025,-.18,.025)],[.057,.045,.035],materials.wood,12,21)
 	var elbow=_joint("elbow_"+suffix,shoulder,Vector3(side*.025,-.18,.025))
 	elbow.rotation.z=side*.85
+	_ellipsoid(elbow,Vector3.ZERO,Vector3(.043,.052,.043),materials.joint_wood)
 	_tube(elbow,[Vector3.ZERO,Vector3(-side*.015,-.085,.04),Vector3(side*.015,-.16,.065)],[.036,.041,.033],materials.wood,12,11)
 	var wrist=_joint("wrist_"+suffix,elbow,Vector3(side*.015,-.16,.065))
+	_ellipsoid(wrist,Vector3.ZERO,Vector3(.040,.048,.041),materials.joint_wood)
 	# Five long twig rays grow from a forked palm; no mitten-shaped hand mass.
 	_tube(wrist,[Vector3(0,.02,0),Vector3(0,-.065,.015),Vector3(0,-.11,.02)],[.039,.046,.029],materials.wood,12,8)
 	var tips=[Vector3(-.18,-.12,.025),Vector3(-.13,-.255,.035),Vector3(-.025,-.30,.035),Vector3(.09,-.265,.025),Vector3(.19,-.17,.015)]
@@ -260,8 +264,10 @@ func _leg(hips: Node3D, side: float) -> void:
 	var thigh = _joint("thigh_"+suffix, hips, Vector3(side*0.12,-0.025,0))
 	_tube(thigh,[Vector3.ZERO,Vector3(side*0.015,-0.12,0.015),Vector3(side*0.025,-0.20,0.035)],[0.095,0.085,0.07],materials.wood,11,4)
 	var knee = _joint("knee_"+suffix, thigh, Vector3(side*0.025,-0.20,0.035))
+	_ellipsoid(knee,Vector3.ZERO,Vector3(.080,.085,.080),materials.joint_wood)
 	_tube(knee,[Vector3.ZERO,Vector3(side*.025,-.06,-.012),Vector3(side*.045,-.12,-.01),Vector3(side*.05,-.16,.015)],[.075,.081,.079,.080],materials.wood,12,7)
 	var ankle = _joint("ankle_"+suffix, knee, Vector3(side*0.05,-0.16,0.015))
+	_ellipsoid(ankle,Vector3.ZERO,Vector3(.083,.075,.083),materials.joint_wood)
 	var toe = _joint("toe_"+suffix, ankle, Vector3(0,-0.025,0.075))
 	_ellipsoid(toe,Vector3(0,0.030,0.025),Vector3(0.14,0.065,0.16),materials.ridge)
 	for root in range(4):

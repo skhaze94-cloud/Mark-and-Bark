@@ -149,7 +149,7 @@ func _cache_legs() -> void:
 func _rotate(key: String, target: Vector3, delta: float, immediate: bool = false) -> void:
 	if not joints.has(key):
 		return
-	var response: float = 1.0 if immediate else 1.0 - exp(-delta * 20.0)
+	var response: float = 1.0 if immediate else 1.0 - exp(-delta * 15.0)
 	var previous: Vector3 = _angles.get(key, target)
 	var angle: Vector3 = previous.lerp(target, response)
 	_angles[key] = angle
@@ -318,6 +318,9 @@ func _apply_pose(delta: float, immediate: bool = false) -> void:
 		if role=="bark" and active_state not in ["idle","walk","run","curious","thinking","uncertain","glance","concentrate"]:
 			arm.z-=rest["shoulder_"+side].basis.get_euler().z
 			elbow.z-=rest["elbow_"+side].basis.get_euler().z
+		# Keep the elbow inside its modeled overlap and hands outside the chest.
+		elbow.x=clampf(elbow.x,-1.20,.15)
+		arm.y=clampf(arm.y,-.32,.32)
 		_rotate("shoulder_" + side, arm, delta, immediate)
 		_rotate("elbow_" + side, elbow, delta, immediate)
 		_rotate("wrist_" + side, wrist, delta, immediate)
@@ -330,7 +333,7 @@ func _apply_pose(delta: float, immediate: bool = false) -> void:
 			_rotate("knee_" + side, Vector3((1.35 if role=="mark" else 1.05) + maxf(0.0, rise) * 0.20, 0.0, 0.0) * flourish, delta, immediate)
 			_rotate("ankle_" + side, Vector3(-0.25, 0.0, 0.0) * flourish, delta, immediate)
 			_rotate("toe_" + side, Vector3(-0.09, 0.0, 0.0) * flourish, delta, immediate)
-	var follow: float = still * (0.08 if active_state in ["spring_contact", "spring_release"] else 0.035)
+	var follow: float = still * (0.10 if active_state in ["spring_contact", "spring_release"] else 0.035)
 	_rotate("crown", Vector3(sin(age * 3.9 - 0.6) * follow, sin(age * 1.7) * 0.025 * still, 0.0), delta, immediate)
 	_rotate("leaf_near", Vector3(sin(age * 4.7 - 0.8) * follow, sin(age * 3.2) * follow * 0.6, 0.0), delta, immediate)
 	_rotate("leaf_far", Vector3(sin(age * 4.2 - 0.3) * follow, -sin(age * 3.6) * follow * 0.6, 0.0), delta, immediate)

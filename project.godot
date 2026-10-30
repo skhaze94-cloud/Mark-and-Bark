@@ -2,7 +2,7 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="4.3.0 Original Shapes"
+config/version="4.4.0 Seamless Motion"
 config/icon="res://assets/app_icon.svg"
 run/main_scene="res://scenes/adventures.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")

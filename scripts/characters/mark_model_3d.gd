@@ -71,8 +71,8 @@ func _oval(parent: Node3D, at: Vector3, radius: Vector3, material: Material) -> 
 	var sphere = SphereMesh.new()
 	sphere.radius = 1.0
 	sphere.height = 2.0
-	sphere.radial_segments = 20
-	sphere.rings = 12
+	sphere.radial_segments = 28
+	sphere.rings = 18
 	return _mesh(parent, sphere, material, at, radius)
 
 func _tube(parent: Node3D, points: Array, radius: float, material: Material, taper: float = 1.0) -> void:
@@ -201,7 +201,7 @@ func _build_arm(spine: Node3D, side: String) -> void:
 	_loft(shoulder,[Vector4(-0.30,0.087,0.09,0.01),Vector4(-0.23,0.105,0.105,0),Vector4(-0.10,0.115,0.115,0),Vector4(0.01,0.092,0.09,0)],jacket,20)
 	var elbow = _joint("elbow_"+side, shoulder, Vector3(0,-0.285,0.015))
 	elbow.rotation.x=-0.23
-	_oval(elbow,Vector3.ZERO,Vector3(0.09,0.09,0.094),jacket)
+	_oval(elbow,Vector3.ZERO,Vector3(0.101,0.103,0.101),jacket)
 	_loft(elbow,[Vector4(-0.285,0.072,0.075,0),Vector4(-0.245,0.092,0.095,0),Vector4(-0.12,0.09,0.095,0.015),Vector4(0.02,0.09,0.092,0)],jacket,20)
 	for n in range(3):
 		var y: float=-0.12-float(n)*0.045
@@ -236,7 +236,7 @@ func _build_leg(hips: Node3D, side: String) -> void:
 	_tube(thigh_shape,[Vector3(sign*0.11,-0.05,0.065),Vector3(sign*0.11,-0.21,0.065),Vector3(sign*0.086,-0.40,0.047)],0.0035,denim_light)
 	var knee=_joint("knee_"+side,thigh,Vector3(0,-0.34,0))
 	# Rounded cloth overlaps the open loft ends throughout a deep knee bend.
-	_oval(knee,Vector3.ZERO,Vector3(0.096,0.10,0.102),denim)
+	_oval(knee,Vector3.ZERO,Vector3(0.105,0.113,0.110),denim)
 	var knee_shape=Node3D.new();knee.add_child(knee_shape);knee_shape.scale.y=0.34/0.405
 	_loft(knee_shape,[Vector4(-0.40,0.081,0.08,0),Vector4(-0.34,0.084,0.082,0.01),Vector4(-0.20,0.09,0.089,0.005),Vector4(-0.03,0.095,0.101,0),Vector4(0.025,0.094,0.10,0)],denim,24)
 	for n in range(3):
@@ -430,7 +430,7 @@ func _paint_cheeks(part: MeshInstance3D) -> void:
 func _build_notebook() -> void:
 	var book=Node3D.new()
 	book.name="MarkNotebook"
-	book.position=Vector3(0,-0.075,0.075)
+	book.position=Vector3(0,-0.085,0.105)
 	book.rotation=Vector3(-0.20,0.05,-0.10)
 	joints.wrist_near.add_child(book)
 	props.notebook=book
