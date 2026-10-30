@@ -94,8 +94,8 @@ async function main() {
     while (Date.now()<deadline) {
       await page.screenshot({path:file});
       execFileSync('python3',['-c','from PIL import Image; import sys,json; im=Image.open(sys.argv[1]).crop(tuple(json.loads(sys.argv[3]))); im.resize((im.width*3,im.height*3)).save(sys.argv[2])',file,crop,JSON.stringify(rectangle)]);
-      const text=execFileSync('tesseract',[crop,'stdout','--psm','6'],{encoding:'utf8',stdio:['ignore','pipe','pipe']}).toLowerCase().replace(/\s+/g,' ');
-      if (text.includes(expected.toLowerCase())) {check(true,`${name}: ready for input`);return;}
+      const text=execFileSync('tesseract',[crop,'stdout','--psm','6'],{encoding:'utf8',stdio:['ignore','pipe','pipe']}).toLowerCase().replace(/\s+/g,' ').replace(/\s*\/\s*/g,'/');
+      if (text.includes(expected.toLowerCase().replace(/\s*\/\s*/g,'/'))) {check(true,`${name}: ready for input`);return;}
       await page.waitForTimeout(300);
     }
     throw new Error(`${name}: did not render ${expected}`);
@@ -117,9 +117,10 @@ async function main() {
     await page.mouse.click(1140,39,{delay:100});
     await waitForText('story_dialogue',[280,623,425,654],'skip story');
     await page.mouse.click(350,638,{delay:100});
-    await waitForText('story_tutorial',[90,25,820,100],'walk right');
-    await capture('05_story_tutorial',['walk right']);
-    await page.mouse.click(1140,75,{delay:100});
+    await waitForText('story_tutorial',[78,28,171,72],'0 / 6');
+    await capture('05_story_tutorial');
+    await waitForText('story_score',[78,28,171,72],'0 / 6');
+    await page.mouse.click(1230,50,{delay:100});
     await waitForText('story_pause',[400,165,880,230],'a little breather');
     await page.mouse.click(640,430);
     await capture('06_story_settings',['35%','Background music: Off','Always show touch controls: On']);
@@ -135,9 +136,10 @@ async function main() {
     await page.mouse.click(1120,48,{delay:100});
     await waitForText('climb_dialogue',[350,615,485,645],'skip story');
     await page.mouse.click(410,630,{delay:100});
-    await waitForText('climb_gameplay',[125,22,920,108],'library ladder');
-    await capture('08_climb_gameplay',['library ladder','jump']);
-    await page.mouse.click(1150,55,{delay:100});
+    await waitForText('climb_gameplay',[78,28,171,72],'0 / 24');
+    await capture('08_climb_gameplay',['jump']);
+    await waitForText('climb_score',[78,28,171,72],'0 / 24');
+    await page.mouse.click(1230,50,{delay:100});
     await waitForText('climb_pause',[400,165,880,230],'a little breather');
     await page.mouse.click(640,430);
     await capture('09_climb_settings',['35%','Background music: Off','Calm climb (climbing adventure): On']);

@@ -1,4 +1,4 @@
-# Mark & Bark 3.5.0 — The Whimsy Update
+# Mark & Bark 3.6.0 — Whimsy HUD
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
@@ -10,7 +10,15 @@ See the [regression audit and repairs](docs/RESTORATION_AUDIT_3_2_1.md). The cli
 
 The **3.2.2 finishing pass** makes the opening music loop reliably, shares one settings panel across both adventures and the opening menu, protects both save files with validated backups, and adds production Web and Windows export checks. See [the finishing notes](docs/FINISHING_3_2_2.md).
 
-## The Whimsy Update
+## The Whimsy HUD redesign
+
+The game now has just three small essentials: a leaf-score capsule, two spring-energy leaves and a round Pause button. The big quest header, shelf panel, jump text and shortcut rows have moved into the Notebook and Pause menu. Touch mode keeps compact movement/Jump controls; Use appears near relevant interactions. Brief paper cues replace the constant task banners.
+
+![A quieter, whimsical HUD](docs/previews/whimsy_hud_3_6.jpg)
+
+The idle keyboard overlay is **91.8% smaller**, and idle touch overlay is **85.1% smaller**, against the former Library panel layout. Score gains get a tiny animated `+N` leaf flourish; Reduced motion makes updates immediate. The two leaves reflect the actual jump charges, with landing recharge. Objectives, hints, checkpoints and all keyboard shortcuts remain available. See [the HUD design and verification notes](docs/WHIMSY_HUD_3_6.md).
+
+## The 3.5 Whimsy Update
 
 The library grows flowering arch garlands, pressed-botanical illustrations and folded paper birds. The bedroom gains cloud murals, moon-and-star mobiles and embroidered bedding. The attic opens onto crescent skies, constellation charts and miniature ringed planets. Woven rugs and soft pastel washes bring the rooms together with the original painted furniture.
 
@@ -128,7 +136,7 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh copy with a unique, verified test-save location, runs all eleven suites and writes logs to the ignored `test_output/` folder. The full suite now contains **1,003 source checks** across eleven suites. These include 93 Whimsy checks for stable decoration, pause and immediate Reduced motion behavior, and 77 finishing checks for write failures, backup recovery, preference persistence, the first-visit music loop, all three settings panels and safe failed-save exits. The 68 restoration checks exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh copy with a unique, verified test-save location, runs all twelve suites and writes logs to the ignored `test_output/` folder. The full suite now contains **1,167 source checks** across twelve suites. These include 164 HUD checks, 93 Whimsy checks for stable decoration, pause and immediate Reduced motion behavior, and 77 finishing checks for write failures, backup recovery, preference persistence, the first-visit music loop, all three settings panels and safe failed-save exits. The 68 restoration checks exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
 The GitHub workflow runs the complete suite on Godot **4.4.1**, captures native screenshots, builds the production Web and Windows releases with official checksum-verified templates, and tests the packed game in fresh processes. It plays the actual Web release in Chrome, checks settings after a page reload, and runs the exported Windows executable on Windows. Source, builds, screenshots and logs are downloadable workflow artifacts. See [export commands and verification boundaries](docs/FINISHING_3_2_2.md).
 
