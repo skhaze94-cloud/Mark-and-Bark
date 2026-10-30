@@ -106,7 +106,7 @@ async function main() {
     await capture('01_home', ['mark','bark','the big idea','the giant climbs']);
     await page.mouse.click(620,613); await capture('02_initial_settings',['settings & controls','45%']);
     await page.mouse.click(598,163);
-    for (const y of [221,272,425]) await page.mouse.click(500,y);
+    for (const y of [221,272,323,425]) await page.mouse.click(500,y);
     await capture('03_changed_settings',['35%','Background music: Off','Reduced motion: On','Always show touch controls: On','3D storybook','Calm climb (climbing adventure): On']);
     await page.keyboard.press('Escape',{delay:100}); await page.waitForTimeout(2000);
     await page.reload(); await ready();
