@@ -18,11 +18,13 @@ var point_button: Button
 var modes=[]
 var auto_stage=-1
 var last_grounded=true
+var turntable=false
+var orbit_button: Button
 
 func _ready():
 	showcase="--showcase" in OS.get_cmdline_user_args()
 	label("MARK & BARK",Rect2(44,20,650,48),36)
-	label("IN MOTION  /  CHARACTER STUDIO  /  3.2",Rect2(47,72,900,30),17,Color("8a713f"))
+	label("CHARACTER 2.0  /  3D PERFORMANCE STUDIO  /  3.7",Rect2(47,72,900,30),17,Color("8a713f"))
 	button("All adventures",Rect2(1040,32,192,52),func():Adventures.go(Adventures.HOME))
 	headline=label("",Rect2(80,140,1120,38),25);headline.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	label("MARK",Rect2(78,190,270,30),21)
@@ -31,6 +33,7 @@ func _ready():
 	label("Big ideas. Questionable advice. Excellent springiness.",Rect2(1040,226,150,110),16,Color("6d725f"))
 	mark=Art.character("young_actions_idle");mark.position=Vector2(420,558);mark.scale=Vector2.ONE*.80;add_child(mark)
 	bark=Art.character("bark_actions_idle");bark.position=Vector2(830,558);bark.scale=Vector2.ONE*1.0;add_child(bark)
+	if Progress.settings.get("characters_3d",true):mark.scale=Vector2.ONE*.73;bark.scale=Vector2.ONE*.88
 	caption=label("",Rect2(110,565,1060,35),17);caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	for n in range(MODES.size()):
 		modes.append(button(MODES[n],Rect2(44+n*171,613,162,42),func():choose(n)))
@@ -38,7 +41,8 @@ func _ready():
 	speed_button=button("Speed: 1×",Rect2(261,667,172,38),toggle_speed)
 	point_button=button("Joints: off [P]",Rect2(445,667,207,38),toggle_points)
 	button("Next frame",Rect2(664,667,174,38),next_frame)
-	label("1–7: pose   •   Esc: game",Rect2(870,671,370,27),16,Color("6d725f"))
+	orbit_button=button("Turntable [O]",Rect2(858,667,174,38),toggle_turntable)
+	label("1–7: pose · Esc: game",Rect2(1044,674,195,27),14,Color("6d725f"))
 	choose(0);queue_redraw();call_deferred("settle_controls")
 
 func settle_controls():
@@ -91,6 +95,12 @@ func toggle_speed():
 func toggle_points():
 	points=not points;point_button.text="Joints: on [P]" if points else "Joints: off [P]"
 	mark.show_points=points;bark.show_points=points
+func toggle_turntable():
+	turntable=not turntable
+	orbit_button.text="Turntable: on" if turntable else "Turntable [O]"
+	if not turntable:
+		for actor in [mark,bark]:
+			if is_instance_valid(actor.character3d):actor.character3d.inspection_yaw=0;actor.character3d.request_frame()
 func next_frame():
 	if not paused:toggle_pause()
 	elapsed+=(1.0/60.0)*(.5 if slow else 1.0);update_actors()
@@ -107,6 +117,9 @@ func _process(delta):
 			else:choose(5);toggle_points()
 	if not paused:
 		elapsed+=delta*(.5 if slow else 1.0);update_actors()
+		if turntable and not Progress.settings.reduced_motion:
+			for actor in [mark,bark]:
+				if is_instance_valid(actor.character3d) and actor.character3d.active:actor.character3d.inspection_yaw+=delta*.62
 func update_actors():
 	var mark_id="young_actions_idle";var bark_id="bark_actions_idle";var state="idle";var grounded=true;var speed=Vector2.ZERO;var height=0.0
 	var cadence=elapsed*(7.6 if current==1 else 11.8)
@@ -135,4 +148,5 @@ func _unhandled_input(event):
 	if event.physical_keycode>=KEY_1 and event.physical_keycode<=KEY_7:choose(event.physical_keycode-KEY_1)
 	elif event.physical_keycode==KEY_SPACE:toggle_pause()
 	elif event.physical_keycode==KEY_P:toggle_points()
+	elif event.physical_keycode==KEY_O:toggle_turntable()
 	elif event.physical_keycode==KEY_ESCAPE:Adventures.go(Adventures.HOME)

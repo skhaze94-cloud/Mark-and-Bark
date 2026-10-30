@@ -1195,7 +1195,7 @@ func place_hud_message(panel: Panel) -> void:
 	for actor in [player,campus.bark]:
 		if is_instance_valid(actor):
 			var at: Vector2=actor.get_global_transform_with_canvas().origin
-			actors.append(Rect2(at-Vector2(66,105),Vector2(132,120)))
+			actors.append(Rect2(at-Vector2(74,170),Vector2(148,185)))
 	# Try quiet upper and lower bands, then their corners. Message cards never
 	# occupy the movement/jump controls and move aside for either friend's face.
 	var candidates: Array[Vector2]=[

@@ -8,7 +8,7 @@ func capture(label):
 	get_tree().root.get_texture().get_image().save_png("res://test_output/rig_"+label+".png")
 func _ready():call_deferred("run")
 func run():
-	Progress.save_enabled=false;Mega.enabled=false;Progress.settings.reduced_motion=false
+	Progress.save_enabled=false;Mega.enabled=false;Progress.settings.reduced_motion=false;Progress.settings.characters_3d=false
 	DirAccess.make_dir_recursive_absolute("res://test_output")
 	var bg=ColorRect.new();bg.color=Color("f3ead4");bg.size=Vector2(1280,720);add_child(bg)
 	mark=Art.character("young_actions_idle");mark.position=Vector2(360,660);mark.scale=Vector2.ONE*.9;add_child(mark)

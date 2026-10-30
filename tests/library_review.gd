@@ -16,7 +16,7 @@ func run():
 	check(game.campus.platforms[0]==Rect2(560,510,320,22) and game.campus.top==-3760,"Library entry collision and complete ascent are unchanged")
 	check(game.campus.ledges.all(func(l):return l.library_style),"Only library platforms opt into the painted cast-shadow treatment")
 	check(game.campus.get_children().filter(func(n):return n.name.begins_with("LibraryContactShadow")).size()==2,"Both painted friends have independent world contact shadows")
-	check(not game.player.sprite.mesh.visible and not game.campus.bark.mesh.visible,"Original painted character presentation stays intact")
+	check(game.player.sprite.character3d.active and game.campus.bark.character3d.active and game.player.sprite.texture==Art.tex("young_actions_idle"),"Default library actors use genuine3D while retaining their original pose artwork")
 	check(not game.library_header.is_visible_in_tree() and not game.objective.is_visible_in_tree() and not game.counters.is_visible_in_tree(),"Quest detail stays available as data without the old full-width header")
 	check(not game.route_label.is_visible_in_tree(),"Keyboard ascent keeps shelf detail out of the always-on view")
 	Progress.settings.touch=true;game.update_hud();await ticks()

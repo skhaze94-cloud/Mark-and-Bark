@@ -8,6 +8,8 @@ var volume_label: Label
 var save_notice: Label
 var back_button: Button
 var toggles={}
+var style_selector: OptionButton
+const STYLE_NAMES=["3D storybook", "Original painting", "Articulated painting"]
 
 func _ready():
 	name="SharedSettings"
@@ -25,6 +27,16 @@ func _ready():
 		for state in ["font_color","font_hover_color","font_pressed_color","font_hover_pressed_color","font_focus_color"]:toggle.add_theme_color_override(state,Color("203849"))
 		toggle.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));toggle.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"));toggles[key]=toggle;add_child(toggle)
 		toggle.toggled.connect(func(value):change_toggle(key,value))
+		if key=="painted_characters":toggle.hide()
+	text("Character style",Rect2(30,300,220,38),21)
+	style_selector=OptionButton.new();style_selector.name="CharacterStyle";style_selector.position=Vector2(260,297);style_selector.size=Vector2(450,44)
+	style_selector.add_theme_font_override("font",Art.font);style_selector.add_theme_font_size_override("font_size",20)
+	for value in STYLE_NAMES:style_selector.add_item(value)
+	for state in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]:style_selector.add_theme_color_override(state,Color("203849"))
+	for state in ["normal","hover","pressed","focus"]:
+		var surface=StyleBoxFlat.new();surface.bg_color=Color("fff5df" if state!="hover" else "e8d9b0");surface.border_color=Color("b59b67");surface.set_border_width_all(2);surface.set_corner_radius_all(10)
+		style_selector.add_theme_stylebox_override(state,surface)
+	add_child(style_selector);style_selector.item_selected.connect(select_character_style)
 	text("A/D or arrows: move · Space twice: jump · E: use · H: hint\nN: notebook · Esc: back/pause · Climbs: R for checkpoint\nTouch: hold an arrow and tap Jump twice.",Rect2(30,414,680,64),17)
 	save_notice=text("",Rect2(30,487,680,44),17)
 	back_button=Button.new();back_button.name="Back";back_button.text="Back";back_button.position=Vector2(240,545);back_button.size=Vector2(260,50);back_button.add_theme_font_override("font",Art.font);back_button.add_theme_font_size_override("font_size",21)
@@ -61,6 +73,15 @@ func sync_settings(_key="",_value=null):
 		var value=bool(Mega.prefs.calm if key=="calm" else Progress.settings[key])
 		toggles[key].set_pressed_no_signal(value)
 		toggles[key].text=LABELS[key]+": "+("On" if value else "Off")
+	style_selector.select(0 if bool(Progress.settings.get("characters_3d",true)) else 1 if bool(Progress.settings.get("painted_characters",true)) else 2)
+
+func select_character_style(index: int) -> void:
+	# One visible choice controls the new renderer without discarding the source
+	# paintings or the earlier articulated presentation.
+	Progress.set_setting("characters_3d",index==0,false)
+	if index!=0:Progress.set_setting("painted_characters",index==1,false)
+	Progress.save_game()
+	sync_settings()
 
 func change_toggle(key,value):
 	if key=="calm":Mega.prefs.calm=value;Mega.save();sync_settings()

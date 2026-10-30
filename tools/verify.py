@@ -24,7 +24,7 @@ def main():
     output.mkdir(exist_ok=True)
     suites = ['playthrough', 'jump_review', 'polish_review', 'variety_review',
               'mega_playthrough', 'animation_review', 'restoration_review', 'finishing_review',
-              'library_review', 'graphics_review', 'whimsy_review', 'hud_review']
+              'library_review', 'graphics_review', 'whimsy_review', 'hud_review', 'character_3d_review']
     summary = {'engine': subprocess.check_output([engine, '--version'], text=True).strip(),
                'clean_project_copy': True, 'isolated_save_data': True, 'suites': {}}
     qa_name = 'MarkBarkQA_' + uuid.uuid4().hex

@@ -2,10 +2,10 @@ config_version=5
 
 [application]
 config/name="Mark & Bark: The Big Idea"
-config/version="3.6.0 Whimsy HUD"
+config/version="3.7.0 Character 2.0"
 run/main_scene="res://scenes/adventures.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/description="The complete painted campus story and all three giant climbs, together with the original Mark and Bark artwork and character animation studio."
+config/description="Expressive 3D Mark and Bark in the complete painted campus story and three giant climbs, with original painting styles and a character performance studio."
 
 [autoload]
 Progress="*res://scripts/progress.gd"

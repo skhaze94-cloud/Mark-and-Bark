@@ -384,7 +384,7 @@ func review_story():
 	var bark_shadow = shadow_for(story.campus, story.campus.bark)
 	exercise_shadow(story.campus, story.player, mark_shadow, Vector2(600, 610), "Story Mark")
 	exercise_shadow(story.campus, story.campus.bark, bark_shadow, Vector2(510, 610), "Story Bark")
-	check(not story.player.sprite.mesh.visible and not story.campus.bark.mesh.visible, "Original chapter retains the complete supplied character paintings")
+	check(story.player.sprite.character3d.active and story.campus.bark.character3d.active and not story.player.sprite.mesh.visible and not story.campus.bark.mesh.visible, "Original chapter presents both volumetric characters over its preserved painted world")
 	var origins = []
 	for piece in story.campus.scenery.planes:
 		origins.append(piece.sprite.position)
@@ -511,7 +511,7 @@ func run():
 		var at = Vector2(campus.platforms[0].get_center().x, campus.platforms[0].position.y)
 		exercise_shadow(campus, game.player, mark_shadow, at, LEVEL_NAMES[level] + " Mark")
 		exercise_shadow(campus, campus.bark, bark_shadow, at + Vector2(-35,0), LEVEL_NAMES[level] + " Bark")
-		check(not game.player.sprite.mesh.visible and not campus.bark.mesh.visible, LEVEL_NAMES[level] + " retains the supplied painted characters")
+		check(game.player.sprite.character3d.active and campus.bark.character3d.active and not game.player.sprite.mesh.visible and not campus.bark.mesh.visible, LEVEL_NAMES[level] + " uses both3D characters while retaining original artwork fallbacks")
 		var scenery_children = campus.scenery.get_child_count()
 		var floor_bay = campus.scenery.visible_bay
 		game.camera.position.y = campus.top - 120

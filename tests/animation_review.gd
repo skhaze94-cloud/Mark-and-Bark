@@ -18,7 +18,7 @@ func _ready():call_deferred("run")
 func run():
 	await ticks(3);screenshots="--screenshots" in OS.get_cmdline_user_args()
 	DirAccess.make_dir_recursive_absolute("res://test_output")
-	Mega.enabled=false;Mega.reset(false);Progress.save_enabled=false;Progress.settings.reduced_motion=false
+	Mega.enabled=false;Mega.reset(false);Progress.save_enabled=false;Progress.settings.reduced_motion=false;Progress.settings.characters_3d=false
 	var holder=Node2D.new();add_child(holder)
 	for role in ["young","bark"]:
 		var actor=Art.character(role+"_actions_idle");holder.add_child(actor);await ticks(3)

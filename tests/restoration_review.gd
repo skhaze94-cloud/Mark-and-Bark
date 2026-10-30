@@ -48,7 +48,7 @@ func run():
 	screenshots="--screenshots" in OS.get_cmdline_user_args()
 	DirAccess.make_dir_recursive_absolute("res://test_output")
 	Progress.save_enabled=false;Mega.enabled=false;Progress.reset_game(false);Mega.reset(false)
-	Progress.settings.painted_characters=true;Progress.settings.reduced_motion=false
+	Progress.settings.painted_characters=true;Progress.settings.characters_3d=false;Progress.settings.reduced_motion=false
 	check(ProjectSettings.get_setting("application/run/main_scene")==Adventures.HOME,"F5 opens the complete adventure menu")
 	var all_present=true
 	for id in Art.index:
@@ -71,7 +71,7 @@ func run():
 	await Adventures.go(Adventures.HOME);var home=get_tree().current_scene;await ticks(8)
 	check(controls_fit(home),"Adventure menu text and controls stay inside the viewport")
 	check(home.mark.texture==Art.tex("young_actions_notebook") and home.bark.texture==Art.tex("bark_actions_cheer"),"Menu stages the supplied character identities prominently")
-	check(not home.mark.mesh.visible and not home.bark.mesh.visible,"Original painted character presentation is the default")
+	check(not home.mark.mesh.visible and not home.bark.mesh.visible,"Original painted presentation remains selectable in the legacy renderer")
 	home.paint_toggle.button_pressed=false;await ticks(2)
 	check(not Progress.settings.painted_characters and home.mark.mesh.visible and home.bark.mesh.visible,"The appearance control updates both friends immediately")
 	home.paint_toggle.button_pressed=true

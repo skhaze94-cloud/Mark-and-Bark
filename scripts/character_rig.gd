@@ -50,6 +50,8 @@ var emote=""
 var emote_left=0.0
 var channel_angles={}
 var step_delta=1.0/60.0
+var character3d
+var _skin_pose_key=""
 
 class RigOverlay extends Node2D:
 	var rig
@@ -82,6 +84,8 @@ func _ready():
 	overlay=RigOverlay.new();overlay.name="AnimationPoints";overlay.rig=self;overlay.z_index=5;add_child(overlay);overlay.hide()
 	for key in ["head","neck","shoulder_near","elbow_near","wrist_near","shoulder_far","elbow_far","wrist_far","hips","knee_near","ankle_near","toe_near","knee_far","ankle_far","toe_far","eye_near","eye_far","brow_near","brow_far","mouth","crown","leaf_near","leaf_far","coat"]:
 		var point=Marker2D.new();point.name=key;overlay.add_child(point);markers[key]=point
+	character3d=load("res://scripts/characters/character_presenter_3d.gd").new()
+	character3d.owner_actor=self;add_child(character3d)
 	sync_pose()
 
 func make_grid():
@@ -103,7 +107,9 @@ func sync_pose():
 		return
 	displayed_pose=id
 	if not profiles.has(id):
-		profile={};mesh.hide();self_modulate.a=1;return
+		profile={};mesh.hide();overlay.hide();self_modulate.a=1
+		if is_instance_valid(character3d):character3d.configure(role,false)
+		return
 	mesh.texture=texture;face_material.set_shader_parameter("face_paint",texture);profile=profiles[id];role=profile.role
 	update_presentation()
 	rest_points={"origin":Vector2.ZERO}
@@ -114,7 +120,7 @@ func sync_pose():
 		var parent_position=Vector2.ZERO if link[1].is_empty() else rest_globals[link[1]].origin
 		var bone=bones[link[0]];bone.transform=Transform2D(0,position-parent_position);bone.rest=bone.transform
 		rest_globals[link[0]]=Transform2D(0,position)
-	apply_skin()
+	if not is_instance_valid(character3d) or not character3d.active:apply_skin()
 	var a=profile.eyes[0];var b=profile.eyes[1];var mouth=profile.mouth
 	face_material.set_shader_parameter("eye_near",Vector4(a[0]/512.0,a[1]/640.0,a[2]/512.0,a[3]/640.0))
 	face_material.set_shader_parameter("eye_far",Vector4(b[0]/512.0,b[1]/640.0,b[2]/512.0,b[3]/640.0))
@@ -124,8 +130,10 @@ func update_presentation():
 	# Keep the complete source painting available, independently of accessibility.
 	# The studio always exposes the articulated performance for inspection.
 	var painted=gameplay_actor and bool(Progress.settings.get("painted_characters",true))
-	mesh.visible=not painted and not profile.is_empty()
-	self_modulate.a=1.0 if painted or profile.is_empty() else 0.0
+	var use_3d=bool(Progress.settings.get("characters_3d",true)) and not profile.is_empty()
+	if is_instance_valid(character3d):character3d.configure(role,use_3d)
+	mesh.visible=not use_3d and not painted and not profile.is_empty()
+	self_modulate.a=0.0 if use_3d else 1.0 if painted or profile.is_empty() else 0.0
 
 func point(key):return rest_points[key]+ANCHOR
 func capsule(p,a,b,radius):
@@ -164,6 +172,7 @@ func weights_at(p,pin):
 	return result
 func apply_skin():
 	var key=displayed_pose+("_ground" if grounded else "_air")
+	_skin_pose_key=key
 	if not skin_cache.has(key):
 		var arrays={}
 		for link in LINKS:
@@ -179,21 +188,37 @@ func apply_skin():
 
 func drive(next_mode,is_grounded,velocity=Vector2.ZERO,gait=0.0):
 	mode=next_mode;grounded=is_grounded;motion=velocity;cadence=gait
-func pulse(name,seconds=.55):emote=name;emote_left=seconds;event_age=0
-func land(strength):landing_age=0;landing_force=strength
+func pulse(name,seconds=.55):
+	emote=name;emote_left=seconds;event_age=0
+	if is_instance_valid(character3d):character3d.pulse(name,seconds)
+func land(strength):
+	landing_age=0;landing_force=strength
+	if is_instance_valid(character3d):character3d.land(strength)
 func reset_motion():
 	event_age=9;landing_age=9;emote_left=0;delight=0;channel_angles.clear();mode="idle";motion=Vector2.ZERO
+	if is_instance_valid(character3d):character3d.reset_motion()
 	if is_instance_valid(skeleton):
 		for bone in bones.values():bone.apply_rest()
 func _process(delta):
+	var raw_delta=delta
 	delta*=playback_rate
 	step_delta=minf(delta,.05)
 	sync_pose()
-	if profile.is_empty() or not is_visible_in_tree():return
+	if profile.is_empty():return
+	if not is_visible_in_tree():
+		if is_instance_valid(character3d):character3d.stop_rendering()
+		return
 	reduced_motion=bool(Progress.settings.reduced_motion)
-	if applied_grounded!=grounded:apply_skin()
 	if not frozen:
 		age+=delta*tuning.tempo;event_age+=delta;landing_age+=delta;emote_left=maxf(0,emote_left-delta)
+	if is_instance_valid(character3d) and character3d.active:
+		character3d.step(raw_delta)
+		overlay.visible=show_points
+		if show_points:
+			for key in markers:markers[key].position=joint_position(key)
+			overlay.queue_redraw()
+		return
+	if applied_grounded!=grounded or _skin_pose_key!=displayed_pose+("_ground" if grounded else "_air"):apply_skin()
 	if reduced_motion:
 		channel_angles.clear()
 		for bone in bones.values():bone.apply_rest()
@@ -272,6 +297,7 @@ func update_face():
 	face_material.set_shader_parameter("brow_near",(bones.BrowNear.rest.origin.y-bones.BrowNear.position.y)/640.0)
 	face_material.set_shader_parameter("brow_far",(bones.BrowFar.rest.origin.y-bones.BrowFar.position.y)/640.0)
 func joint_position(key):
+	if is_instance_valid(character3d) and character3d.active:return character3d.projected_joint(key)
 	if not rest_points.has(key):return Vector2.ZERO
 	if gameplay_actor and bool(Progress.settings.get("painted_characters",true)):return rest_points[key]
 	var original: Vector2=rest_points[key];var weights=weights_at(original+ANCHOR,grounded);var result=Vector2.ZERO

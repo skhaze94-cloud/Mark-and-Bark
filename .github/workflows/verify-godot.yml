@@ -29,7 +29,7 @@ jobs:
           grep ' Godot_v4.4.1-stable_linux.x86_64.zip$' SHA512-SUMS.txt | sha512sum --check -
           unzip -j Godot_v4.4.1-stable_linux.x86_64.zip
           chmod +x Godot_v4.4.1-stable_linux.x86_64
-      - name: Import a clean copy and run all twelve regression suites
+      - name: Import a clean copy and run all thirteen regression suites
         run: python3 tools/verify.py --godot /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64
       - name: Verify native menus and capture screenshots
         run: |
@@ -56,6 +56,12 @@ jobs:
           set -o pipefail
           xvfb-run -a /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --path . --fixed-fps 60 res://tests/hud_review.tscn -- --screenshots 2>&1 | tee test_output/native_hud.log
           if grep -E 'SCRIPT ERROR:|^ERROR:|FAIL:' test_output/native_hud.log; then exit 1; fi
+      - name: Verify 3D characters, animation, framing and presentation styles
+        run: |
+          set -o pipefail
+          xvfb-run -a /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64 --audio-driver Dummy --path . --log-file "$PWD/test_output/native_character3d.log" --fixed-fps 60 res://tests/character_3d_review.tscn -- --screenshots 2>&1 | tee test_output/native_character3d_stdout.log
+          if grep -E 'SCRIPT ERROR:|^ERROR:|FAIL:' test_output/native_character3d*.log; then exit 1; fi
+          grep -q 'CHARACTER 3D RESULT:' test_output/native_character3d.log
       - name: Fetch checksum-verified official export templates
         run: python3 tools/fetch_export_templates.py --destination /tmp/godot-templates
       - name: Build production Web and Windows releases and test the packed runtime
@@ -68,27 +74,27 @@ jobs:
         run: node tools/verify_web.cjs --browser /tmp/mark-bark-chrome/chrome-headless-shell-linux64/chrome-headless-shell --modules /tmp/mark-bark-browser/node_modules
       - name: Package editable Godot source
         run: |
-          mkdir -p dist/Mark-and-Bark-3.6.0-Whimsy-HUD
-          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output --exclude=__pycache__ ./ dist/Mark-and-Bark-3.6.0-Whimsy-HUD/
+          mkdir -p dist/Mark-and-Bark-3.7.0-Character-2-0
+          rsync -a --exclude=.git --exclude=.godot --exclude=dist --exclude=test_output --exclude=__pycache__ ./ dist/Mark-and-Bark-3.7.0-Character-2-0/
           cd dist
-          zip -qr Mark-and-Bark-3.6.0-Whimsy-HUD.zip Mark-and-Bark-3.6.0-Whimsy-HUD
+          zip -qr Mark-and-Bark-3.7.0-Character-2-0.zip Mark-and-Bark-3.7.0-Character-2-0
       - name: Upload editable source
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-3.6.0-source
-          path: dist/Mark-and-Bark-3.6.0-Whimsy-HUD.zip
+          name: Mark-and-Bark-3.7.0-source
+          path: dist/Mark-and-Bark-3.7.0-Character-2-0.zip
           if-no-files-found: error
       - name: Upload production Web build
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-3.6.0-Web
-          path: test_output/exports/Mark-and-Bark-3.6.0-web.zip
+          name: Mark-and-Bark-3.7.0-Web
+          path: test_output/exports/Mark-and-Bark-3.7.0-web.zip
           if-no-files-found: error
       - name: Upload production Windows build
         uses: actions/upload-artifact@v4
         with:
-          name: Mark-and-Bark-3.6.0-Windows
-          path: test_output/exports/Mark-and-Bark-3.6.0-windows.zip
+          name: Mark-and-Bark-3.7.0-Windows
+          path: test_output/exports/Mark-and-Bark-3.7.0-windows.zip
           if-no-files-found: error
       - name: Upload logs and screenshots for review
         if: always()
@@ -103,6 +109,7 @@ jobs:
             test_output/finishing_*.png
             test_output/library_shelf_*.png
             test_output/hud_*.png
+            test_output/character3d_*.png
             test_output/graphics_*.png
             test_output/graphics_preview_*.jpg
             test_output/exports/*.log
@@ -119,11 +126,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Mark-and-Bark-3.6.0-Windows
+          name: Mark-and-Bark-3.7.0-Windows
           path: test_output/windows-download
       - name: Extract the production build
         shell: pwsh
-        run: Expand-Archive -Path test_output/windows-download/Mark-and-Bark-3.6.0-windows.zip -DestinationPath test_output/windows-build
+        run: Expand-Archive -Path test_output/windows-download/Mark-and-Bark-3.7.0-windows.zip -DestinationPath test_output/windows-build
       - name: Run the actual Windows release through save, resume, recovery and safe exit
         run: python tools/verify_exports.py --runtime test_output/windows-build/Mark-and-Bark.exe --pack test_output/windows-build/Mark-and-Bark.pck --output test_output/windows-native
       - name: Upload Windows runtime results

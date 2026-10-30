@@ -66,6 +66,15 @@ func show_pose(id: String, seconds: float = 0.5) -> void:
 	if id.ends_with("cheer") and sprite.has_method("pulse"):sprite.pulse("celebrate",seconds)
 
 func _physics_process(delta: float) -> void:
+	# 3D articulation owns its continuous pose; a painted frame crossfade would
+	# duplicate a flat silhouette over it, including while a menu suspends play.
+	var renderer=sprite.get("character3d") if is_instance_valid(sprite) else null
+	var using_3d: bool=is_instance_valid(renderer) and renderer.get("active")==true
+	if using_3d:
+		last_texture=sprite.texture
+		blend_age=1.0
+		sprite.modulate.a=1.0
+		ghost.hide()
 	if suspended:
 		if sprite.has_method("drive"):
 			var game=get_parent();var lively=game.get("mode") in ["title","ray"] or (game.has_method("result") and game.result_open)
@@ -174,15 +183,16 @@ func _physics_process(delta: float) -> void:
 			sprite.scale.x*=1.0+settle*0.5
 
 	# A short crossfade smooths the supplied key poses, with identical foot pivots.
-	if sprite.texture!=last_texture:
-		ghost.texture=last_texture
-		last_texture=sprite.texture
-		blend_age=0.0
-	blend_age+=delta
-	var mix=1.0 if reduced_motion or spring_contact else clampf(blend_age/0.065,0,1)
-	sprite.modulate.a=mix
-	ghost.modulate.a=1.0-mix
-	ghost.visible=mix<1
+	if not using_3d:
+		if sprite.texture!=last_texture:
+			ghost.texture=last_texture
+			last_texture=sprite.texture
+			blend_age=0.0
+		blend_age+=delta
+		var mix=1.0 if reduced_motion or spring_contact else clampf(blend_age/0.065,0,1)
+		sprite.modulate.a=mix
+		ghost.modulate.a=1.0-mix
+		ghost.visible=mix<1
 	ghost.scale=sprite.scale
 	ghost.rotation=sprite.rotation
 	ghost.position=sprite.position
