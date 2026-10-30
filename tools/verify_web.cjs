@@ -79,6 +79,13 @@ async function main() {
       execFileSync('python3',['-c','from PIL import Image; import sys; Image.open(sys.argv[1]).crop((531,354,955,393)).resize((1272,117)).save(sys.argv[2])',file,styleFile]);
       text += '\n'+execFileSync('tesseract',[styleFile,'stdout','--psm','7'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
     }
+    if (name === '08_climb_gameplay') {
+      // The illustrated scene can cause sparse whole-frame OCR to omit the
+      // small circular touch control. Verify its visible label directly.
+      const jumpFile=path.join(output,name+'_jump.png');
+      execFileSync('python3',['-c','from PIL import Image; import sys; Image.open(sys.argv[1]).crop((1180,631,1244,666)).resize((192,105)).save(sys.argv[2])',file,jumpFile]);
+      text += '\n'+execFileSync('tesseract',[jumpFile,'stdout','--psm','7'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
+    }
     fs.writeFileSync(path.join(output, name + '.txt'), text);
     const normalized = text.toLowerCase().replace(/\s+/g, ' ');
     for (const word of words) check(normalized.includes(word.toLowerCase()), `${name}: rendered ${word}`);
