@@ -32,6 +32,8 @@ func _ready():
 			runs[i].quest=truth(r.get("quest",false));runs[i].token=truth(r.get("token",false))
 			for id in r.get("leaves",[]) if r.get("leaves") is Array else []:
 				if (id is int or id is float) and is_finite(float(id)) and int(id) in range(24) and not int(id) in runs[i].leaves:runs[i].leaves.append(int(id))
+			for id in r.get("wonders",[]) if r.get("wonders") is Array else []:
+				if i==0 and (id is int or id is float) and is_finite(float(id)) and float(id)==int(id) and int(id) in range(3) and not int(id) in runs[i].wonders:runs[i].wonders.append(int(id))
 		if data.get("best") is Array and data.best.size()>i and data.best[i] is Dictionary:
 			best[i].complete=truth(data.best[i].get("complete",false))
 			best[i].leaves=clampi(number(data.best[i].get("leaves"),0),0,24)
@@ -45,11 +47,11 @@ func valid_document(d: Dictionary) -> bool:
 func reset(write=true):
 	unlocked=1;current=0;intro_done=false;runs=[];best=[]
 	for i in range(3):
-		runs.append({"checkpoint":-1,"quest":false,"leaves":[],"token":false})
+		runs.append({"checkpoint":-1,"quest":false,"leaves":[],"token":false,"wonders":[]})
 		best.append({"complete":false,"leaves":0,"token":false})
 	if write:save()
 func replay(i):
-	runs[i]={"checkpoint":-1,"quest":false,"leaves":[],"token":false};current=i;save()
+	runs[i]={"checkpoint":-1,"quest":false,"leaves":[],"token":false,"wonders":[]};current=i;save()
 func finish():
 	best[current].complete=true
 	best[current].leaves=maxi(best[current].leaves,runs[current].leaves.size())
