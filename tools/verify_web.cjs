@@ -73,6 +73,11 @@ async function main() {
       const volumeFile=path.join(output,name+'_volume.png');
       execFileSync('python3',['-c','from PIL import Image; import sys; Image.open(sys.argv[1]).crop((845,140,930,185)).resize((255,135)).save(sys.argv[2])',file,volumeFile]);
       text += '\n'+execFileSync('tesseract',[volumeFile,'stdout','--psm','7','-c','tessedit_char_whitelist=0123456789%'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
+      // The panel OCR treats the bordered selector as a separate block.
+      // Read its actual rendered value independently, as with the volume label.
+      const styleFile=path.join(output,name+'_style.png');
+      execFileSync('python3',['-c','from PIL import Image; import sys; Image.open(sys.argv[1]).crop((531,354,955,393)).resize((1272,117)).save(sys.argv[2])',file,styleFile]);
+      text += '\n'+execFileSync('tesseract',[styleFile,'stdout','--psm','7'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
     }
     fs.writeFileSync(path.join(output, name + '.txt'), text);
     const normalized = text.toLowerCase().replace(/\s+/g, ' ');
