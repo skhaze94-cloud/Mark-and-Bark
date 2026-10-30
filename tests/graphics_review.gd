@@ -96,14 +96,20 @@ func visible_buttons(root):
 	return buttons
 
 func hud_fits_and_separates(hud, objective, counter):
-	var viewport = Rect2(0, 0, 1280, 720).grow(1)
+	var viewport = Rect2(Vector2.ZERO, hud.get_viewport_rect().size).grow(1)
 	var buttons = visible_buttons(hud)
-	var valid = viewport.encloses(objective.get_global_rect()) and viewport.encloses(counter.get_global_rect())
-	valid = valid and not objective.get_global_rect().intersects(counter.get_global_rect())
+	var labels = []
+	for label in [objective, counter]:
+		if label.is_visible_in_tree():
+			labels.append(label.get_global_rect())
+	var valid = true
+	for rect in labels:
+		valid = valid and viewport.encloses(rect)
 	for i in range(buttons.size()):
 		var rect = buttons[i].get_global_rect()
 		valid = valid and viewport.encloses(rect)
-		valid = valid and not rect.intersects(objective.get_global_rect()) and not rect.intersects(counter.get_global_rect())
+		for label_rect in labels:
+			valid = valid and not rect.intersects(label_rect)
 		for j in range(i + 1, buttons.size()):
 			if rect.intersects(buttons[j].get_global_rect()):
 				print("Overlapping HUD buttons: ", buttons[i].text, " / ", buttons[j].text)

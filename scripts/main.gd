@@ -57,7 +57,12 @@ var bark_pose_until: float = 0.0
 var shrinking_intro
 var tutorial_double_baseline: int = 0
 var jump_meter: Label
-var last_air_cheer: float = -10.0
+const BARK_NOTEBOOK_QUIPS = [
+	"Bark: Aim for the clouds! Mark: The next platform will do.",
+	"Bark: Try landing upside down! Mark: Feet first, please.",
+	"Bark: I call this leaf-powered nonsense. Mark: Useful nonsense!",
+	"Bark: Can we jump over tomorrow? Mark: One ledge at a time."
+]
 var soundscape
 var objective_icon: TextureRect
 var quest_ribbon
@@ -73,6 +78,10 @@ var notebook_button: Button
 var hint_button: Button
 var modal_back: Callable
 var dialogue_count: Label
+var whimsy_hud
+var _hud_goal_signature: String = ""
+var _hud_goal_pending: String = ""
+var _idle_hint_goal: String = ""
 
 func sync_room() -> void:
 	campus.enter_room(campus.room_for(player.position.x))
@@ -246,84 +255,62 @@ func build_ui() -> void:
 	hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	layer.add_child(hud)
-	var top=Panel.new()
-	top.position=Vector2(22,18)
-	top.size=Vector2(1236,112)
-	top.add_theme_stylebox_override("panel",panel_style("203849"))
-	hud.add_child(top)
+	# Journal data remains available to the notebook and accessibility checks.
+	# Its former full-width header and shortcut rows never paint over the world.
+	var journal_data=Control.new()
+	journal_data.name="JournalData"
+	journal_data.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	hud.add_child(journal_data)
+	journal_data.hide()
 	objective_icon=TextureRect.new()
-	objective_icon.position=Vector2(18,36)
-	objective_icon.size=Vector2(48,48)
 	objective_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	objective_icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	objective_icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	top.add_child(objective_icon)
-	zone_label=label_at(top,"THE BIG IDEA",Rect2(80,10,730,24),16,"e3c479")
-	objective=label_at(top,"",Rect2(80,34,730,50),21,"fff5dd")
-	step_label=label_at(top,"",Rect2(625,91,185,18),13,"e3c479")
-	step_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
+	journal_data.add_child(objective_icon)
+	zone_label=label_at(journal_data,"THE BIG IDEA",Rect2(0,0,730,24),16)
+	objective=label_at(journal_data,"",Rect2(0,30,730,60),21)
+	step_label=label_at(journal_data,"",Rect2(0,92,300,24),16)
 	quest_ribbon=load("res://scripts/quest_ribbon.gd").new()
-	quest_ribbon.position=Vector2(80,92)
 	quest_ribbon.size=Vector2(245,18)
-	top.add_child(quest_ribbon)
-	counter=label_at(top,"",Rect2(850,15,180,86),17,"fff5dd")
-	var meter_panel=Panel.new()
-	meter_panel.position=Vector2(25,540)
-	meter_panel.size=Vector2(225,46)
-	meter_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var meter_style=panel_style("203849")
-	meter_style.bg_color.a=0.9
-	meter_style.set_border_width_all(1)
-	meter_style.shadow_size=3
-	meter_panel.add_theme_stylebox_override("panel",meter_style)
-	hud.add_child(meter_panel)
-	jump_meter=label_at(meter_panel,"",Rect2(12,11,205,28),17,"fff2bd")
-	jump_meter.add_theme_color_override("font_shadow_color",Color("203849"))
-	jump_meter.add_theme_constant_override("shadow_offset_y",2)
-	button(top,"Pause",Rect2(1070,28,145,55),show_pause)
+	journal_data.add_child(quest_ribbon)
+	counter=label_at(journal_data,"",Rect2(750,30,200,86),17)
+	jump_meter=label_at(journal_data,"",Rect2(0,120,300,30),17)
+	hint_button=button(journal_data,"Bark's hint  [H]",Rect2(0,180,240,50),request_hint)
+	notebook_button=button(journal_data,"Notebook  [N]",Rect2(250,180,240,50),show_notebook)
+	var skip=button(hud,"Skip tutorial",Rect2(0,0,180,50),finish_tutorial)
+	skip.name="SkipTutorial"
+	skip.hide()
+	whimsy_hud=load("res://scripts/whimsy_hud.gd").new()
+	whimsy_hud.controller=self
+	hud.add_child(whimsy_hud)
+	whimsy_hud.pause_requested.connect(show_pause)
+	whimsy_hud.journal_requested.connect(show_notebook)
+	touch_root=whimsy_hud.touch_root
+	whimsy_hud.touch_buttons.left.button_down.connect(func():touches.left=true)
+	whimsy_hud.touch_buttons.left.button_up.connect(func():touches.left=false)
+	whimsy_hud.touch_buttons.right.button_down.connect(func():touches.right=true)
+	whimsy_hud.touch_buttons.right.button_up.connect(func():touches.right=false)
+	whimsy_hud.touch_buttons.jump.pressed.connect(jump_pressed)
+	whimsy_hud.touch_buttons.use.pressed.connect(interact_pressed)
 	prompt_panel=Panel.new()
-	prompt_panel.position=Vector2(255,638)
-	prompt_panel.size=Vector2(720,54)
+	prompt_panel.position=Vector2(390,30)
+	prompt_panel.size=Vector2(500,52)
 	prompt_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var prompt_style=panel_style("203849")
-	prompt_style.bg_color.a=0.92
-	prompt_style.set_border_width_all(1)
-	prompt_style.shadow_size=3
-	prompt_panel.add_theme_stylebox_override("panel",prompt_style)
+	prompt_panel.add_theme_stylebox_override("panel",hud_paper())
 	hud.add_child(prompt_panel)
-	prompt=label_at(prompt_panel,"",Rect2(12,8,696,38),20,"fff5dd")
+	prompt=label_at(prompt_panel,"",Rect2(16,10,468,32),18,"304f50")
 	prompt.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	prompt.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	prompt.add_theme_color_override("font_shadow_color",Color("172e3c"))
-	prompt.add_theme_constant_override("shadow_offset_x",2)
-	prompt.add_theme_constant_override("shadow_offset_y",2)
+	prompt_panel.hide()
 	toast_panel=Panel.new()
-	toast_panel.position=Vector2(325,139)
-	toast_panel.size=Vector2(630,70)
+	toast_panel.position=Vector2(370,28)
+	toast_panel.size=Vector2(540,68)
 	toast_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var toast_style=panel_style("203849")
-	toast_style.bg_color.a=0.93
-	toast_style.set_border_width_all(1)
-	toast_style.shadow_size=5
-	toast_panel.add_theme_stylebox_override("panel",toast_style)
+	toast_panel.add_theme_stylebox_override("panel",hud_paper())
 	hud.add_child(toast_panel)
-	toast_label=label_at(toast_panel,"",Rect2(16,12,598,46),18,"fff2bd")
+	toast_label=label_at(toast_panel,"",Rect2(18,12,504,44),18,"304f50")
 	toast_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	toast_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
-	toast_label.add_theme_color_override("font_shadow_color",Color("172e3c"))
-	toast_label.add_theme_constant_override("shadow_offset_y",2)
-	hint_button=button(hud,"Bark's hint  [H]",Rect2(985,624,265,68),request_hint)
-	notebook_button=button(hud,"Notebook  [N]",Rect2(1018,545,232,60),show_notebook)
-	button(hud,"Skip tutorial",Rect2(24,155,180,50),finish_tutorial).name="SkipTutorial"
-	touch_root=Control.new()
-	touch_root.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	hud.add_child(touch_root)
-	for spec in [["left","◀",Rect2(25,609,90,88)],["right","▶",Rect2(130,609,90,88)]]:
-		var b=button(touch_root,spec[1],spec[2],func():pass,true)
-		b.button_down.connect(func():touches[spec[0]]=true)
-		b.button_up.connect(func():touches[spec[0]]=false)
-	button(touch_root,"Jump",Rect2(255,609,140,88),jump_pressed,true)
-	button(touch_root,"Use",Rect2(420,609,140,88),interact_pressed,true)
+	toast_panel.hide()
 	overlay=Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -418,7 +405,7 @@ func show_title() -> void:
 	campus.add_child(decoration)
 	campus.world_label("Small friends. Big possibilities.",Vector2(795,236),19)
 	var p=open_modal(Rect2(48,42,602,638))
-	label_at(p,"THE COMPLETE CAMPUS STORY · 3.5.0",Rect2(36,24,530,28),16,"977134")
+	label_at(p,"THE COMPLETE CAMPUS STORY · 3.6.0",Rect2(36,24,530,28),16,"977134")
 	label_at(p,"MARK & BARK",Rect2(34,63,535,64),43)
 	label_at(p,"THE BIG IDEA",Rect2(36,130,530,42),27,"977134")
 	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,188,535,68),21)
@@ -575,15 +562,15 @@ func _input(event: InputEvent) -> void:
 		input_touch=true
 		apply_settings()
 		# Explicit multitouch avoids relying on first-finger mouse emulation.
-		if event.pressed and not busy and mode in ["tutorial","campus"]:
-			if Rect2(25,609,90,88).has_point(event.position):
+		if event.pressed and not busy and mode in ["tutorial","campus"] and touch_root.is_visible_in_tree():
+			if whimsy_hud.touch_rect("left").has_point(event.position):
 				touch_fingers[event.index]="left"
-			elif Rect2(130,609,90,88).has_point(event.position):
+			elif whimsy_hud.touch_rect("right").has_point(event.position):
 				touch_fingers[event.index]="right"
-			elif Rect2(255,609,140,88).has_point(event.position):
+			elif whimsy_hud.touch_rect("jump").has_point(event.position):
 				jump_pressed()
 				get_viewport().set_input_as_handled()
-			elif Rect2(420,609,140,88).has_point(event.position):
+			elif whimsy_hud.touch_buttons.use.is_visible_in_tree() and whimsy_hud.touch_rect("use").has_point(event.position):
 				interact_pressed()
 				get_viewport().set_input_as_handled()
 		elif not event.pressed:
@@ -593,7 +580,7 @@ func _input(event: InputEvent) -> void:
 		if touch_fingers.has(event.index):get_viewport().set_input_as_handled()
 	elif event is InputEventScreenDrag and touch_fingers.has(event.index):
 		var direction=touch_fingers[event.index]
-		var region=Rect2(25,609,90,88) if direction=="left" else Rect2(130,609,90,88)
+		var region: Rect2=whimsy_hud.touch_rect(direction)
 		if not region.grow(20).has_point(event.position):touch_fingers.erase(event.index)
 		touches.left="left" in touch_fingers.values()
 		touches.right="right" in touch_fingers.values()
@@ -679,8 +666,9 @@ func _physics_process(delta: float) -> void:
 	if not busy and flight.is_empty():
 		idle_time+=delta
 		if absf(player.velocity.x)>20:idle_time=0
-		if idle_time>22:
-			toast("Bark: Need a clue? Use the hint button. There's always another try.")
+		if idle_time>35 and _idle_hint_goal!=current_goal():
+			_idle_hint_goal=current_goal()
+			toast("Need a clue? Pause for Bark's hint, or press H.")
 			idle_time=0
 		if mode=="tutorial":
 			update_tutorial()
@@ -712,8 +700,8 @@ func _physics_process(delta: float) -> void:
 	if not busy:
 		toast_time-=delta
 		toast_age+=delta
-	# Keep notices below the friends when high platforms bring them near the top HUD.
-	toast_panel.position.y=430 if flight.is_empty() and player.get_global_transform_with_canvas().origin.y<380 else 139
+	# One short paper message at a time, in a safe band away from both friends.
+	place_hud_message(toast_panel)
 	toast_panel.visible=toast_time>0 and not busy
 	toast_label.visible=toast_panel.visible
 	toast_panel.modulate.a=1.0 if Progress.settings.reduced_motion else minf(clampf(toast_age/0.12,0,1),clampf(toast_time/0.3,0,1))
@@ -749,7 +737,7 @@ func collect_nearby() -> void:
 			Progress.collect_leaf(item.id)
 			campus.refresh()
 			play_sound("collect")
-			toast("Leaf found! "+str(Progress.data.leaves.size())+" / 6 discoveries")
+			# The small leaf counter celebrates the discovery without another banner.
 
 func update_checkpoint(delta: float) -> void:
 	checkpoint_save_timer+=delta
@@ -777,25 +765,44 @@ func update_hud() -> void:
 	objective_icon.texture=Art.tex(icons[clampi(tutorial_step if mode=="tutorial" else int(Progress.data.stage),0,7)])
 	if mode=="campus" and int(Progress.data.stage)==3 and Progress.data.books:objective_icon.texture=Art.tex("collectibles_pencil")
 	counter.text="Learn at your pace\nNo lost discoveries" if mode=="tutorial" else "Leaves  "+str(Progress.data.leaves.size())+" / 6\nNotes   "+str(Progress.data.discoveries.size())+" / 2\nBark token  "+("Found!" if Progress.data.bark_token else "Hidden")
-	hud.get_node("SkipTutorial").visible=mode=="tutorial"
-	touch_root.visible=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
+	hud.get_node("SkipTutorial").hide()
 	hint_button.text="Bark's hint" if input_touch else "Bark's hint  [H]"
 	notebook_button.text="Notebook" if input_touch else "Notebook  [N]"
+	var touch_requested: bool=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
+	var active: bool=not busy and flight.is_empty() and room_transition.is_empty()
 	campus.feedback.focus_id=""
-	if busy or not flight.is_empty():
-		prompt.text=""
+	var item: Dictionary=campus.nearest(player.position) if active else {}
+	var ask_bark: bool=active and mode=="tutorial" and tutorial_step==5 and player.position.distance_to(campus.bark.position)<160
+	var use_visible: bool=active and (ask_bark or not item.is_empty())
+	var leaps: int=2 if player.is_on_floor() or player.jumps_used==0 else maxi(0,2-player.jumps_used)
+	whimsy_hud.update_state(Progress.data.leaves.size(),6,leaps,touch_requested and active,use_visible)
+	if ask_bark:
+		prompt.text=("Use: " if touch_requested else "[E] ")+"Ask Bark for a hint"
+	elif not item.is_empty():
+		campus.feedback.focus_id=String(item.id)
+		prompt.text=("Use: " if touch_requested else "[E] ")+String(item.title)
+		if item.id in ["notebook","books","pencil"] and not player.is_on_floor():
+			prompt.text="Land beside "+String(item.title)+", then "+("tap Use." if touch_requested else "press E.")
 	else:
-		var item=campus.nearest(player.position)
-		campus.feedback.focus_id=String(item.id) if not item.is_empty() else ""
-		prompt.text=("Use: " if input_touch else "[E] ")+String(item.title) if not item.is_empty() else ""
-		if not item.is_empty() and item.id in ["notebook","books","pencil"] and not player.is_on_floor():
-			prompt.text="Land beside "+String(item.title)+", then "+("tap Use." if input_touch else "press E.")
-
-	prompt_panel.visible=not prompt.text.is_empty()
-	prompt_panel.position=Vector2(255,547 if touch_root.visible else 638)
+		prompt.text=""
+	# Objectives appear once when they change. The full task is always in Notes.
+	var signature: String=mode+":"+current_goal()
+	if signature!=_hud_goal_signature:
+		_hud_goal_signature=signature
+		_hud_goal_pending=current_goal()
+	if active and toast_time<=0 and not _hud_goal_pending.is_empty():
+		toast(_hud_goal_pending)
+		_hud_goal_pending=""
+	prompt_panel.visible=active and not prompt.text.is_empty() and toast_time<=0
+	if prompt_panel.visible:
+		fit_hud_message(prompt_panel,prompt,prompt.text,500)
+		place_hud_message(prompt_panel)
 
 func interact_pressed() -> void:
 	if busy or not flight.is_empty() or not mode in ["tutorial","campus"]:
+		return
+	if mode=="tutorial" and tutorial_step==5 and player.position.distance_to(campus.bark.position)<160:
+		request_hint()
 		return
 	var item=campus.nearest(player.position)
 	if item.is_empty():
@@ -918,7 +925,8 @@ func show_notebook() -> void:
 	var ready=[Progress.data.notebook,Progress.data.plant_restored,Progress.data.books,Progress.data.pencil]
 	for i in range(4):
 		label_at(p,("✓ " if ready[i] else "○ ")+checklist[i]+(" · Ready" if ready[i] else " · To find"),Rect2(32,163+i*38,710,36),22,"53715b" if ready[i] else "203849")
-	label_at(p,"Optional discoveries never block your big idea.\nProgress stays with you between rooms and retries.",Rect2(32,324,710,60),18)
+	var doodle: String=BARK_NOTEBOOK_QUIPS[posmod(player.double_jump_count,BARK_NOTEBOOK_QUIPS.size())]
+	label_at(p,"Leaves "+str(Progress.data.leaves.size())+" / 6  ·  Funny pages "+str(Progress.data.discoveries.size())+" / 2  ·  Bark portrait: "+("Found" if Progress.data.bark_token else "Hidden")+"\n"+doodle+"\nDiscoveries and quest progress stay safe between retries.",Rect2(32,324,710,70),18)
 	button(p,"Where next?",Rect2(32,405,260,55),func():close_modal();request_hint())
 	button(p,"Back to exploring",Rect2(332,405,400,55),close_modal,true)
 	focus_action("Back to exploring")
@@ -1101,6 +1109,31 @@ func show_pause() -> void:
 	button(p,"Settings & controls",Rect2(30,250,440,60),func():show_settings(show_pause))
 	button(p,"Save & title screen",Rect2(30,329,440,60),func():Progress.save_game();show_title())
 	label_at(p,"Retries keep your quest and discoveries.",Rect2(30,409,440,28),17)
+	var tools=Panel.new()
+	tools.position=Vector2(-320,0)
+	tools.size=Vector2(300,455)
+	tools.add_theme_stylebox_override("panel",panel_style("e6eddc"))
+	p.add_child(tools)
+	label_at(tools,"POCKET TOOLS",Rect2(24,24,252,38),23,"53715b")
+	button(tools,"Notebook",Rect2(20,95,260,60),func():close_modal();show_notebook())
+	button(tools,"Bark's hint",Rect2(20,173,260,60),func():close_modal();request_hint())
+	if mode=="tutorial":
+		button(tools,"Skip tutorial",Rect2(20,251,260,60),func():close_modal();finish_tutorial())
+	label_at(tools,"N · Notebook\nH · Bark's hint\nSpace twice · Leafy lift",Rect2(24,337,252,90),17,"53715b")
+	var details=Panel.new()
+	details.position=Vector2(520,0)
+	details.size=Vector2(300,455)
+	details.add_theme_stylebox_override("panel",panel_style("f5edda"))
+	p.add_child(details)
+	label_at(details,"OUR LITTLE ADVENTURE",Rect2(22,24,256,55),21,"53715b")
+	var goal_label=label_at(details,current_goal(),Rect2(22,95,256,150),20)
+	goal_label.name="PauseObjective"
+	goal_label.clip_text=true
+	# Reapply after font/theme minimum sizes settle so long goals wrap inside
+	# the paper sidecard instead of retaining their first unwrapped width.
+	goal_label.size=Vector2(256,150)
+	goal_label.set_deferred("size",Vector2(256,150))
+	label_at(details,counter.text+"\n\n"+step_label.text,Rect2(22,275,256,145),18)
 	focus_action("Continue")
 
 func restart_checkpoint() -> void:
@@ -1134,16 +1167,63 @@ func apply_settings() -> void:
 			player.ghost.hide()
 			player.sprite.modulate.a=1
 	if is_instance_valid(campus):campus.reduced_motion=bool(Progress.settings.reduced_motion)
-	if is_instance_valid(touch_root):touch_root.visible=bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")
+	if is_instance_valid(touch_root):touch_root.visible=(bool(Progress.settings.touch) or input_touch or OS.has_feature("mobile")) and not busy and flight.is_empty() and room_transition.is_empty()
+
+func hud_paper() -> StyleBoxFlat:
+	var paper=panel_style("f5edda")
+	paper.border_color=Color("a6b994")
+	paper.set_border_width_all(1)
+	paper.set_corner_radius_all(15)
+	paper.shadow_color=Color(0.10,0.22,0.22,0.15)
+	paper.shadow_size=4
+	paper.shadow_offset=Vector2(0,3)
+	return paper
+
+func fit_hud_message(panel: Panel, text_label: Label, value: String, width: float) -> void:
+	width=minf(width,maxf(260.0,get_viewport_rect().size.x-360.0))
+	var measured: Vector2=Art.font.get_multiline_string_size(value,HORIZONTAL_ALIGNMENT_CENTER,width-36,18)
+	panel.size=Vector2(width,clampf(measured.y+26,52,150))
+	text_label.position=Vector2(18,12)
+	text_label.size=panel.size-Vector2(36,24)
+	text_label.text=value
+
+func place_hud_message(panel: Panel) -> void:
+	var viewport: Vector2=get_viewport_rect().size
+	var center_x: float=(viewport.x-panel.size.x)*0.5
+	var lower_y: float=maxf(150.0,viewport.y-172.0-panel.size.y)
+	var actors: Array[Rect2]=[]
+	for actor in [player,campus.bark]:
+		if is_instance_valid(actor):
+			var at: Vector2=actor.get_global_transform_with_canvas().origin
+			actors.append(Rect2(at-Vector2(66,105),Vector2(132,120)))
+	# Try quiet upper and lower bands, then their corners. Message cards never
+	# occupy the movement/jump controls and move aside for either friend's face.
+	var candidates: Array[Vector2]=[
+		Vector2(center_x,28),Vector2(center_x,lower_y),
+		Vector2(190,28),Vector2(viewport.x-panel.size.x-90,28),
+		Vector2(24,lower_y),Vector2(viewport.x-panel.size.x-24,lower_y)
+	]
+	var persistent: Array=whimsy_hud.persistent_rects()
+	for candidate in candidates:
+		var rect: Rect2=Rect2(candidate,panel.size)
+		if not Rect2(Vector2.ZERO,viewport).encloses(rect):continue
+		var clear: bool=true
+		for actor in actors:
+			if rect.grow(10).intersects(actor):clear=false
+		for item in persistent:
+			if rect.grow(6).intersects(item):clear=false
+		if clear:
+			panel.position=candidate
+			return
+	panel.position=Vector2(center_x,28)
 
 func toast(text: String) -> void:
-	toast_label.text=text
 	toast_time=clampf(2.5+text.length()/28.0,4,9)
-	toast_panel.size.y=96 if Art.font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,18).x>1100 else 70
-	toast_label.size.y=toast_panel.size.y-24
+	fit_hud_message(toast_panel,toast_label,text,540)
+	place_hud_message(toast_panel)
 	toast_age=0
-	toast_panel.show()
-	toast_label.show()
+	toast_panel.visible=not busy
+	toast_label.visible=not busy
 
 func play_sound(id: String, pitch: float = 1.0) -> void:
 	if sounds.has(id) and float(Progress.settings.volume)>0:
@@ -1191,10 +1271,7 @@ func on_player_jump(is_second: bool) -> void:
 	if is_second:
 		campus.bark.texture=Art.tex("bark_actions_cheer")
 		bark_pose_until=clock+0.9
-		if clock-last_air_cheer>7 and mode=="campus":
-			last_air_cheer=clock
-			var quips=["Bark: Aim for the clouds! Mark: The next platform will do.","Bark: Try landing upside down! Mark: Feet first, please.","Bark: I call this leaf-powered nonsense. Mark: Useful nonsense!","Bark: Can we jump over tomorrow? Mark: One ledge at a time."]
-			toast(quips[(player.double_jump_count-1)%quips.size()])
+		# Keep the cheerful pose and sound; Bark's longer jokes live in Notes.
 
 
 func on_player_landed(at: Vector2, strength: float) -> void:

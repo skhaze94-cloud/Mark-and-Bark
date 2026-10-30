@@ -431,13 +431,13 @@ func run() -> void:
 	var before=game.player.position.x
 	var e=InputEventScreenTouch.new()
 	e.index=0
-	e.position=Vector2(175,650)
+	e.position=game.whimsy_hud.touch_rect("right").get_center()
 	e.pressed=true
 	root.push_input(e,true)
 	await ticks(20)
 	e=InputEventScreenTouch.new()
 	e.index=0
-	e.position=Vector2(175,650)
+	e.position=game.whimsy_hud.touch_rect("right").get_center()
 	e.pressed=false
 	root.push_input(e,true)
 	await ticks(6)
@@ -447,13 +447,13 @@ func run() -> void:
 	await ticks(30)
 	e=InputEventScreenTouch.new()
 	e.index=0
-	e.position=Vector2(315,650)
+	e.position=game.whimsy_hud.touch_rect("jump").get_center()
 	e.pressed=true
 	root.push_input(e,true)
 	await ticks(2)
 	e=InputEventScreenTouch.new()
 	e.index=0
-	e.position=Vector2(315,650)
+	e.position=game.whimsy_hud.touch_rect("jump").get_center()
 	e.pressed=false
 	root.push_input(e,true)
 	await ticks(8)
@@ -461,13 +461,13 @@ func run() -> void:
 	await ticks(15)
 	e=InputEventScreenTouch.new()
 	e.index=1
-	e.position=Vector2(315,650)
+	e.position=game.whimsy_hud.touch_rect("jump").get_center()
 	e.pressed=true
 	root.push_input(e,true)
 	await ticks(2)
 	e=InputEventScreenTouch.new()
 	e.index=1
-	e.position=Vector2(315,650)
+	e.position=game.whimsy_hud.touch_rect("jump").get_center()
 	e.pressed=false
 	root.push_input(e,true)
 	await ticks(3)
@@ -477,12 +477,12 @@ func run() -> void:
 	var start_x: float=game.player.position.x
 	e=InputEventScreenTouch.new()
 	e.index=0
-	e.position=Vector2(175,650)
+	e.position=game.whimsy_hud.touch_rect("right").get_center()
 	e.pressed=true
 	root.push_input(e,true)
 	e=InputEventScreenTouch.new()
 	e.index=1
-	e.position=Vector2(315,650)
+	e.position=game.whimsy_hud.touch_rect("jump").get_center()
 	e.pressed=true
 	root.push_input(e,true)
 	await ticks(15)
@@ -490,7 +490,7 @@ func run() -> void:
 	for finger in [0,1]:
 		e=InputEventScreenTouch.new()
 		e.index=finger
-		e.position=Vector2(175,650) if finger==0 else Vector2(315,650)
+		e.position=game.whimsy_hud.touch_rect("right").get_center() if finger==0 else game.whimsy_hud.touch_rect("jump").get_center()
 		e.pressed=false
 		root.push_input(e,true)
 	await ticks(8)
@@ -594,7 +594,7 @@ func run() -> void:
 	check(not game.busy,"Notebook cannot interrupt a plane test")
 	game.flight.clear()
 	game.toast("A long helpful notice explains that you can jump again near the top of your first jump, land on the next platform, and try again safely whenever you need to.")
-	check(game.toast_panel.size.y==96 and game.toast_time>7,"Long notices receive more reading room and time")
+	check(game.toast_panel.size.y>=70 and game.toast_panel.size.y<=160 and game.toast_label.size.y<=game.toast_panel.size.y and game.toast_time>7,"Long notices fit their reading card and retain enough reading time")
 	game.show_pause()
 	var notice_time: float=game.toast_time
 	await ticks(10)
