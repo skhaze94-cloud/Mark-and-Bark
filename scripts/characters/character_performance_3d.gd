@@ -35,6 +35,8 @@ var _last_prop_state: String = ""
 var _last_reduced: bool = false
 var friend_direction: float = 0.0
 var friend_left: float = 0.0
+var mode_age: float = 0.0
+var discovery_age: float = 4.0
 
 func bind_model(value: Node3D) -> void:
 	model = value
@@ -53,6 +55,7 @@ func drive(next_mode, is_grounded, velocity = Vector2.ZERO, gait = 0.0) -> void:
 	var next: String = str(next_mode)
 	if next != mode:
 		state_age = 0.0
+		mode_age = 0.0
 		if next == "land":
 			land(0.65)
 	mode = next
@@ -80,6 +83,8 @@ func reset_motion() -> void:
 	landing_age = 9.0
 	emote_left = 0.0
 	friend_left = 0.0
+	mode_age = 0.0
+	discovery_age = 4.0
 	_angles.clear()
 	_positions.clear()
 	_last_state = ""
@@ -100,6 +105,8 @@ func advance(delta: float) -> void:
 	var step: float = clampf(delta * maxf(0.0, playback_rate), 0.0, 0.1)
 	age += step
 	state_age += step
+	mode_age += step
+	discovery_age += step
 	event_age += step
 	landing_age += step
 	emote_left = maxf(0.0, emote_left - step)
@@ -169,6 +176,16 @@ func _state() -> String:
 			result = "celebrate"
 		elif pose_hint.ends_with("_hint") or pose_hint.ends_with("_point"):
 			result = "hint"
+	if result=="surprise" and (event_age if emote_left>0 else mode_age)>.65:
+		result="curious"
+	if result=="laugh" and (event_age if emote_left>0 else mode_age)>1.6:
+		result="delight" if mode_age<2.2 else "idle"
+	if discovery_age<3.2 and grounded and mode=="idle" and absf(motion.x)<35:
+		if reduced_motion:result="present" if role=="mark" else "delight"
+		elif discovery_age<.55:result="spot" if role=="mark" else "thinking"
+		elif discovery_age<1.3:result="point" if role=="mark" else "curious"
+		elif discovery_age<2.05:result="glance"
+		else:result="present" if role=="mark" else "delight"
 	return result
 
 func _apply_pose(delta: float, immediate: bool = false) -> void:
@@ -227,23 +244,29 @@ func _apply_pose(delta: float, immediate: bool = false) -> void:
 		hip_drop += (0.11 if role == "bark" else 0.16) * flourish
 		hip_rotation.x = 0.13 * flourish
 		head_rotation.x = -0.035 * flourish
-	if active_state in ["delight", "celebrate", "cheer"]:
+	if active_state in ["delight", "celebrate", "cheer", "laugh"]:
 		hip_rotation.z = sin(age * 5.0) * 0.035 * still
 		head_rotation = Vector3(-0.08 * flourish, sin(age * 2.7) * 0.07 * still, sin(age * 4.6) * 0.025 * still)
 	if active_state in ["talk", "hint", "notebook"]:
 		head_rotation.x = (0.05 if active_state == "notebook" else -0.02) + sin(age * 3.1) * 0.025 * still
 		head_rotation.y = sin(age * 1.4) * 0.07 * still
-	if active_state in ["hint","curious"]:
-		head_rotation.z = -.09 * flourish
-	if friend_left>0:
+	if active_state in ["hint","curious","spot","thinking","point"]:
+		head_rotation.z = (-.12 if role=="mark" else .10) * flourish
+		head_rotation.x = .075 if active_state=="thinking" else -.025
+	if active_state=="uncertain":head_rotation.z=.075*flourish
+	if active_state=="surprise":head_rotation.x=-.12*flourish
+	if active_state=="laugh":
+		head_rotation.x=-.09+sin(state_age*8)*.045*still
+		hip_rotation.z=sin(state_age*6)*.04*still
+	if friend_left>0 or active_state=="glance":
 		head_rotation.y = friend_direction*.24
 		head_rotation.z = -friend_direction*.035
 	_rotate("hips", hip_rotation, delta, immediate)
 	_translate("hips", Vector3(0, -hip_drop, 0), delta, immediate)
-	_rotate("spine", Vector3(bob, 0.0, -hip_rotation.z * 0.55), delta, immediate)
+	_rotate("spine", Vector3(.07*flourish if active_state in ["thinking","curious","point"] and role=="bark" else bob, 0.0, -.025 if role=="bark" and active_state=="idle" else -hip_rotation.z * .55), delta, immediate)
 	if role=="bark":
 		var stretch: float=1.0
-		if active_state in ["delight","celebrate","cheer"]:
+		if active_state in ["delight","celebrate","cheer","laugh"]:
 			stretch += sin(state_age*6.0)*.045*still
 		elif active_state in ["spring_contact","anticipate"]:stretch -= .06*flourish
 		elif active_state=="spring_release":stretch += .055*flourish
@@ -265,7 +288,7 @@ func _apply_pose(delta: float, immediate: bool = false) -> void:
 			elbow.x = -0.38 * flourish
 			if active_state == "spring_release" and role == "bark":
 				arm = Vector3(-0.18, 0.0, sign_side * 1.65) * flourish
-		if active_state in ["delight", "celebrate", "cheer"]:
+		if active_state in ["delight", "celebrate", "cheer", "laugh"]:
 			arm = Vector3(-0.16, 0.0, sign_side * (1.95 + sin(age * 6.0 + sign_side) * 0.06 * still)) * flourish
 			elbow.x = -0.45 * flourish
 			wrist.y = sin(age * 5.0 + sign_side) * 0.12 * still
@@ -278,6 +301,16 @@ func _apply_pose(delta: float, immediate: bool = false) -> void:
 			arm.z = sign_side * (0.35 if active_state == "hint" else 0.16) * flourish
 			elbow.x = -0.48 * flourish
 			wrist.y = sin(age * 2.7) * 0.10 * still
+		if active_state in ["thinking","concentrate"] and side=="near":
+			arm=Vector3(-.65,0,-.24)*flourish;elbow.x=-1.35*flourish;wrist.y=-.25*flourish
+		if active_state=="present" and role=="mark" and side=="near":
+			arm=Vector3(-.65,-.10,.16);elbow.x=-.68;wrist.x=.12
+		if active_state in ["spot","point","present"] and side=="far":
+			var emphasis: float=1.0 if reduced_motion else smoothstep(0,.18,state_age)
+			arm=Vector3(-.72,0,.55 if active_state=="point" else .30)*flourish*emphasis
+			elbow.x=-.38*flourish;wrist.y=-.38*flourish
+		if active_state=="surprise":
+			arm=Vector3(-.30,0,sign_side*.55)*flourish;elbow.x=-.6*flourish
 		if active_state=="wave" and side=="far":
 			arm=Vector3(-.25,0,1.85)*flourish
 			elbow.x=-.65*flourish
@@ -347,13 +380,16 @@ func _face(state: String) -> void:
 	blink_value = sin(phase / 0.16 * PI) if phase < 0.16 and not reduced_motion else 0.0
 	var talking: bool = state in ["talk", "hint"]
 	mouth_open = (0.10 + maxf(0.0, sin(age * 11.0)) * 0.38) * still if talking else 0.0
-	smile = 0.92 if state in ["delight", "celebrate", "cheer", "spring_release"] else 0.55
+	smile = 0.92 if state in ["delight", "celebrate", "cheer", "laugh", "spring_release"] else 0.55
 	brow = 0.36 if state in ["anticipate", "spring_contact", "hint"] else 0.15 if state == "notebook" else 0.0
-	if state in ["delight", "celebrate", "cheer"]:
+	if state in ["delight", "celebrate", "cheer", "laugh"]:
 		mouth_open = 0.50 if reduced_motion else 0.52 + maxf(0.0, sin(state_age * 5.0)) * 0.10
 		brow = 0.35
-	gaze = Vector2(friend_direction*.65 if friend_left>0 else 0.0, 0.16 if state=="notebook" else 0.0)
-	if state in ["hint","curious"]:brow=.5
+	gaze = Vector2(friend_direction*.65 if friend_left>0 or state=="glance" else 0.0, 0.16 if state=="notebook" else 0.0)
+	if state in ["hint","curious","spot","point","thinking"]:brow=.5
+	elif state=="surprise":mouth_open=.8;brow=.95;smile=.25
+	elif state=="uncertain":smile=.25;brow=.2
+	elif state=="present":mouth_open=.28;smile=.8;brow=.25
 	elif state=="wave":smile=.8;brow=.3
 	if state in ["jump", "spring_release"]:
 		blink_value = 0.0
@@ -366,3 +402,7 @@ func _face(state: String) -> void:
 func look_at_friend(direction: float) -> void:
 	friend_direction=signf(direction)
 	friend_left=1.4
+
+func share_discovery(direction: float) -> void:
+	friend_direction=signf(direction)
+	discovery_age=0.0

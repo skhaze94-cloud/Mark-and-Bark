@@ -19,12 +19,16 @@ var modes=[]
 var auto_stage=-1
 var last_grounded=true
 var turntable=false
+var expression_override=""
+var expression_index=-1
+var expression_button: Button
+const EXPRESSIONS=["curious","uncertain","surprise","delight","thinking","present","wave","laugh"]
 var orbit_button: Button
 
 func _ready():
 	showcase="--showcase" in OS.get_cmdline_user_args()
 	label("MARK & BARK",Rect2(44,20,650,48),36)
-	label("A PAINTING COME TO LIFE  /  CHARACTER STUDIO  /  4.1",Rect2(47,72,900,30),17,Color("8a713f"))
+	label("FULL OF CHARACTER  /  CHARACTER STUDIO  /  4.2",Rect2(47,72,900,30),17,Color("8a713f"))
 	button("All adventures",Rect2(1040,32,192,52),func():Adventures.go(Adventures.HOME))
 	headline=label("",Rect2(400,24,620,48),22);headline.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	label("MARK",Rect2(78,190,270,30),21)
@@ -43,6 +47,8 @@ func _ready():
 	button("Next frame",Rect2(664,667,174,38),next_frame)
 	orbit_button=button("Turntable [O]",Rect2(858,667,174,38),toggle_turntable)
 	label("1–7: pose · Esc: game",Rect2(1044,674,195,27),14,Color("6d725f"))
+	expression_button=button("Try expressions",Rect2(78,350,170,42),cycle_expression)
+	button("Shared discovery",Rect2(1035,350,195,42),preview_discovery)
 	choose(0);queue_redraw();call_deferred("settle_controls")
 
 func settle_controls():
@@ -80,7 +86,7 @@ func button(value,r,action):
 	c.pressed.connect(action);add_child(c);c.set_meta("studio_rect",r);return c
 
 func choose(n):
-	current=posmod(n,MODES.size());elapsed=0;last_grounded=true
+	current=posmod(n,MODES.size());elapsed=0;last_grounded=true;expression_override=""
 	for actor in [mark,bark]:actor.reset_motion();actor.frozen=paused
 	for i in range(modes.size()):modes[i].disabled=i==current
 	headline.text=["A little breath. A bright idea.","A stroll with a very opinionated friend.","Tiny feet. Enormous plans.","Reach, tuck, float… and land softly.","One jump. Two friends. A leafy launch.","“What could possibly go slightly sideways?”","Big idea? Big celebration."][current]
@@ -137,6 +143,7 @@ func update_actors():
 		if current==4 and t<.16:bark_id="bark_actions_hop";state="spring_contact"
 	elif current==5:mark_id="young_actions_notebook";bark_id="bark_actions_hint";state="talk"
 	elif current==6:mark_id="young_actions_jump";bark_id="bark_actions_cheer";state="celebrate"
+	if not expression_override.is_empty():state=expression_override;grounded=true;height=0;mark_id="young_actions_idle";bark_id="bark_actions_idle"
 	mark.texture=Art.tex(mark_id);bark.texture=Art.tex(bark_id)
 	if is_instance_valid(mark.character3d) and mark.character3d.active:height*=.74
 	mark.position.y=558-height;bark.position.y=558-height*.55
@@ -151,3 +158,18 @@ func _unhandled_input(event):
 	elif event.physical_keycode==KEY_P:toggle_points()
 	elif event.physical_keycode==KEY_O:toggle_turntable()
 	elif event.physical_keycode==KEY_ESCAPE:Adventures.go(Adventures.HOME)
+
+func cycle_expression():
+	choose(0)
+	expression_index=(expression_index+1)%EXPRESSIONS.size()
+	expression_override=EXPRESSIONS[expression_index]
+	expression_button.text=expression_override.capitalize()
+	headline.text="Full of character · "+expression_override.capitalize()
+	caption.text="A held expression, a clear gesture, then a gentle return."
+	update_actors()
+
+func preview_discovery():
+	choose(0)
+	mark.character3d.share_discovery(1)
+	bark.character3d.share_discovery(-1)
+	headline.text="A discovery is better with a friend."

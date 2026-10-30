@@ -10,6 +10,8 @@ var motes=[]
 var flourish_age=2.0
 var was_cheering=false
 var settle=0.0
+var emotion="idle"
+var previous_emotion="idle"
 
 func mat(id,colour,metal=0.0):
  if materials.has(id):return materials[id]
@@ -118,6 +120,9 @@ func bark_details(model):
  oval(flower,Vector3(0,0,.017),Vector3(.025,.025,.015),mat("pollen","d79d3e"))
 
 func advance(delta,motion,still,reduced):
+ if emotion!=previous_emotion:
+  if previous_emotion=="laugh":settle=.8
+  previous_emotion=emotion
  if reduced:
   for mote in motes:mote.hide()
  if still:return
@@ -142,7 +147,8 @@ func advance(delta,motion,still,reduced):
   tails[i].rotation.x=0 if reduced else -.15-speed*.7+sin(clock*6-i)*(.07+speed*.1)
   tails[i].rotation.z=-.55-i*.2+(0 if reduced else sin(clock*3.5-i)*.08)
  for item in leaves:
-  item.node.rotation=item.rest if reduced else item.rest+Vector3(sin(clock*2.7+item.phase)*(.015+speed*.06+settle*.07),0,cos(clock*3.1+item.phase)*(.015+settle*.03))
+  var lift=.10 if emotion in ["curious","thinking","spot"] else 0.0
+  item.node.rotation=item.rest if reduced else item.rest+Vector3(lift+sin(clock*2.7+item.phase)*(.015+speed*.06+settle*.07),0,cos(clock*3.1+item.phase)*(.015+settle*.03))
 
 func batch(model):
  var boundaries=model.joints.values()+tails

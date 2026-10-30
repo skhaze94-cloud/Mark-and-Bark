@@ -167,6 +167,7 @@ func step(delta: float) -> void:
 	if cheering and not finishing.was_cheering and not reduced and not still:
 		finishing.celebrate()
 	finishing.was_cheering = cheering
+	finishing.emotion=performance.active_state
 	finishing.advance(delta * owner_actor.playback_rate, owner_actor.motion, still, reduced)
 	var on_screen: bool = owner_actor.is_visible_in_tree() and _on_screen()
 	if not on_screen:
@@ -245,3 +246,8 @@ func _painted_materials(node: Node, cache: Dictionary) -> void:
 				cache[id]=paint
 			node.material_override=cache[id]
 	for child in node.get_children():_painted_materials(child,cache)
+
+func share_discovery(direction: float) -> void:
+	if is_instance_valid(performance):
+		performance.share_discovery(direction)
+		_request_frame=true

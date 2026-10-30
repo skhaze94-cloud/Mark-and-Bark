@@ -1,3 +1,14 @@
+## 4.2 — Full of Character
+
+Swept hair, softer hands and coordinated expressions give Mark more warmth.
+Bark's curved grin, bowed tooth band, relaxed eyes, wider roots and leafy reactions
+restore his goofy enthusiasm. Optional library discoveries now include a short
+notice/point/look/delight exchange. The character studio exposes expressions and
+the shared discovery. Original art, saves, movement and the minimal HUD remain.
+
+Android 4.2.0 (420) retains the existing package and signing identity.
+See [character notes and preview reproduction](docs/CHARACTERS_4_2.md).
+
 ## 4.1 — A Painting Come to Life
 
 Mark regains a clear hairline, swept fringe, navy jacket, soft cheeks, almond eyes

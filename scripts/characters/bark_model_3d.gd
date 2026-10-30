@@ -11,6 +11,8 @@ var _brow_rest: Array[Vector3] = []
 var _mouth_open: Node3D
 var _tongue: Node3D
 var _smile_line: Node3D
+var _surprised: Node3D
+var _cheeks: Array[Node3D] = []
 var emotion: String = "idle"
 const Paint = preload("res://scripts/characters/painted_shapes_3d.gd")
 
@@ -46,7 +48,7 @@ func build() -> void:
 	var boundaries: Dictionary = {}
 	for joint in joints.values():
 		boundaries[joint.get_instance_id()] = true
-	for item in _eye_lids + [_mouth_open,_tongue,_smile_line]:
+	for item in _eye_lids + [_mouth_open,_tongue,_smile_line,_surprised]:
 		boundaries[item.get_instance_id()] = true
 	_batch_static(self,boundaries)
 
@@ -115,6 +117,9 @@ func _trunk(parent: Node3D, bottom: float, height: float, radius_bottom: float, 
 			var angle: float = float(n) * TAU / sides
 			var grain: float = sin(angle * 13.0 + t * 2.2 + seed) * 0.018 + sin(angle * 23.0 - t + seed) * 0.009
 			var radius: float = lerpf(radius_bottom, radius_top, t) + sin(t * PI) * 0.025 + grain
+			# The face occupies this sector: keep grain behind its painted surface.
+			if broken and sin(angle)>.6 and t<.82:
+				radius=minf(radius,.315)
 			var top_cut: float = (sin(angle * 5.0 + seed) * 0.045 + cos(angle * 7.0) * 0.025) * pow(t, 12.0) if broken else 0.0
 			var p = Vector3(cos(angle) * radius, bottom + height * t + top_cut, sin(angle) * radius * depth)
 			p.x += sin(t * 2.8 + float(seed)) * 0.012
@@ -258,7 +263,7 @@ func _leg(hips: Node3D, side: float) -> void:
 	_ellipsoid(toe,Vector3(0,0.008,0.025),Vector3(0.12,0.043,0.155),materials.ridge)
 	for root in range(4):
 		var across: float = (float(root)-1.5)*0.065
-		_tube(toe,[Vector3(across*0.35,0.025,-0.025),Vector3(across,0.008,0.11),Vector3(across*1.22,-0.003,0.19+float(root%2)*0.025)],[0.040,0.033,0.012],materials.wood,7,root+11)
+		_tube(toe,[Vector3(across*0.35,0.025,-0.025),Vector3(across,0.008,0.11),Vector3(across*1.38,-0.003,0.215+float(root%2)*0.025)],[0.040,0.033,0.012],materials.wood,7,root+11)
 	# The back root keeps the sole grounded from side and three-quarter views.
 	_tube(ankle,[Vector3(0,0.02,0),Vector3(side*0.075,-0.012,-0.09),Vector3(side*0.12,-0.018,-0.16)],[0.045,0.031,0.010],materials.wood,7,5)
 
@@ -266,10 +271,10 @@ func _face(head: Node3D) -> void:
 	# Painted almond eyes lie close to a warm, quiet facial panel.
 	for paint in [materials.cream,materials.iris,materials.pupil,materials.glint,materials.brow,materials.mouth]:
 		paint.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
-	_ellipsoid(head,Vector3(0,0.16,0.242),Vector3(0.294,0.325,0.037),materials.face)
+	_ellipsoid(head,Vector3(0,0.16,0.249),Vector3(0.294,0.325,0.037),materials.face)
 	for side in [-1.0,1.0]:
 		var suffix: String = "near" if side < 0 else "far"
-		var eye = _joint("eye_"+suffix,head,Vector3(side*0.14,0.255,0.272))
+		var eye = _joint("eye_"+suffix,head,Vector3(side*0.14,0.255,0.278))
 		eye.rotation.y=side*0.18
 		Paint.almond(eye,Vector3.ZERO,Vector2(.112,.112),materials.brow)
 		Paint.almond(eye,Vector3(0,-.003,.006),Vector2(.101,.099),materials.cream)
@@ -287,11 +292,16 @@ func _face(head: Node3D) -> void:
 	var mouth = _joint("mouth",head,Vector3(0,-0.018,0.283))
 	# A generous warm grin is the defining shape in the original paintings.
 	_mouth_open=Node3D.new();mouth.add_child(_mouth_open)
-	_ellipsoid(_mouth_open,Vector3.ZERO,Vector3(.225,.145,.007),materials.mouth)
-	_tongue=_ellipsoid(_mouth_open,Vector3(0,-.080,.009),Vector3(.12,.040,.003),materials.tongue)
-	var teeth=_ellipsoid(_mouth_open,Vector3(0,.074,.010),Vector3(.19,.038,.003),materials.cream)
+	Paint.grin(_mouth_open,Vector3.ZERO,.225,.175,materials.mouth)
+	_tongue=_ellipsoid(_mouth_open,Vector3(0,-.125,.014),Vector3(.115,.030,.003),materials.tongue)
+	var teeth=Paint.grin(_mouth_open,Vector3(0,.002,.012),.214,.047,materials.cream)
 	for x in [-.095,-.032,.032,.095]:
-		_tube(_mouth_open,[Vector3(x,.055,.014),Vector3(x,.095,.014)],[.002],materials.iris,5)
+		_tube(_mouth_open,[Vector3(x,-.027,.024),Vector3(x,.004,.024)],[.002],materials.iris,5)
+	_surprised=Node3D.new();mouth.add_child(_surprised)
+	_ellipsoid(_surprised,Vector3(0,-.035,.012),Vector3(.068,.078,.005),materials.mouth)
+	for side in [-1.0,1.0]:
+		var cheek=_joint("cheek_"+str(int(side)),head,Vector3(side*.235,.09,.253))
+		_ellipsoid(cheek,Vector3.ZERO,Vector3(.055,.040,.013),materials.face);_cheeks.append(cheek)
 	_smile_line=Node3D.new();mouth.add_child(_smile_line)
 	var smile_points: Array[Vector3] = []
 	for n in range(17):
@@ -388,24 +398,25 @@ func _tube(parent: Node3D, points: Array, radii: Array, material: Material, side
 	return _mesh(parent,st.commit(),material)
 
 func set_expression(blink: float, gaze: Vector2, mouth_open: float, smile: float, brow: float) -> void:
-	if not built:
-		return
+	if not built:return
+	var delighted: bool=emotion in ["delight","celebrate","cheer","laugh"]
+	var curious: bool=emotion in ["hint","curious","thinking","spot","point"]
+	var surprise: bool=emotion=="surprise"
+	var unsure: bool=emotion=="uncertain"
 	for n in range(_eye_lids.size()):
-		var closing: float = clampf(blink,0,1)
-		var happy: float=.28 if emotion in ["delight","celebrate","cheer"] else .06
-		_eye_lids[n].scale.y = maxf(.04,(1.0-closing)*(1.0-happy))
-
-		_pupils[n].position = Vector3(clampf(gaze.x,-1,1)*0.012,clampf(gaze.y,-1,1)*0.014,0.017)
-		_brows[n].position = _brow_rest[n]+Vector3(0,clampf(brow,-1,1)*0.035,0)
-		_brows[n].rotation.z = (1.0 if n==0 else -1.0)*clampf(brow,-1,1)*0.22+(.07 if n==0 else -.015)
-	var opening: float = clampf(mouth_open,0,1)
-	var grin: float=clampf((smile-.3)*1.4,0,1)
-	_mouth_open.scale.y = .52+grin*.55+opening*.35
-	_mouth_open.visible = true
-	_tongue.visible = true
-	_smile_line.visible = false
-	if joints.has("mouth"):
-		joints.mouth.scale.x = 0.92+clampf(smile,0,1)*0.12
+		var height: float=.52 if delighted else 1.10 if surprise else .77 if curious else .86
+		_eye_lids[n].scale.y=maxf(.04,(1-clampf(blink,0,1))*height)
+		_pupils[n].position=Vector3(clampf(gaze.x,-1,1)*.012,clampf(gaze.y,-1,1)*.011,.017)
+		var lift: float=.06 if surprise else (.04 if n==0 else -.005) if curious else .025 if delighted else .006
+		_brows[n].position=_brow_rest[n]+Vector3(0,lift,0)
+		_brows[n].rotation.z=(.27 if n==0 else -.06) if curious else (-.15 if n==0 else .15) if unsure else (.16 if n==0 else -.12) if delighted else (.055 if n==0 else -.015)
+		_cheeks[n].position.y=.09+(.026 if delighted else 0)
+	_surprised.visible=surprise
+	_mouth_open.visible=not surprise and not unsure
+	_smile_line.visible=unsure
+	_mouth_open.scale=Vector3(1.05 if delighted else .94 if curious else 1.0,.95+mouth_open*.55 if delighted else .48+mouth_open*.6 if curious else .58,1)
+	_tongue.visible=delighted or mouth_open>.2
+	joints.mouth.rotation.z=-.055 if curious else .025
 
 func _batch_static(anchor: Node3D, boundaries: Dictionary) -> void:
 	var groups: Dictionary = {}
