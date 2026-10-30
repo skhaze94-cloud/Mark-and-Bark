@@ -94,7 +94,7 @@ func bark_details(model):
  var copper=mat("copper","d3924d");copper.cull_mode=BaseMaterial3D.CULL_DISABLED
  for i in range(4):
   var a=i*2.39996
-  var p=leaf(crown,Vector3(cos(a)*.22,.04+(i%3)*.035,sin(a)*.17),Vector3(sin(a)*.85,a,cos(a)*-.95),.19+(i%3)*.025,.070,[green,lime,copper][i%3])
+  var p=leaf(crown,Vector3((-1 if i%2==0 else 1)*.29,-.06+(i/2)*.07,sin(a)*.13),Vector3(.20,a*.1,(1 if i%2==0 else -1)*1.1),.19+(i%3)*.025,.070,[green,lime,copper][i%3])
   leaves.append({"node":p,"rest":p.rotation,"phase":float(i)})
  # Moss pads follow the woody shoulder contours, away from the facial panel.
  for side in [-1,1]:

@@ -315,6 +315,9 @@ func _apply_pose(delta: float, immediate: bool = false) -> void:
 			arm=Vector3(-.25,0,1.85)*flourish
 			elbow.x=-.65*flourish
 			wrist.z=sin(state_age*12.0)*.32*still
+		if role=="bark" and active_state not in ["idle","walk","run","curious","thinking","uncertain","glance","concentrate"]:
+			arm.z-=rest["shoulder_"+side].basis.get_euler().z
+			elbow.z-=rest["elbow_"+side].basis.get_euler().z
 		_rotate("shoulder_" + side, arm, delta, immediate)
 		_rotate("elbow_" + side, elbow, delta, immediate)
 		_rotate("wrist_" + side, wrist, delta, immediate)

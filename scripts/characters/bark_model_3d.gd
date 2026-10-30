@@ -24,21 +24,21 @@ func build() -> void:
 		return
 	built = true
 	# Broad living-tree presence, with a modest height increase over the painting.
-	scale = Vector3(1.16,0.96,1.12)
+	scale = Vector3(1.10,1.0,1.08)
 	_materials()
 	var hips = _joint("hips", self, Vector3(0, 0.44, 0))
 	var spine = _joint("spine", hips, Vector3(0, 0.27, 0))
 	# A single continuous trunk reaches down around the hips. There is no
 	# separate pelvic bowl or visible waist hinge when the upper body leans.
-	_trunk(spine, -0.32, 1.02, 0.21, 0.36, 0.76, 17)
-	_chips(spine, -0.28, 0.94, 0.22, 0.36, 0.76, 18, 17)
-	_bark_ridges(spine, -0.32, 1.01, 0.21, 0.36, 0.76, 10, 0)
+	_trunk(spine, -0.32, 1.02, 0.13, 0.29, 0.76, 17)
+	_chips(spine, -0.30, 0.98, 0.14, 0.29, 0.76, 86, 17)
+	_bark_ridges(spine, -0.32, 1.01, 0.13, 0.29, 0.76, 6, 0)
 	_bark_fringe(spine)
 	var neck = _joint("neck", spine, Vector3(0, 0.61, 0.01))
 	var head = _joint("head", neck, Vector3.ZERO)
-	_trunk(head, -0.08, 0.56, 0.35, 0.31, 0.79, 43, true)
-	_chips(head, -0.055, 0.54, 0.35, 0.31, 0.79, 12, 31, true)
-	_bark_ridges(head, -0.06, 0.56, 0.35, 0.31, 0.79, 12, 1)
+	_trunk(head, -0.08, 0.56, 0.31, 0.32, 0.79, 43, true)
+	_chips(head, -0.055, 0.54, 0.31, 0.32, 0.79, 40, 31, true)
+	_bark_ridges(head, -0.06, 0.56, 0.31, 0.32, 0.79, 12, 1)
 	_face(head)
 	_crown(head)
 	for side in [-1.0, 1.0]:
@@ -57,7 +57,7 @@ func _materials() -> void:
 	materials.groove = _material(Color("805027"), 0.94)
 	materials.ridge = _material(Color("bf803c"), 0.88)
 	materials.light_wood = _material(Color("d7a25c"), 0.9)
-	materials.face = _material(Color("c9954c"), 0.86)
+	materials.face = _material(Color("b88748"), 0.86)
 	materials.brow = _material(Color("593b23"), 0.91)
 	materials.cream = _material(Color("fff2c8"), 0.5)
 	materials.iris = _material(Color("9a5c22"), 0.32)
@@ -171,7 +171,7 @@ func _chips(parent: Node3D, bottom: float, height: float, radius_bottom: float, 
 		var radius: float = lerpf(radius_bottom, radius_top, t) + 0.009
 		var at = Vector3(cos(angle) * radius, bottom + height * t, sin(angle) * radius * depth)
 		var basis = Basis.from_euler(Vector3(sin(angle) * -0.10, -angle + PI * 0.5, cos(angle) * 0.09))
-		basis = basis.scaled(Vector3(0.016 + float(n % 3) * 0.007, 0.052 + float(n % 4) * 0.017, 0.014))
+		basis = basis.scaled(Vector3(0.013 + float(n % 3) * 0.006, 0.025 + float(n % 4) * 0.010, 0.009))
 		transforms.append(Transform3D(basis, at))
 		colors.append(Color("d29a50") if n % 3 != 0 else Color("8c572c"))
 	var sphere = SphereMesh.new()
@@ -201,10 +201,10 @@ func _bark_ridges(parent: Node3D, bottom: float, height: float, radius_bottom: f
 		var points: Array[Vector3] = []
 		for row in range(7):
 			var t: float = float(row)/6.0
-			var bend: float = angle+sin(t*7.0+n)*0.024
+			var bend: float = angle+sin(t*7.0+n)*0.065
 			var radius: float = lerpf(radius_bottom,radius_top,t)+sin(t*PI)*0.025+0.007
 			points.append(Vector3(cos(bend)*radius,bottom+height*t,sin(bend)*radius*depth))
-		_tube(parent,points,[0.008 if n%3 else 0.011],materials.groove if n%3 else materials.ridge,5)
+		_tube(parent,points,[0.0045 if n%3 else 0.006],materials.groove if n%3 else materials.ridge,5)
 	if skip_face == 0:
 		for knot in [[-0.13,0.28],[0.12,0.48]]:
 			var at: Vector3 = Vector3(knot[0],knot[1],0.252)
@@ -218,13 +218,13 @@ func _bark_ridges(parent: Node3D, bottom: float, height: float, radius_bottom: f
 func _bark_fringe(parent: Node3D) -> void:
 	# Loose pointed bark bridges the flexible waist, like the source painting's
 	# root-like bark hem. It moves with the spine rather than exposing a hinge.
-	for n in range(13):
-		var angle: float = float(n)*TAU/13.0
+	for n in range(9):
+		var angle: float = float(n)*TAU/9.0
 		var pivot = Node3D.new()
-		pivot.position = Vector3(cos(angle)*0.23,-0.23,sin(angle)*0.23*0.76)
+		pivot.position = Vector3(cos(angle)*0.145,-0.23,sin(angle)*0.145*0.76)
 		pivot.rotation.y = PI*0.5-angle
 		parent.add_child(pivot)
-		var outline: Array[Vector2] = [Vector2(-0.028,0.13),Vector2(0.029,0.12),Vector2(0.034,-0.02),Vector2(0,-0.16-float(n%3)*0.016),Vector2(-0.031,-0.07)]
+		var outline: Array[Vector2] = [Vector2(-0.018,0.10),Vector2(0.020,0.10),Vector2(0.022,-0.02),Vector2(0,-0.13-float(n%3)*0.016),Vector2(-0.019,-0.07)]
 		var st = SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		for n_corner in range(outline.size()):
@@ -236,34 +236,39 @@ func _bark_fringe(parent: Node3D) -> void:
 		_mesh(pivot,st.commit(),materials.wood)
 
 func _arm(spine: Node3D, side: float) -> void:
-	var suffix: String = "near" if side < 0 else "far"
-	var shoulder = _joint("shoulder_" + suffix, spine, Vector3(side * 0.31, 0.31, -0.005))
-	_tube(shoulder, [Vector3.ZERO,Vector3(side*0.075,-0.10,0.01),Vector3(side*0.11,-0.27,0.035)], [0.075,0.063,0.047], materials.wood, 10, 21)
-	var elbow = _joint("elbow_" + suffix, shoulder, Vector3(side * 0.11, -0.27, 0.035))
-	_ellipsoid(elbow, Vector3.ZERO, Vector3(0.052,0.069,0.053), materials.ridge)
-	_tube(elbow, [Vector3.ZERO,Vector3(side*0.055,-0.13,0.045),Vector3(side*0.035,-0.25,0.085)], [0.047,0.051,0.058], materials.wood, 10, 11)
-	var wrist = _joint("wrist_" + suffix, elbow, Vector3(side*0.035,-0.25,0.085))
-	_ellipsoid(wrist, Vector3(0,-0.045,0.025), Vector3(0.077,0.090,0.052), materials.ridge)
-	for finger in range(3):
-		var x: float = (float(finger) - 1.0) * 0.052
-		_tube(wrist,[Vector3(x,-0.06,0.035),Vector3(x*1.2,-0.13,0.067),Vector3(x*1.1,-0.16,0.11),Vector3(x*0.9,-0.15,0.14)],[0.026,0.023,0.018,0.010],materials.wood,7,finger+7)
-	_tube(wrist,[Vector3(side*-0.06,-0.02,0.045),Vector3(side*-0.10,-0.065,0.10),Vector3(side*-0.075,-0.105,0.14)],[0.026,0.021,0.011],materials.wood,7,9)
-	# A small living offshoot catches the light at each elbow.
-	var cluster = _joint("leaf_"+suffix, elbow, Vector3(side*0.03,-0.015,-0.005))
-	_leaf(cluster, Vector3.ZERO, Vector3(0,0,side*-0.85),0.20,0.065,Color("77952b"))
+	var suffix: String="near" if side<0 else "far"
+	var shoulder=_joint("shoulder_"+suffix,spine,Vector3(side*.25,.40,-.015))
+	shoulder.rotation.z=side*.85
+	_tube(shoulder,[Vector3.ZERO,Vector3(side*.025,-.085,.01),Vector3(side*.025,-.18,.025)],[.057,.045,.035],materials.wood,12,21)
+	var elbow=_joint("elbow_"+suffix,shoulder,Vector3(side*.025,-.18,.025))
+	elbow.rotation.z=side*.85
+	_tube(elbow,[Vector3.ZERO,Vector3(-side*.015,-.085,.04),Vector3(side*.015,-.16,.065)],[.036,.041,.033],materials.wood,12,11)
+	var wrist=_joint("wrist_"+suffix,elbow,Vector3(side*.015,-.16,.065))
+	# Five long twig rays grow from a forked palm; no mitten-shaped hand mass.
+	_tube(wrist,[Vector3(0,.02,0),Vector3(0,-.065,.015),Vector3(0,-.11,.02)],[.039,.046,.029],materials.wood,12,8)
+	var tips=[Vector3(-.18,-.12,.025),Vector3(-.13,-.255,.035),Vector3(-.025,-.30,.035),Vector3(.09,-.265,.025),Vector3(.19,-.17,.015)]
+	for finger in range(tips.size()):
+		var tip: Vector3=tips[finger]
+		var start=Vector3(tip.x*.18,-.055,.018)
+		_tube(wrist,[start,Vector3(tip.x*.48,tip.y*.38,.045),Vector3(tip.x*.88,tip.y*.80,.06),tip+Vector3(-.008,0,.03)],[.032,.028,.021,.011],materials.wood,10,finger+7)
+		_ellipsoid(wrist,tip,Vector3(.015,.020,.015),materials.ridge)
+	var cluster=_joint("leaf_"+suffix,elbow,Vector3(side*.02,-.015,-.005))
+	_leaf(cluster,Vector3.ZERO,Vector3(0,0,side*-.85),.16,.052,Color("77952b"))
 
 func _leg(hips: Node3D, side: float) -> void:
 	var suffix: String = "near" if side < 0 else "far"
-	var thigh = _joint("thigh_"+suffix, hips, Vector3(side*0.17,-0.025,0))
-	_tube(thigh,[Vector3.ZERO,Vector3(side*0.015,-0.12,0.015),Vector3(side*0.025,-0.20,0.035)],[0.085,0.065,0.06],materials.wood,11,4)
+	var thigh = _joint("thigh_"+suffix, hips, Vector3(side*0.12,-0.025,0))
+	_tube(thigh,[Vector3.ZERO,Vector3(side*0.015,-0.12,0.015),Vector3(side*0.025,-0.20,0.035)],[0.095,0.085,0.07],materials.wood,11,4)
 	var knee = _joint("knee_"+suffix, thigh, Vector3(side*0.025,-0.20,0.035))
-	_tube(knee,[Vector3.ZERO,Vector3(side*0.025,-0.11,-0.005),Vector3(side*0.05,-0.16,0.015)],[0.061,0.058,0.075],materials.wood,10,7)
+	_tube(knee,[Vector3.ZERO,Vector3(side*.025,-.06,-.012),Vector3(side*.045,-.12,-.01),Vector3(side*.05,-.16,.015)],[.075,.081,.079,.080],materials.wood,12,7)
 	var ankle = _joint("ankle_"+suffix, knee, Vector3(side*0.05,-0.16,0.015))
 	var toe = _joint("toe_"+suffix, ankle, Vector3(0,-0.025,0.075))
-	_ellipsoid(toe,Vector3(0,0.008,0.025),Vector3(0.12,0.043,0.155),materials.ridge)
+	_ellipsoid(toe,Vector3(0,0.030,0.025),Vector3(0.14,0.065,0.16),materials.ridge)
 	for root in range(4):
-		var across: float = (float(root)-1.5)*0.065
-		_tube(toe,[Vector3(across*0.35,0.025,-0.025),Vector3(across,0.008,0.11),Vector3(across*1.38,-0.003,0.215+float(root%2)*0.025)],[0.040,0.033,0.012],materials.wood,7,root+11)
+		var across: float = (float(root)-1.5)*0.14
+		if across*side<0:across*=.55
+		_tube(toe,[Vector3(across*0.15,0.060,-0.025),Vector3(across*.70,0.025,0.11),Vector3(across*1.30,-0.003,0.215+float(root%2)*0.025)],[0.055,0.040,0.013],materials.wood,7,root+11)
+		_tube(toe,[Vector3(across*.15,.103,-.025),Vector3(across*.70,.065,.11),Vector3(across*1.26,.007,.20)],[.0035,.0025,.001],materials.ridge,6)
 	# The back root keeps the sole grounded from side and three-quarter views.
 	_tube(ankle,[Vector3(0,0.02,0),Vector3(side*0.075,-0.012,-0.09),Vector3(side*0.12,-0.018,-0.16)],[0.045,0.031,0.010],materials.wood,7,5)
 
@@ -271,16 +276,16 @@ func _face(head: Node3D) -> void:
 	# Painted almond eyes lie close to a warm, quiet facial panel.
 	for paint in [materials.cream,materials.iris,materials.pupil,materials.glint,materials.brow,materials.mouth]:
 		paint.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
-	_ellipsoid(head,Vector3(0,0.16,0.249),Vector3(0.294,0.325,0.037),materials.face)
+	_ellipsoid(head,Vector3(0,0.16,0.244),Vector3(0.266,0.31,0.023),materials.face)
 	for side in [-1.0,1.0]:
 		var suffix: String = "near" if side < 0 else "far"
-		var eye = _joint("eye_"+suffix,head,Vector3(side*0.14,0.255,0.278))
+		var eye = _joint("eye_"+suffix,head,Vector3(side*0.135,0.255,0.267))
 		eye.rotation.y=side*0.18
-		Paint.almond(eye,Vector3.ZERO,Vector2(.112,.112),materials.brow)
-		Paint.almond(eye,Vector3(0,-.003,.006),Vector2(.101,.099),materials.cream)
+		Paint.almond(eye,Vector3.ZERO,Vector2(.094,.100),materials.brow)
+		Paint.almond(eye,Vector3(0,-.003,.006),Vector2(.085,.089),materials.cream)
 		var pupil = _joint("pupil_"+suffix,eye,Vector3(0,0,0.017))
-		_ellipsoid(pupil,Vector3.ZERO,Vector3(0.065,0.076,0.004),materials.iris)
-		_ellipsoid(pupil,Vector3(0,0.002,0.004),Vector3(0.039,0.058,0.003),materials.pupil)
+		_ellipsoid(pupil,Vector3.ZERO,Vector3(0.058,0.070,0.004),materials.iris)
+		_ellipsoid(pupil,Vector3(0,0.002,0.004),Vector3(0.034,0.052,0.003),materials.pupil)
 		_ellipsoid(pupil,Vector3(-0.019,0.029,0.008),Vector3(0.014,0.018,0.002),materials.glint)
 		_pupils.append(pupil)
 		# Blink compresses the whole painted eye; no moving skin ball over it.
@@ -289,7 +294,7 @@ func _face(head: Node3D) -> void:
 		_tube(eyebrow,[Vector3(-0.09,0,0),Vector3(-0.035,0.023,0.006),Vector3(0.03,0.025,0.006),Vector3(0.09,0.006,0)],[0.015,0.018,0.016,0.008],materials.brow,8)
 		_brows.append(eyebrow);_brow_rest.append(eyebrow.position)
 	_ellipsoid(head,Vector3(0,0.115,0.281),Vector3(0.032,0.030,0.012),materials.light_wood)
-	var mouth = _joint("mouth",head,Vector3(0,-0.018,0.283))
+	var mouth = _joint("mouth",head,Vector3(0,-0.018,0.267))
 	# A generous warm grin is the defining shape in the original paintings.
 	_mouth_open=Node3D.new();mouth.add_child(_mouth_open)
 	Paint.grin(_mouth_open,Vector3.ZERO,.225,.175,materials.mouth)
@@ -301,7 +306,7 @@ func _face(head: Node3D) -> void:
 	_ellipsoid(_surprised,Vector3(0,-.035,.012),Vector3(.068,.078,.005),materials.mouth)
 	for side in [-1.0,1.0]:
 		var cheek=_joint("cheek_"+str(int(side)),head,Vector3(side*.235,.09,.253))
-		_ellipsoid(cheek,Vector3.ZERO,Vector3(.055,.040,.013),materials.face);_cheeks.append(cheek)
+		_ellipsoid(cheek,Vector3.ZERO,Vector3(.040,.032,.008),materials.face);_cheeks.append(cheek)
 	_smile_line=Node3D.new();mouth.add_child(_smile_line)
 	var smile_points: Array[Vector3] = []
 	for n in range(17):
@@ -311,20 +316,15 @@ func _face(head: Node3D) -> void:
 
 func _crown(head: Node3D) -> void:
 	var crown = _joint("crown",head,Vector3(0,0.50,-0.015))
-	for n in range(7):
-		var angle: float = float(n)*TAU/7.0
+	for n in range(11):
+		var angle: float = float(n)*TAU/11.0
 		var at = Vector3(cos(angle)*0.24,0,sin(angle)*0.18)
-		var reach: float = 0.12+float(n%3)*0.035
-		_tube(crown,[at,at+Vector3(cos(angle)*0.025,reach*0.65,sin(angle)*0.025),at+Vector3(cos(angle)*0.018,reach,sin(angle)*0.018)],[0.045,0.032,0.019],materials.wood,8,n+4)
-	for n in range(12):
-		var angle: float = float(n)*2.39996
-		var at = Vector3(cos(angle)*0.29,0.05+float(n%3)*0.043,sin(angle)*0.21)
-		var leaf_pivot = Node3D.new()
-		leaf_pivot.name = "CrownLeaf"+str(n)
-		leaf_pivot.position = at
-		crown.add_child(leaf_pivot)
-		var rotation_value = Vector3(sin(angle)*0.75,angle*0.25,cos(angle)*-0.75)
-		_leaf(leaf_pivot,Vector3.ZERO,rotation_value,0.18+float(n%3)*0.025,0.060+float(n%2)*0.012,Color("6e8c29") if n%3 else Color("91a52e"))
+		var reach: float = 0.08+float(n%5)*0.025
+		_tube(crown,[at,at+Vector3(cos(angle)*0.025,reach*0.65,sin(angle)*0.025),at+Vector3(cos(angle)*0.018,reach,sin(angle)*0.018)],[0.024,0.015,0.005],materials.wood,8,n+4)
+	for n in range(8):
+		var side: float=-1 if n%2==0 else 1
+		var at=Vector3(side*.275,-.08+float(n/2)*.06,-.09 if n<4 else .09)
+		_leaf(crown,at,Vector3(.25,side*.2,-side*1.15),.16+float(n%3)*.02,.052,Color("6e8c29") if n%3 else Color("91a52e"))
 	# Small shoots on the trunk sides retain the painted Bark silhouette.
 	for side in [-1.0,1.0]:
 		for n in range(2):

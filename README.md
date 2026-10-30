@@ -1,3 +1,15 @@
+## 4.3 — Original Shapes
+
+A proportion correction against the original front/side paintings: Bark has a
+narrow tapered lower trunk, shorter branching arms, five broad curved twig rays
+per hand, thick spreading roots and a broken woody crown with leaves at its edges.
+Mark has a narrower head, sloping shoulders, a rounded coat hem, smoother garment
+contours, larger relaxed hands and a softly splayed stance. The 4.2 expressions,
+discovery sequence, original art, painting styles, saves, physics and HUD remain.
+
+Android 4.3.0 (430) retains the existing package and signing identity.
+See [proportion notes](docs/CHARACTERS_4_3.md).
+
 ## 4.2 — Full of Character
 
 Swept hair, softer hands and coordinated expressions give Mark more warmth.

@@ -26,7 +26,7 @@ func build() -> void:
 	var spine = _joint("spine", hips, Vector3(0, 0.40, 0))
 	var neck = _joint("neck", spine, Vector3(0, 0.40, 0))
 	var head = _joint("head", neck, Vector3(0, 0.28, 0.015))
-	head.scale = Vector3.ONE * 1.16
+	head.scale = Vector3(.99,1.12,1.04)
 	var coat = _joint("coat", spine, Vector3.ZERO)
 	var crown = _joint("crown", head, Vector3(0, 0.20, 0))
 	_build_body(spine, coat, neck, hips)
@@ -89,7 +89,16 @@ func _tube(parent: Node3D, points: Array, radius: float, material: Material, tap
 		part.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
 
 func _loft(parent: Node3D, rings: Array, material: Material, segments: int = 28) -> MeshInstance3D:
-	# ring = (height, x radius, z radius, front/back centre offset).
+	# Smooth radius transitions keep cloth and limbs from becoming straight prisms.
+	var smooth_rings=[]
+	for row in range(rings.size()-1):
+		var a: Vector4=rings[maxi(0,row-1)];var b: Vector4=rings[row]
+		var c: Vector4=rings[row+1];var d: Vector4=rings[mini(rings.size()-1,row+2)]
+		for step in range(3):
+			var t: float=float(step)/3.0
+			var v: Vector4=.5*((2*b)+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t)
+			v.x=lerpf(b.x,c.x,t);v.y=maxf(.001,v.y);v.z=maxf(.001,v.z);smooth_rings.append(v)
+	smooth_rings.append(rings[-1]);rings=smooth_rings
 	var vertices = PackedVector3Array()
 	var normals = PackedVector3Array()
 	var colours = PackedColorArray()
@@ -133,7 +142,7 @@ func _build_body(spine: Node3D, coat: Node3D, neck: Node3D, hips: Node3D) -> voi
 	var seam = _mat("jacket_seam", "718694")
 	var cord = _mat("cord", "d5c7a9")
 	var zip = _mat("zip", "b6a27b", 0.55)
-	_loft(coat, [Vector4(-0.28,0.23,0.15,0),Vector4(-0.25,0.26,0.17,0),Vector4(-0.08,0.27,0.19,0),Vector4(0.14,0.30,0.185,0),Vector4(0.26,0.32,0.16,-0.01),Vector4(0.32,0.22,0.13,0),Vector4(0.34,0.10,0.085,0)], jacket)
+	_loft(coat, [Vector4(-0.28,0.245,0.15,0),Vector4(-0.25,0.28,0.17,0),Vector4(-0.08,0.26,0.19,0),Vector4(0.14,0.27,0.185,0),Vector4(0.24,0.27,0.16,-0.01),Vector4(0.31,0.20,0.13,0),Vector4(0.34,0.10,0.085,0)], jacket)
 	_loft(hips, [Vector4(-0.05,0.22,0.14,0),Vector4(0.0,0.25,0.155,0),Vector4(0.12,0.24,0.15,0)], denim)
 	# The tee is a curved front panel, wrapped onto the jacket's volume.
 	_front_panel(coat, [Vector3(-0.27,0.115,0.175),Vector3(-0.10,0.12,0.199),Vector3(0.12,0.135,0.198),Vector3(0.29,0.115,0.157)], ochre)
@@ -186,12 +195,12 @@ func _build_arm(spine: Node3D, side: String) -> void:
 	var blue_light = _mat("jacket_light", "52778d")
 	var rib = _mat("jacket_dark", "1a3048")
 	var skin = _mat("skin", "e9aa73")
-	var shoulder = _joint("shoulder_"+side, spine, Vector3(sign*0.31,0.24,0))
+	var shoulder = _joint("shoulder_"+side, spine, Vector3(sign*0.275,0.20,0))
 	shoulder.rotation.z=sign*0.095
 	_oval(shoulder,Vector3.ZERO,Vector3(0.102,0.105,0.10),jacket)
 	_loft(shoulder,[Vector4(-0.30,0.087,0.09,0.01),Vector4(-0.23,0.105,0.105,0),Vector4(-0.10,0.115,0.115,0),Vector4(0.01,0.092,0.09,0)],jacket,20)
 	var elbow = _joint("elbow_"+side, shoulder, Vector3(0,-0.285,0.015))
-	elbow.rotation.x=-0.10
+	elbow.rotation.x=-0.23
 	_oval(elbow,Vector3.ZERO,Vector3(0.09,0.09,0.094),jacket)
 	_loft(elbow,[Vector4(-0.285,0.072,0.075,0),Vector4(-0.245,0.092,0.095,0),Vector4(-0.12,0.09,0.095,0.015),Vector4(0.02,0.09,0.092,0)],jacket,20)
 	for n in range(3):
@@ -199,6 +208,7 @@ func _build_arm(spine: Node3D, side: String) -> void:
 		_tube(elbow,[Vector3(-0.07,y,0.05),Vector3(0,y-0.013,0.099),Vector3(0.07,y+0.004,0.045)],0.004,blue_light)
 	_loft(elbow,[Vector4(-0.29,0.074,0.076,0),Vector4(-0.275,0.08,0.08,0),Vector4(-0.245,0.083,0.084,0)],rib,20)
 	var wrist=_joint("wrist_"+side,elbow,Vector3(0,-0.28,0))
+	wrist.scale=Vector3(1.08,1.08,1.04)
 	_loft(wrist,[Vector4(-0.15,0.04,0.035,0.01),Vector4(-0.10,0.068,0.046,0.01),Vector4(-0.025,0.069,0.042,0),Vector4(0.025,0.046,0.038,0)],skin,20)
 	# Soft palm with separate rounded fingers; the index stays readable when pointing.
 	var digits=[]
@@ -219,6 +229,7 @@ func _build_leg(hips: Node3D, side: String) -> void:
 	var denim_light=_mat("denim_light","57768a")
 	var denim_dark=_mat("denim_dark","293e52")
 	var thigh=_joint("thigh_"+side,hips,Vector3(sign*0.14,-0.015,0))
+	thigh.rotation.z=-sign*.045
 	_oval(thigh,Vector3.ZERO,Vector3(0.122,0.10,0.126),denim)
 	var thigh_shape=Node3D.new();thigh.add_child(thigh_shape);thigh_shape.scale.y=0.34/0.405
 	_loft(thigh_shape,[Vector4(-0.415,0.092,0.095,0),Vector4(-0.32,0.105,0.11,0),Vector4(-0.14,0.12,0.125,0),Vector4(0.03,0.125,0.13,0)],denim,24)
@@ -234,6 +245,7 @@ func _build_leg(hips: Node3D, side: String) -> void:
 	_loft(knee_shape,[Vector4(-0.405,0.085,0.085,0),Vector4(-0.37,0.095,0.088,0),Vector4(-0.35,0.092,0.085,0)],denim_light,24)
 	_tube(knee_shape,[Vector3(-0.082,-0.37,0.018),Vector3(0,-0.38,0.092),Vector3(0.08,-0.37,0.02)],0.0035,denim_dark)
 	var ankle=_joint("ankle_"+side,knee,Vector3(0,-0.34,0))
+	ankle.rotation.y=sign*.18
 	_joint("toe_"+side,ankle,Vector3(0,-0.18,0.24))
 	_build_shoe(ankle,sign)
 
@@ -296,7 +308,7 @@ func _build_head(head: Node3D, crown: Node3D) -> void:
 	for side in ["near","far"]:
 		var sign_value: float=-1 if side=="near" else 1
 		var cheek=_joint("cheek_"+side,head,Vector3(sign_value*.205,-.125,.167))
-		_oval(cheek,Vector3.ZERO,Vector3(.062,.045,.018),skin)
+		# The original painted blush stays on the skin; retain the expression pivot.
 	for paint in ["mouth_line","mouth_inside","tongue","teeth"]:
 		_materials[paint].shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
 	_build_hair(crown)
@@ -314,6 +326,7 @@ func _build_eyes(head: Node3D) -> void:
 		var sign: float=-1.0 if side=="near" else 1.0
 		var eye=Node3D.new();eye.name="eye_"+side;eye.position=Vector3(sign*0.14,0.014,0.234);head.add_child(eye);face["eye_"+side]=eye;joints["eye_"+side]=eye
 		eye.rotation.y=sign*0.28
+		eye.scale.x=.90
 		_eye_rest[side]=eye.transform
 		Paint.almond(eye,Vector3.ZERO,Vector2(.091,.096),brow_mat)
 		Paint.almond(eye,Vector3(0,-.003,.006),Vector2(.082,.084),white)

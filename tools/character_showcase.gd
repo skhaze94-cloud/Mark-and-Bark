@@ -18,7 +18,7 @@ func run():
  for i in 4:await process_frame
  DirAccess.make_dir_recursive_absolute(directory)
  var baseline="--baseline" in OS.get_cmdline_user_args()
- var tag="4.1" if baseline else "4.2"
+ var tag="4.2" if baseline else "4.3"
  if "--movie" in OS.get_cmdline_user_args():
   await movie();quit();return
  for pose in ["idle","curious","uncertain","surprise","delight","wave","present","walk","jump","talk"]:
@@ -39,7 +39,7 @@ func movie():
   var t=float(frame)/24.0
   var stage=int(t/2.0)
   var state=["idle","curious","surprise","present","laugh","delight"][mini(stage,5)]
-  headline.text="FULL OF CHARACTER · "+["A quiet moment","What have you found?","Oh!","Look at this!","An excellent joke","Two very happy friends"][mini(stage,5)]
+  headline.text="ORIGINAL SHAPES · "+["A quiet moment","What have you found?","Oh!","Look at this!","An excellent joke","Two very happy friends"][mini(stage,5)]
   for actor in actors:
    actor.frozen=false
    actor.drive("thinking" if state=="curious" and actor.role=="bark" else state,true)
