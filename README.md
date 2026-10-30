@@ -1,14 +1,24 @@
-# Mark & Bark 3.6.0 — Whimsy HUD
+# Mark & Bark 3.7.0 — Character 2.0
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
 **Both adventures are accessible again.** The illustrated opening menu offers the full original campus story, all three giant climbs, the campus film and the character studio. The school hallway, discovery garden, workshop puzzle, tutorial and discoveries were still bundled in 3.2, but its normal menu could not reach them.
 
-The original painted character presentation is enabled by default. Turn off **Original painted characters** on the opening menu for the extra face and limb articulation from 3.2. Walking, running, jumping, Bark's spring and the original PNGs remain available in both presentations. The studio retains the full articulated renderer. The original chapter's flat book/pencil platforms now use the existing painted atlas, and its leafy routes use the supplied mossy branch artwork. Physics and landing positions are unchanged.
+**3D storybook** is now the default character style. Mark and Bark have real modeled bodies, articulated limbs, expressive faces and directional lighting. They turn in depth inside the existing painted world. **Settings → Character style** also offers **Original painting** and **Articulated painting**, retaining the supplied PNGs and the earlier 2D skeleton renderer. The opening menu has a quick **Character 2.0 / 3D** switch.
 
-See the [regression audit and repairs](docs/RESTORATION_AUDIT_3_2_1.md). The climbing campaign's simpler, partly procedural scenery remains a distinct mode; this restoration does not replace it with a new world or claim to add 3D characters.
+The original chapter's book/pencil platforms use the painted atlas, and its leafy routes use the supplied mossy branch artwork. Physics and landing positions are unchanged. The climbing campaign remains a distinct mode. See the [original restoration audit](docs/RESTORATION_AUDIT_3_2_1.md).
 
 The **3.2.2 finishing pass** makes the opening music loop reliably, shares one settings panel across both adventures and the opening menu, protects both save files with validated backups, and adds production Web and Windows export checks. See [the finishing notes](docs/FINISHING_3_2_2.md).
+
+## Character 2.0 — the 3.7 update
+
+![The actual 3D characters in Godot's performance studio](docs/previews/character_2_0_3_7.jpg)
+
+Mark keeps his chestnut hair, navy hoodie, golden T-shirt and sneakers, now shaped in three dimensions with layered clothing, separate fingers and detailed shoes. Bark gains a broad carved trunk, uneven crown, wood grain, branch hands, root feet and folded leaves. Both friends have a little more presence while keeping their feet anchored to the established world positions.
+
+The animation system drives actual 3D joints: planted-foot walk and run poses, jump reach and tuck, Bark's spring contact and release, landing recovery, conversation and celebration. Blinks, gaze, eyebrows and mouth movement bring the faces to life; clothing and leaves follow the main motion. Mark holds a modeled notebook during his notebook pose. Turning changes the model's angle instead of flipping a flat image.
+
+The character studio adds a **Turntable [O]** control alongside joint points, pause, half speed and frame advance. Dialogue portraits use the new models too. Pause freezes the performance, and Reduced motion removes idle flourishes while retaining readable gameplay poses. The 3.6 minimal HUD, painted levels, collisions, jump timing, quests and saves remain intact. See the [Character 2.0 implementation and editing notes](docs/CHARACTER_2_0_3_7.md).
 
 ## The Whimsy HUD redesign
 
@@ -54,13 +64,15 @@ Everything needed to play is bundled. No paid plugins, .NET, Python or extra ass
 
 ## Meet the livelier Mark & Bark
 
-Both friends now use native Godot 2D skeletons over the original painted exports. Mark reaches into a jump, tucks his knees and settles into landings. Bark braces, springs, gestures, blinks and lets his leaves follow through. Their faces keep the supplied artwork, with gentle eyelids, gaze, eyebrow and mouth movement in calibrated expressive poses. Dialogue portraits show a larger animated face and upper body.
+The current **3D storybook** style uses native Godot meshes and a separate lit 3D scene for each character. A transparent viewport places that performance in the painted 2D scene. The levels and physics remain 2D; the characters themselves have real depth. The original and articulated painting styles remain available in Settings.
 
-![Mark and Bark in the character animation studio](docs/previews/in_motion_3_2.png)
+The earlier **3.2 articulated painting** style uses native Godot 2D skeletons over the original painted exports. Its original showcase remains available:
+
+![The earlier 3.2 painted animation studio](docs/previews/in_motion_3_2.png)
 
 The jump impulse, controls, collision bodies, routes and forgiving input timing are preserved. The animation never waits for a button press to finish playing before Mark moves. Small spring leaves stay at the launch point. Pause freezes the performance, checkpoints clear it, and Reduced motion removes the extra deformation and effects.
 
-Choose **Character studio** on the opening menu, or open `scenes/animation_studio.tscn` and press **F6**. Select Idle, Walk, Run, Jump, Bark spring, Talk or Cheer; pause, advance one frame, choose half speed, or show the joint points. **1–7** selects a pose, **Space** pauses, **P** toggles points and **Esc** returns to all adventures. In the climbing campaign, **F8** toggles the two actors’ joint overlays.
+Choose **Character studio** on the opening menu, or open `scenes/animation_studio.tscn` and press **F6**. Select Idle, Walk, Run, Jump, Bark spring, Talk or Cheer; pause, advance one frame, choose half speed, show the joint points or turn the 3D models. **1–7** selects a pose, **Space** pauses, **P** toggles points, **O** toggles the turntable and **Esc** returns to all adventures. In the climbing campaign, **F8** toggles the two actors’ joint overlays.
 
 See the [recorded character and gameplay showcase](docs/previews/in_motion_3_2.mp4) and [rigging/editing notes](docs/IN_MOTION_3_2.md). The studio is a separate preview room; its jump display is a pose study. The live gameplay segment in the recording uses the actual campaign player and double-jump physics.
 
@@ -124,7 +136,7 @@ The original school adventure, tutorial and paper-plane workshop are available f
 
 Both adventures use Godot’s standard user-data folder for **Mark & Bark: The Big Idea**. `big_idea_save.json` stores the original story and shared preferences; `mark_bark_mega.json` stores climbing progress and calm mode. Each now retains a validated `.bak` of the previous valid save. A missing or corrupt primary recovers from its backup. Version 1 climbing saves remain readable; version 2 supports the extended upper checkpoints and all 24 leaves.
 
-Settings on the opening menu and inside either adventure now offer the same volume, music, reduced-motion, touch, painted-character and calm-climb controls. Changes apply immediately and persist across restarts. A failed save shows a visible status; closing the native game after a failure offers **Try again**, **Keep playing** and **Quit anyway**.
+Settings on the opening menu and inside either adventure offer the same volume, music, reduced-motion, touch, character-style and calm-climb controls. Changes apply immediately and persist across restarts. Existing saves gain the 3D default when the new preference is absent; the earlier painting preference remains available when choosing a painting style. A failed save shows a visible status; closing the native game after a failure offers **Try again**, **Keep playing** and **Quit anyway**.
 
 The application name stays unchanged so previous save locations remain compatible. New adventure asks before resetting this campaign and its scores; accessibility preferences and original-chapter progress are preserved.
 
@@ -136,10 +148,10 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh copy with a unique, verified test-save location, runs all twelve suites and writes logs to the ignored `test_output/` folder. The full suite now contains **1,167 source checks** across twelve suites. These include 164 HUD checks, 93 Whimsy checks for stable decoration, pause and immediate Reduced motion behavior, and 77 finishing checks for write failures, backup recovery, preference persistence, the first-visit music loop, all three settings panels and safe failed-save exits. The 68 restoration checks exercise the actual opening menu, scene changes, progress preservation, all 40 original character views/poses, source-art fallbacks, painted platforms and original-chapter pause. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh copy with a unique, verified test-save location, runs all **thirteen suites** and writes logs to the ignored `test_output/` folder. The new character suite checks actual 3D mesh volume, joint motion, facing, pause, Reduced motion, source-art retention, style switching, preference migration and integration across both adventures. Native rendering adds transparent-character framing and scene screenshots. The existing suites retain HUD, scenery, music, settings, save recovery, original-art and complete-playthrough coverage. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
 The GitHub workflow runs the complete suite on Godot **4.4.1**, captures native screenshots, builds the production Web and Windows releases with official checksum-verified templates, and tests the packed game in fresh processes. It plays the actual Web release in Chrome, checks settings after a page reload, and runs the exported Windows executable on Windows. Source, builds, screenshots and logs are downloadable workflow artifacts. See [export commands and verification boundaries](docs/FINISHING_3_2_2.md).
 
 Native Godot compatibility-renderer playthrough and visual fixtures were also reviewed. See [3.2 character update and editing notes](docs/IN_MOTION_3_2.md), [3.2 verification results](docs/release_3_2_verification.json), and [the earlier campaign artwork provenance](docs/RELEASE_3_1.md).
 
-Physical Android/iOS device testing, macOS exports and hardware performance measurements are outside this finishing pass. The tests cover keyboard, mouse and injected multi-touch events in Godot; automated browser rendering uses software graphics.
+Physical Android/iOS device testing, macOS exports and hardware performance measurements are outside this release's verification scope. The tests cover keyboard, mouse and injected multi-touch events in Godot; automated browser rendering uses software graphics.

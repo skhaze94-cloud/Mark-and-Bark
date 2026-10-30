@@ -405,7 +405,7 @@ func show_title() -> void:
 	campus.add_child(decoration)
 	campus.world_label("Small friends. Big possibilities.",Vector2(795,236),19)
 	var p=open_modal(Rect2(48,42,602,638))
-	label_at(p,"THE COMPLETE CAMPUS STORY · 3.6.0",Rect2(36,24,530,28),16,"977134")
+	label_at(p,"THE COMPLETE CAMPUS STORY · 3.7.0",Rect2(36,24,530,28),16,"977134")
 	label_at(p,"MARK & BARK",Rect2(34,63,535,64),43)
 	label_at(p,"THE BIG IDEA",Rect2(36,130,530,42),27,"977134")
 	label_at(p,"A shrinking ray. Two tiny friends.\nA school full of GIANT possibilities!",Rect2(36,188,535,68),21)
@@ -1195,7 +1195,7 @@ func place_hud_message(panel: Panel) -> void:
 	for actor in [player,campus.bark]:
 		if is_instance_valid(actor):
 			var at: Vector2=actor.get_global_transform_with_canvas().origin
-			actors.append(Rect2(at-Vector2(66,105),Vector2(132,120)))
+			actors.append(Rect2(at-Vector2(74,170),Vector2(148,185)))
 	# Try quiet upper and lower bands, then their corners. Message cards never
 	# occupy the movement/jump controls and move aside for either friend's face.
 	var candidates: Array[Vector2]=[

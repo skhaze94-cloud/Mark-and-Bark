@@ -73,6 +73,18 @@ async function main() {
       const volumeFile=path.join(output,name+'_volume.png');
       execFileSync('python3',['-c','from PIL import Image; import sys; Image.open(sys.argv[1]).crop((845,140,930,185)).resize((255,135)).save(sys.argv[2])',file,volumeFile]);
       text += '\n'+execFileSync('tesseract',[volumeFile,'stdout','--psm','7','-c','tessedit_char_whitelist=0123456789%'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
+      // The panel OCR treats the bordered selector as a separate block.
+      // Read its actual rendered value independently, as with the volume label.
+      const styleFile=path.join(output,name+'_style.png');
+      execFileSync('python3',['-c','from PIL import Image; import sys; Image.open(sys.argv[1]).crop((531,354,955,393)).resize((1272,117)).save(sys.argv[2])',file,styleFile]);
+      text += '\n'+execFileSync('tesseract',[styleFile,'stdout','--psm','7'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
+    }
+    if (name === '08_climb_gameplay') {
+      // The illustrated scene can cause sparse whole-frame OCR to omit the
+      // small circular touch control. Verify its visible label directly.
+      const jumpFile=path.join(output,name+'_jump.png');
+      execFileSync('python3',['-c','from PIL import Image; import sys; Image.open(sys.argv[1]).crop((1180,631,1244,666)).resize((192,105)).save(sys.argv[2])',file,jumpFile]);
+      text += '\n'+execFileSync('tesseract',[jumpFile,'stdout','--psm','7'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
     }
     fs.writeFileSync(path.join(output, name + '.txt'), text);
     const normalized = text.toLowerCase().replace(/\s+/g, ' ');
@@ -107,11 +119,11 @@ async function main() {
     await page.mouse.click(620,613); await capture('02_initial_settings',['settings & controls','45%']);
     await page.mouse.click(598,163);
     for (const y of [221,272,323,425]) await page.mouse.click(500,y);
-    await capture('03_changed_settings',['35%','Background music: Off','Reduced motion: On','Always show touch controls: On','Original painted characters: On','Calm climb (climbing adventure): On']);
+    await capture('03_changed_settings',['35%','Background music: Off','Reduced motion: On','Always show touch controls: On','3D storybook','Calm climb (climbing adventure): On']);
     await page.keyboard.press('Escape',{delay:100}); await page.waitForTimeout(2000);
     await page.reload(); await ready();
     await page.mouse.click(620,613);
-    await capture('04_reloaded_settings',['35%','Background music: Off','Reduced motion: On','Always show touch controls: On','Original painted characters: On','Calm climb (climbing adventure): On']);
+    await capture('04_reloaded_settings',['35%','Background music: Off','Reduced motion: On','Always show touch controls: On','3D storybook','Calm climb (climbing adventure): On']);
     await page.keyboard.press('Escape',{delay:100}); await page.mouse.click(500,339);
     await waitForText('story_intro',[1025,10,1260,72],'skip intro');
     await page.mouse.click(1140,39,{delay:100});

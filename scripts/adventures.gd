@@ -6,6 +6,7 @@ var music_player: AudioStreamPlayer
 var story_button: Button
 var climb_button: Button
 var paint_toggle: CheckButton
+var three_d_toggle: CheckButton
 var closing=false
 var audio_stopped=false
 var settings_overlay: Control
@@ -25,7 +26,7 @@ func _ready() -> void:
 	whimsy=load("res://scripts/whimsy_layer.gd").new();whimsy.name="WhimsyLayer";whimsy.context="menu";whimsy.controller=self;add_child(whimsy)
 	label(self,"MARK & BARK",Rect2(48,28,780,65),47,"fff3d3")
 	label(self,"Small friends. Big possibilities.",Rect2(52,101,760,35),23,"f0ce83")
-	label(self,"THE WHIMSY HUD UPDATE · 3.6",Rect2(820,126,400,28),16,"f4d39a")
+	label(self,"CHARACTER 2.0 · 3.7",Rect2(820,126,400,28),16,"f4d39a")
 	card(Rect2(48,166,680,213))
 	picture("school_hub",Rect2(65,184,202,177))
 	label(self,"THE BIG IDEA",Rect2(292,184,407,40),29)
@@ -46,7 +47,17 @@ func _ready() -> void:
 	for state in ["font_color","font_hover_color","font_pressed_color","font_hover_pressed_color","font_focus_color"]:paint_toggle.add_theme_color_override(state,Color("fff3d3"))
 	paint_toggle.toggled.connect(func(value):Progress.set_setting("painted_characters",value))
 	add_child(paint_toggle)
-	label(self,"Off: extra facial and limb movement",Rect2(470,660,350,28),15,"e3d9b9")
+	# Keep the legacy switch API for old saves/tools; the new visible switch is
+	# explicit about 3D, with both painting modes available in shared Settings.
+	paint_toggle.hide()
+	three_d_toggle=CheckButton.new();three_d_toggle.name="Characters3D";three_d_toggle.text="Character 2.0 · 3D models";three_d_toggle.position=Vector2(48,654);three_d_toggle.size=Vector2(410,40)
+	three_d_toggle.button_pressed=bool(Progress.settings.get("characters_3d",true))
+	three_d_toggle.add_theme_icon_override("checked",load("res://assets/ui_toggle_on.svg"));three_d_toggle.add_theme_icon_override("unchecked",load("res://assets/ui_toggle_off.svg"))
+	three_d_toggle.add_theme_font_override("font",Art.font);three_d_toggle.add_theme_font_size_override("font_size",18)
+	for state in ["font_color","font_hover_color","font_pressed_color","font_hover_pressed_color","font_focus_color"]:three_d_toggle.add_theme_color_override(state,Color("fff3d3"))
+	three_d_toggle.toggled.connect(func(value):Progress.set_setting("characters_3d",value))
+	add_child(three_d_toggle)
+	label(self,"Painted styles remain in Settings",Rect2(470,660,350,28),15,"e3d9b9")
 	mark=Art.game_actor("young_actions_notebook");mark.position=Vector2(940,610);mark.scale=Vector2.ONE*.66;add_child(mark)
 	bark=Art.game_actor("bark_actions_cheer");bark.position=Vector2(1150,610);bark.scale=Vector2.ONE*.63;add_child(bark)
 	for actor in [mark,bark]:
@@ -81,6 +92,7 @@ func stop_audio():
 
 func apply_settings(_key="",_value=null):
 	paint_toggle.set_pressed_no_signal(bool(Progress.settings.painted_characters))
+	three_d_toggle.set_pressed_no_signal(bool(Progress.settings.get("characters_3d",true)))
 	if not is_instance_valid(music_player) or audio_stopped:return
 	music_player.volume_db=linear_to_db(maxf(.0001,Progress.settings.volume*.28))
 	music_player.stream_paused=not Progress.settings.music or Progress.settings.volume<=0

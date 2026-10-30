@@ -1,7 +1,7 @@
 extends Node
 
 const SAVE_PATH = "user://big_idea_save.json"
-const SETTING_DEFAULTS = {"volume":0.45, "reduced_motion":false, "touch":false, "music":true, "painted_characters":true}
+const SETTING_DEFAULTS = {"volume":0.45, "reduced_motion":false, "touch":false, "music":true, "painted_characters":true, "characters_3d":true}
 signal settings_changed(key: String, value: Variant)
 signal save_status_changed(ok: bool)
 var data: Dictionary = {}

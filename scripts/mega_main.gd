@@ -143,7 +143,7 @@ func title():
 	else:campus.refresh()
 	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.6.0",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.7.0",Rect2(35,97,640,40),23,"8a713f")
 	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)

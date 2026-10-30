@@ -69,7 +69,8 @@ func test_atomic_writes():
 func test_story_recovery():
 	Progress.save_path=folder+"/story.json";Progress.storage=Store.new();Progress.save_enabled=true;Progress._ready()
 	Progress.data.stage=3;Progress.data.notebook=true;Progress.data.leaves=["leaf_1"];Progress.data.checkpoint=2700.0;Progress.tutorial_done=true
-	Progress.settings={"volume":.35,"music":false,"reduced_motion":true,"touch":true,"painted_characters":true}
+	Progress.settings=Progress.SETTING_DEFAULTS.duplicate(true)
+	Progress.settings.merge({"volume":.35,"music":false,"reduced_motion":true,"touch":true,"painted_characters":true},true)
 	check(Progress.save_game(),"Legacy-format story and shared preferences save together")
 	var first=Progress.read_valid(Progress.save_path)
 	Progress.data.stage=4;Progress.data.books=true;check(Progress.save_game(),"Later story progress rotates the prior save")
@@ -114,6 +115,7 @@ func run():
 	Mega.save_path=folder+"/climbs.json";Mega.storage=Store.new();Mega.enabled=true;Mega._ready()
 	test_atomic_writes();test_story_recovery()
 	Progress.settings=Progress.SETTING_DEFAULTS.duplicate(true)
+	Progress.settings.characters_3d=false # This suite retains explicit legacy appearance-control coverage.
 	Progress.reset_game(false);Progress.tutorial_done=true;Progress.data.shrunken=true;Progress.data.stage=4;Progress.data.notebook=true;Progress.data.plant=true;Progress.data.plant_restored=true;Progress.data.books=true;Progress.data.pencil=true;Progress.data.checkpoint=4490.0;Progress.save_game()
 	Mega.intro_done=true;Mega.runs[0].checkpoint=3;Mega.runs[0].leaves=[0,3,8];Mega.save()
 	var story_before=Progress.data.duplicate(true);var climbs_before=Mega.runs.duplicate(true)
@@ -125,7 +127,7 @@ func run():
 	home.music_player.seek(home.music_player.stream.get_length()-.10);await wall_time(450)
 	check(home.music_player.playing and ended.count==0 and home.music_player.get_playback_position()<1.0,"Menu music actually wraps past the end without stopping")
 	home.show_settings();await ticks(5);var menu=shared(home.settings_overlay)
-	check(menu!=null and menu.toggles.size()==5 and fits(home.settings_overlay),"Home exposes the complete shared settings in a bounded panel")
+	check(menu!=null and menu.toggles.size()==SettingsMenu.LABELS.size() and fits(home.settings_overlay),"Home exposes the complete shared settings in a bounded panel")
 	menu.volume_slider.value=.35
 	check(menu.volume_label.text=="35%" and absf(home.music_player.volume_db-linear_to_db(.35*.28))<.01,"Volume feedback and live menu gain update immediately")
 	menu.toggles.music.button_pressed=false;await ticks()
