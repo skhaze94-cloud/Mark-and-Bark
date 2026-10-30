@@ -29,7 +29,7 @@ jobs:
           grep ' Godot_v4.4.1-stable_linux.x86_64.zip$' SHA512-SUMS.txt | sha512sum --check -
           unzip -j Godot_v4.4.1-stable_linux.x86_64.zip
           chmod +x Godot_v4.4.1-stable_linux.x86_64
-      - name: Import a clean copy and run all fourteen regression suites
+      - name: Import a clean copy and run all fifteen regression suites
         run: python3 tools/verify.py --godot /tmp/godot-bin/Godot_v4.4.1-stable_linux.x86_64
       - name: Verify native menus and capture screenshots
         run: |

@@ -4,3 +4,6 @@ exports/
 test_output/
 dist/
 __pycache__/
+.godot/export_credentials.cfg
+*.keystore
+*.jks

@@ -1,5 +1,10 @@
 # Mark & Bark 3.8.0 — The Secret Life of Little Things
 
+**Android edition:** signed offline ARM64 APK with landscape touch controls,
+Android Back/pause support and 16 KiB memory-page compatibility. The Android
+build uses Godot 4.5.1; desktop and Web remain on 4.4.1. See
+[Android build and verification notes](docs/ANDROID_3_8.md).
+
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
 **Both adventures are accessible again.** The illustrated opening menu offers the full original campus story, all three giant climbs, the campus film and the character studio. The school hallway, discovery garden, workshop puzzle, tutorial and discoveries were still bundled in 3.2, but its normal menu could not reach them.
@@ -158,7 +163,7 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh copy with a unique, verified test-save location, runs all **fourteen suites** and writes logs to the ignored `test_output/` folder. The new character suite checks actual 3D mesh volume, joint motion, facing, pause, Reduced motion, source-art retention, style switching, preference migration and integration across both adventures. Native rendering adds transparent-character framing and scene screenshots. The existing suites retain HUD, scenery, music, settings, save recovery, original-art and complete-playthrough coverage. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh copy with a unique, verified test-save location, runs all **fifteen suites** and writes logs to the ignored `test_output/` folder. The new character suite checks actual 3D mesh volume, joint motion, facing, pause, Reduced motion, source-art retention, style switching, preference migration and integration across both adventures. Native rendering adds transparent-character framing and scene screenshots. The existing suites retain HUD, scenery, music, settings, save recovery, original-art and complete-playthrough coverage. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
 The GitHub workflow runs the complete suite on Godot **4.4.1**, captures native screenshots, builds the production Web and Windows releases with official checksum-verified templates, and tests the packed game in fresh processes. It plays the actual Web release in Chrome, checks settings after a page reload, and runs the exported Windows executable on Windows. Source, builds, screenshots and logs are downloadable workflow artifacts. See [export commands and verification boundaries](docs/FINISHING_3_2_2.md).
 
