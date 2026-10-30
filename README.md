@@ -1,4 +1,6 @@
-# Mark & Bark 3.8.0 — The Secret Life of Little Things
+# Mark & Bark 3.9.0 — Storybook Friends
+
+Mark now wears sculpted brass goggles, a coral scarf with animated tails, a stitched leather satchel and an enamel pin. His warmer, broader face has freckles and a teal jacket. Bark has a fuller emerald and copper canopy, mossy shoulders, two tiny mushrooms, an acorn keepsake and a crown blossom. Joint-mounted details follow their existing 3D performances; decorative motion respects Pause and Reduced motion. Static detail meshes are combined by material and animation pivot to limit draw calls.
 
 **Android edition:** signed offline ARM64 APK with landscape touch controls,
 Android Back/pause support and 16 KiB memory-page compatibility. The Android

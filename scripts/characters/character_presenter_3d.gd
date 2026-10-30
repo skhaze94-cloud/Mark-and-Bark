@@ -10,6 +10,7 @@ var world: Node3D
 var carrier: Node3D
 var model: Node3D
 var camera: Camera3D
+var finishing: Node3D
 var performance: Node
 var display: Sprite2D
 var role: String = "mark"
@@ -115,6 +116,9 @@ func _build_model() -> void:
 	carrier.add_child(model)
 	if model.has_method("build"):
 		model.build()
+	finishing = preload("res://scripts/characters/character_finishing_3d.gd").new()
+	model.add_child(finishing)
+	finishing.build(model,role)
 	performance.bind_model(model)
 	_built_role = role
 	_request_frame = true
@@ -158,6 +162,7 @@ func step(delta: float) -> void:
 	performance.pose_hint = owner_actor.displayed_pose
 	performance.drive(owner_actor.mode, owner_actor.grounded, owner_actor.motion, owner_actor.cadence)
 	performance.advance(delta)
+	finishing.advance(delta * owner_actor.playback_rate, owner_actor.motion, still, reduced)
 	var on_screen: bool = owner_actor.is_visible_in_tree() and _on_screen()
 	if not on_screen:
 		viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED

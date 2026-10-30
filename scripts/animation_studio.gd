@@ -24,7 +24,7 @@ var orbit_button: Button
 func _ready():
 	showcase="--showcase" in OS.get_cmdline_user_args()
 	label("MARK & BARK",Rect2(44,20,650,48),36)
-	label("CHARACTER 2.0  /  3D PERFORMANCE STUDIO  /  3.8",Rect2(47,72,900,30),17,Color("8a713f"))
+	label("CHARACTER 2.0  /  3D PERFORMANCE STUDIO  /  3.9",Rect2(47,72,900,30),17,Color("8a713f"))
 	button("All adventures",Rect2(1040,32,192,52),func():Adventures.go(Adventures.HOME))
 	headline=label("",Rect2(400,24,620,48),22);headline.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	label("MARK",Rect2(78,190,270,30),21)

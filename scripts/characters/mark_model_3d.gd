@@ -23,7 +23,7 @@ func build() -> void:
 	var spine = _joint("spine", hips, Vector3(0, 0.40, 0))
 	var neck = _joint("neck", spine, Vector3(0, 0.40, 0))
 	var head = _joint("head", neck, Vector3(0, 0.28, 0.015))
-	head.scale = Vector3.ONE * 1.12
+	head.scale = Vector3.ONE * 1.16
 	var coat = _joint("coat", spine, Vector3.ZERO)
 	var crown = _joint("crown", head, Vector3(0, 0.20, 0))
 	_build_body(spine, coat, neck, hips)
@@ -119,8 +119,8 @@ func _loft(parent: Node3D, rings: Array, material: Material, segments: int = 28)
 	return _mesh(parent, geometry, material)
 
 func _build_body(spine: Node3D, coat: Node3D, neck: Node3D, hips: Node3D) -> void:
-	var jacket = _mat("jacket", "294762")
-	var blue_light = _mat("jacket_light", "365976")
+	var jacket = _mat("jacket", "265a70")
+	var blue_light = _mat("jacket_light", "428296")
 	var blue_dark = _mat("jacket_dark", "1a3048")
 	var denim = _mat("denim", "3c5a70")
 	var ochre = _mat("shirt", "e5ad38")
@@ -177,8 +177,8 @@ func _front_panel(parent: Node3D, rows: Array, material: Material) -> void:
 
 func _build_arm(spine: Node3D, side: String) -> void:
 	var sign: float = -1.0 if side == "near" else 1.0
-	var jacket = _mat("jacket", "294762")
-	var blue_light = _mat("jacket_light", "365976")
+	var jacket = _mat("jacket", "265a70")
+	var blue_light = _mat("jacket_light", "428296")
 	var rib = _mat("jacket_dark", "1a3048")
 	var skin = _mat("skin", "e9aa73")
 	var shoulder = _joint("shoulder_"+side, spine, Vector3(sign*0.31,0.24,0))

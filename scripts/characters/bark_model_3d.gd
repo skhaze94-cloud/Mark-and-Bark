@@ -19,7 +19,7 @@ func build() -> void:
 		return
 	built = true
 	# Broad living-tree presence, with a modest height increase over the painting.
-	scale = Vector3(1.10,0.90,1.08)
+	scale = Vector3(1.16,0.96,1.12)
 	_materials()
 	var hips = _joint("hips", self, Vector3(0, 0.44, 0))
 	var spine = _joint("spine", hips, Vector3(0, 0.27, 0))
