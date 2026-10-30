@@ -143,7 +143,7 @@ func title():
 	else:campus.refresh()
 	player.position=Vector2(1130,645);player.velocity=Vector2.ZERO;camera.position=Vector2(800,420);ambient.color=Color("fff7e5");campus.bark.position=Vector2(1290,645);campus.bark.scale=Vector2.ONE*.35;campus.bark.texture=Art.tex("bark_actions_cheer");player.visual_scale=.42;player.sprite.scale=Vector2.ONE*.42;player.sprite.texture=Art.tex("young_actions_notebook");player.ghost.hide()
 	var p=open(Rect2(55,60,710,600))
-	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.7.0",Rect2(35,97,640,40),23,"8a713f")
+	text(p,"MARK & BARK",Rect2(35,25,640,65),42);text(p,"THE GIANT CLIMBS · 3.8.0",Rect2(35,97,640,40),23,"8a713f")
 	text(p,"A shrinking ray. Three towering adventures.\n84 platforms. Tiny pests. One very helpful jump.",Rect2(35,153,640,80),22)
 	button(p,"Continue climb" if Mega.intro_done else "Start the adventure",Rect2(35,252,640,65),start,true)
 	button(p,"Choose a level",Rect2(35,337,310,60),level_select)
@@ -250,6 +250,8 @@ func interact():
 		Mega.finish();play_sound("success");campus.bark.texture=Art.tex("bark_actions_cheer")
 		if Mega.current==2:intro_ray.begin(func():load_level(2);result(),true)
 		else:result()
+	elif is_instance_valid(campus.little_wonders) and campus.little_wonders.interact():
+		update_hud()
 	else:toast("Climb toward the next numbered shelf. E / Use picks up the quest item.")
 func result():
 	var i=Mega.current;var r=Mega.runs[i]
@@ -291,7 +293,7 @@ func journal(return_to=Callable()):
 	text(p,"Leaves: "+str(r.leaves.size())+" / 24\nDiscovery nooks: "+str(nooks_found(r))+" / 3\nBark token: "+("Found!" if r.token else "First discovery nook"),Rect2(30,190,355,110),21)
 	text(p,"Current shelf: "+str(last_shelf)+" / "+str(campus.RISES[Mega.current].size())+"\nCheckpoint: "+("Starting floor" if r.checkpoint<0 else "Shelf "+str(r.checkpoint+1))+"\nCalm climb: "+("On" if Mega.prefs.calm else "Off"),Rect2(410,190,350,110),21)
 	var quips=["Bark: Feet on my leaves! Mark: Spring, please—not sneeze.","Bark: Try three jumps! Mark: Two. Make this one count.","Bark: Aim for next Tuesday! Mark: The shelf will do.","Bark: Close your eyes! Mark: I like knowing where the floor is.","Bark: Land in the pencil pot! Mark: The bridge looks kinder.","Bark: We could ask a moth for a lift. Mark: Let us jump past it.","Bark: My leaves are ticklish! Mark: Then hold very, very still.","Bark: What about a flying sandwich? Mark: First, a safe landing."]
-	text(p,quips[int(spring_contacts/4)%quips.size()],Rect2(30,310,730,44),16,"8a713f")
+	text(p,campus.little_wonders.notebook_text() if is_instance_valid(campus.little_wonders) else quips[int(spring_contacts/4)%quips.size()],Rect2(30,310,730,44),16,"8a713f")
 	var help="Two jumps, one team. Land to recharge. H marks the next shelf.\nR returns to your highest checkpoint. Every discovery stays safe."
 	if not Mega.last_save_ok:help="Progress could not be saved. Keep this game open and try again in Settings."
 	text(p,help,Rect2(30,365,730,44),16)
@@ -354,11 +356,13 @@ func update_hud():
 	var near_quest=player.position.distance_to(campus.quest.pos)<125
 	var at_exit=player.position.distance_to(campus.exit)<125
 	var usable=player.is_on_floor() and ((near_quest and not r.quest) or (at_exit and r.quest))
+	var wonder_usable=is_instance_valid(campus.little_wonders) and campus.little_wonders.can_interact()
 	var touch_visible=touch_mode or Progress.settings.touch or OS.has_feature("mobile")
 	var energy=2 if player.is_on_floor() else maxi(0,2-player.jumps_used)
 	whimsy_hud.score_key="climb:"+str(Mega.current)
-	whimsy_hud.update_state(r.leaves.size(),24,energy,touch_visible,usable)
+	whimsy_hud.update_state(r.leaves.size(),24,energy,touch_visible,usable or wonder_usable)
 	context.text=("Tap Use" if touch_visible else "E")+" · "+("Deliver your discovery" if at_exit and r.quest else "Gather the missing piece") if usable else ""
+	if not usable and wonder_usable:context.text=("Tap Use" if touch_visible else "E")+" · "+campus.little_wonders.prompt()
 	if context.text.is_empty() and clock<tutorial_hint_until and player.double_jump_count==0:
 		context.text="Jump, then jump again · Bark will help!"
 	context.visible=not busy and not context.text.is_empty() and not notice.visible
@@ -440,6 +444,7 @@ func update_bark_jump(delta: float) -> void:
 					for shelf in campus.platforms:
 						if absf(player.position.y-shelf.position.y)<6 and player.position.x>=shelf.position.x-15 and player.position.x<=shelf.end.x+15:
 							goal.x=clampf(goal.x,shelf.position.x+16,shelf.end.x-16);break
+			if is_instance_valid(campus.little_wonders):goal.x=campus.little_wonders.clear_companion_x(player.position,goal.x)
 			goal.y=campus.support_y(goal.x,player.position.y)
 		response=22.0 if ready else 9.0
 		bark.texture=Art.tex("bark_actions_hop" if ready else ("bark_actions_walk_stride_a" if absf(player.velocity.x)>30 else "bark_actions_idle"))

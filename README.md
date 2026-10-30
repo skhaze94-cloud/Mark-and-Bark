@@ -1,4 +1,4 @@
-# Mark & Bark 3.7.0 — Character 2.0
+# Mark & Bark 3.8.0 — The Secret Life of Little Things
 
 A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mishap turns school and home into three towering playgrounds. Mark and his mischievous tree friend Bark must recover a design, a power cell and a lens, then repair the ray together.
 
@@ -9,6 +9,16 @@ A finished, child-friendly 2D platform adventure for Godot. A shrinking-ray mish
 The original chapter's book/pencil platforms use the painted atlas, and its leafy routes use the supplied mossy branch artwork. Physics and landing positions are unchanged. The climbing campaign remains a distinct mode. See the [original restoration audit](docs/RESTORATION_AUDIT_3_2_1.md).
 
 The **3.2.2 finishing pass** makes the opening music loop reliably, shares one settings panel across both adventures and the opening menu, protects both save files with validated backups, and adds production Web and Windows export checks. See [the finishing notes](docs/FINISHING_3_2_2.md).
+
+## The Secret Life of Little Things — 3.8
+
+The opening climb, **The Library Ladder**, now hides three optional miniature encounters. Help the beetles at **Pencil Patrol**, receive a roof-party invitation from **Snail Mail**, and join the dust bunnies for **Thimble Tea**. The inhabitants use layered, softly shaded paper-and-felt illustrations, contact shadows and gentle animation alongside the 3D friends.
+
+Approach on the floor or the two checkpoint shelves and press **E / Use**. Each encounter has an anticipation, a reveal and a lasting aftermath. They replay after a short cooldown; discoveries persist and appear in the Notebook. Pause freezes the scenes, and Reduced motion shows the completed tableau immediately. Bark leaves the little residents clear when standing beside Mark.
+
+These are optional discoveries within the existing route. See the [encounter and editing notes](docs/LITTLE_WONDERS_3_8.md).
+
+![Three little lives in the opening climb](docs/previews/little_wonders_3_8.jpg)
 
 ## Character 2.0 — the 3.7 update
 
@@ -148,7 +158,7 @@ The complete, isolated check suite runs with:
 python3 tools/verify.py --godot /path/to/Godot
 ```
 
-It imports a fresh copy with a unique, verified test-save location, runs all **thirteen suites** and writes logs to the ignored `test_output/` folder. The new character suite checks actual 3D mesh volume, joint motion, facing, pause, Reduced motion, source-art retention, style switching, preference migration and integration across both adventures. Native rendering adds transparent-character framing and scene screenshots. The existing suites retain HUD, scenery, music, settings, save recovery, original-art and complete-playthrough coverage. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
+It imports a fresh copy with a unique, verified test-save location, runs all **fourteen suites** and writes logs to the ignored `test_output/` folder. The new character suite checks actual 3D mesh volume, joint motion, facing, pause, Reduced motion, source-art retention, style switching, preference migration and integration across both adventures. Native rendering adds transparent-character framing and scene screenshots. The existing suites retain HUD, scenery, music, settings, save recovery, original-art and complete-playthrough coverage. The campaign test physically climbs every required shelf and all nine side routes, collects all 72 leaves, delivers all three quest items, exercises keyboard and multi-touch input, checks safe checkpoints and completes the ending.
 
 The GitHub workflow runs the complete suite on Godot **4.4.1**, captures native screenshots, builds the production Web and Windows releases with official checksum-verified templates, and tests the packed game in fresh processes. It plays the actual Web release in Chrome, checks settings after a page reload, and runs the exported Windows executable on Windows. Source, builds, screenshots and logs are downloadable workflow artifacts. See [export commands and verification boundaries](docs/FINISHING_3_2_2.md).
 

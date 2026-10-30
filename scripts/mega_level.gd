@@ -22,6 +22,7 @@ var clock=0.0
 var reduced_motion=false
 var scenery
 var whimsy
+var little_wonders
 var checkpoints=[]
 var branches=[]
 var branch_indices=[]
@@ -32,7 +33,7 @@ var last_safe=Vector2(510,647)
 var safe_shelf=0
 func build(i):
 	for c in get_children():remove_child(c);c.queue_free()
-	level=i;room=0;platforms=[];ledges=[];pickups=[];checkpoints=[];branches=[];branch_indices=[];leaf_shelves=[];enemies=[];quest={};enemy_grace=1.8;last_safe=Vector2(510,647);safe_shelf=0
+	level=i;room=0;platforms=[];ledges=[];pickups=[];checkpoints=[];branches=[];branch_indices=[];leaf_shelves=[];enemies=[];quest={};little_wonders=null;enemy_grace=1.8;last_safe=Vector2(510,647);safe_shelf=0
 	var height=0.0
 	for rise in RISES[i]:height+=rise
 	top=650-height
@@ -77,6 +78,9 @@ func build(i):
 	prop("school_props_noticeboard" if i==0 else "school_props_desk",exit,155)
 	label("DELIVERY POINT",exit+Vector2(-100,-170),18)
 	bark=Art.game_actor("bark_actions_idle");bark.scale=Vector2.ONE*.20;bark.position=Vector2(410,650);bark.z_index=4;add_child(bark)
+	if i==0:
+		little_wonders=load("res://scripts/little_wonders.gd").new();little_wonders.name="LittleWonders";little_wonders.z_index=3;add_child(little_wonders)
+		little_wonders.configure(get_parent(),platforms)
 	for actor in [get_parent().player,bark]:
 		var shadow=load("res://scripts/prop_shadow.gd").new()
 		shadow.name=("LibraryContactShadow" if i==0 else "WorldContactShadow")+("Bark" if actor==bark else "Mark")

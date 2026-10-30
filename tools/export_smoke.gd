@@ -45,7 +45,7 @@ func run():
 		mega.reset(false);mega.unlocked=3;mega.intro_done=true;mega.runs[0].checkpoint=3;mega.runs[0].leaves=[0,3,8]
 		check(progress.save_game() and mega.save(),"Export can save both adventures outside its resource pack")
 	else:
-		check(progress.data.stage==4 and progress.tutorial_done and mega.runs[0].checkpoint==3 and mega.runs[0].leaves==[0,3,8],"Export reloads progress from a previous process")
+		check(progress.data.stage==4 and progress.tutorial_done and mega.runs[0].checkpoint==3 and mega.runs[0].leaves==[0,3,8] and 0 in mega.runs[0].get("wonders",[]),"Export reloads progress and optional wonders from a previous process")
 		check(is_equal_approx(progress.settings.volume,.35) and not progress.settings.music and progress.settings.touch and progress.settings.characters_3d and mega.prefs.calm,"Export reloads the shared preferences")
 		if phase=="recover":check(progress.recovered_backup and mega.recovered_backup,"A fresh exported process recovers both damaged primary saves")
 	var story_before=progress.data.duplicate(true)
@@ -70,6 +70,12 @@ func run():
 	await nav.go(nav.CLIMBS,"start");var climbs=current_scene;await ticks(5)
 	for i in range(3):
 		climbs.load_level(i);await ticks(3)
+		if i==0:
+			var wonders=climbs.campus.little_wonders
+			check(wonders!=null and wonders.entries.size()==3,"Export includes all three opening-stage miniature encounters")
+			climbs.player.position=wonders.entries[0].at+Vector2(85,-3);climbs.player.velocity=Vector2.ZERO;await ticks(8)
+			climbs.interact();await ticks(2)
+			check(0 in mega.runs[0].wonders and not climbs.busy,"Exported Use discovers a tiny life without blocking play")
 		check(climbs.campus.RISES[i].size()==[24,27,33][i] and climbs.campus.ledges[0].atlas!=null,"Export loads the painted platforms for climb "+str(i+1))
 	climbs.settings(climbs.close);await ticks(3);menu=shared(climbs.panel)
 	check(menu!=null and menu.toggles.calm.button_pressed,"Exported climbs share the calm-climb preference")
